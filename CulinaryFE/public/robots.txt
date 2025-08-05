@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+Disallow: relative-path
+Sitemap: https://url-website/sitemap.xml

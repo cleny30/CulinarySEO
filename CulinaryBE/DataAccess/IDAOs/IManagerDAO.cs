@@ -5,6 +5,6 @@ namespace DataAccess.IDAOs
 {
     public interface IManagerDAO
     {
-        Task<Manager> GetManagerAccount(LoginAccountModel loginAccountModel);
+        Task<AccountData> VerifyAccountAsync(LoginAccountModel model);
     }
 }

@@ -1,11 +1,13 @@
 ﻿using BusinessObject.Models.Entity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 
 namespace BusinessObject.AppDbContext
 {
     public class CulinaryContext : DbContext
     {
+        public CulinaryContext(DbContextOptions<CulinaryContext> options) : base(options)
+        {
+        }
         public CulinaryContext() { }
         public DbSet<Role> Roles { get; set; }
         public DbSet<Permission> Permissions { get; set; }
@@ -36,17 +38,6 @@ namespace BusinessObject.AppDbContext
         public DbSet<BlogImage> BlogImages { get; set; }
         public DbSet<BlogSave> BlogSaves { get; set; }
         public DbSet<BlogComment> BlogComments { get; set; }
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-                var builder = new ConfigurationBuilder()
-                    .SetBasePath(AppContext.BaseDirectory)
-                    .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
-                IConfigurationRoot configuration = builder.Build();
-                optionsBuilder.UseNpgsql(configuration.GetConnectionString("SupabaseConnection"));
-            }
-        }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

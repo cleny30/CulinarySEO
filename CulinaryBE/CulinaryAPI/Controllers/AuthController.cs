@@ -10,10 +10,12 @@ namespace CulinaryAPI.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAuthService authService;
+        private readonly IJwtService jwtService;
 
-        public AuthController(IAuthService authService)
+        public AuthController(IAuthService authService, IJwtService jwtService)
         {
             this.authService = authService;
+            this.jwtService = jwtService;
         }
 
         [HttpPost]
@@ -23,7 +25,10 @@ namespace CulinaryAPI.Controllers
 
             var manager = await authService.VerifyManager(loginAccountModel);
 
-            apiResponse.Result = manager;
+            var token = await jwtService.GenerateJwtToken(manager);
+
+            apiResponse.Result = token;
+            apiResponse.Message = "Login successful";
 
             return Ok(apiResponse);
         }

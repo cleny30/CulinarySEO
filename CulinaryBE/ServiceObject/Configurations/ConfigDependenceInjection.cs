@@ -16,6 +16,7 @@ namespace ServiceObject.Configurations
 
         public static void ConfigureService(this IServiceCollection services)
         {
+            services.AddScoped<IJwtService, JwtService>();
             services.AddScoped<IAuthService, AuthService>();
         }
     }

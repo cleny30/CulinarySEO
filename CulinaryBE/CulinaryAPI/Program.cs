@@ -1,15 +1,28 @@
+using BusinessObject.AppDbContext;
 using CulinaryAPI.Core;
 using CulinaryAPI.Middleware.Authentication;
+using CulinaryAPI.Middleware.ExceptionHelper;
 using CulinaryAPI.SignalRHub;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
+using Serilog;
 using ServiceObject.Configurations;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.Services.AddDbContext<CulinaryContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("SupabaseConnection")));
 
+//Config Serilog
+builder.Host.UseSerilog((context, services, configuration) =>
+{
+    configuration
+        .ReadFrom.Configuration(context.Configuration)
+        .ReadFrom.Services(services);
+});
+
+// Add services to the container.
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -49,6 +62,10 @@ builder.Services.AddCors(options =>
 });
 var app = builder.Build();
 
+//Add exception and logging handling middleware
+app.UseSerilogRequestLogging();
+app.UseExceptionHandling();
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -63,5 +80,8 @@ app.UseAuthorization();
 app.MapHub<SignalRServer>("/hub");
 
 app.MapControllers();
+
+//Close and flush Serilog on application stop
+app.Lifetime.ApplicationStopped.Register(Log.CloseAndFlush);
 
 app.Run();

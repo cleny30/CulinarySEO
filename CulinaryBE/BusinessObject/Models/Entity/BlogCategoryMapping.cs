@@ -1,0 +1,23 @@
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace BusinessObject.Models.Entity
+{
+    [Table("blog_category_mappings")]
+    public class BlogCategoryMapping
+    {
+        [Column("blog_id")]
+        public Guid BlogId { get; set; }
+
+        [Required]
+        [Column("category_id")]
+        public Guid CategoryId { get; set; }
+
+        // Navigation properties
+        [ForeignKey(nameof(BlogId))]
+        public virtual Blog? Blog { get; set; }
+
+        [ForeignKey(nameof(CategoryId))]
+        public virtual BlogCategory? BlogCategory { get; set; }
+    }
+}

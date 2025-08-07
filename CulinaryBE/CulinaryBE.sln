@@ -1,0 +1,57 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36310.24
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessObject", "BusinessObject\BusinessObject.csproj", "{FAB3AE37-B313-4269-969F-A4596D7C95EE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2. Business Object Layer", "2. Business Object Layer", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1. API Layer", "1. API Layer", "{6A24F04D-0338-4060-B331-790EF95E7ADE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3. Service Object Layer", "3. Service Object Layer", "{C110E482-626D-4A70-9858-56EAC42F0CB7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceObject", "ServiceObject\ServiceObject.csproj", "{3BE524AB-D662-4FE5-B791-F96F39D15DA6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4. Data Access Layer", "4. Data Access Layer", "{43E5E134-B646-41D6-B42E-3009FA507B62}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccess", "DataAccess\DataAccess.csproj", "{FA157848-93B3-40FF-825D-6F41C308E5D8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CulinaryAPI", "CulinaryAPI\CulinaryAPI.csproj", "{8F2516FD-4CC2-4DB7-843C-151643BF9427}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FAB3AE37-B313-4269-969F-A4596D7C95EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FAB3AE37-B313-4269-969F-A4596D7C95EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FAB3AE37-B313-4269-969F-A4596D7C95EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FAB3AE37-B313-4269-969F-A4596D7C95EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3BE524AB-D662-4FE5-B791-F96F39D15DA6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3BE524AB-D662-4FE5-B791-F96F39D15DA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3BE524AB-D662-4FE5-B791-F96F39D15DA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3BE524AB-D662-4FE5-B791-F96F39D15DA6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA157848-93B3-40FF-825D-6F41C308E5D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA157848-93B3-40FF-825D-6F41C308E5D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA157848-93B3-40FF-825D-6F41C308E5D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA157848-93B3-40FF-825D-6F41C308E5D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F2516FD-4CC2-4DB7-843C-151643BF9427}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F2516FD-4CC2-4DB7-843C-151643BF9427}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F2516FD-4CC2-4DB7-843C-151643BF9427}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F2516FD-4CC2-4DB7-843C-151643BF9427}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{FAB3AE37-B313-4269-969F-A4596D7C95EE} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{3BE524AB-D662-4FE5-B791-F96F39D15DA6} = {C110E482-626D-4A70-9858-56EAC42F0CB7}
+		{FA157848-93B3-40FF-825D-6F41C308E5D8} = {43E5E134-B646-41D6-B42E-3009FA507B62}
+		{8F2516FD-4CC2-4DB7-843C-151643BF9427} = {6A24F04D-0338-4060-B331-790EF95E7ADE}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F4E357B3-27A7-43E6-A999-8ECFD97813BB}
+	EndGlobalSection
+EndGlobal

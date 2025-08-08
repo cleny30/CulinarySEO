@@ -1,8 +1,9 @@
 import axiosClient from "./axios";
-import type { AxiosResponse } from 'axios';
+import { AxiosError, type AxiosResponse } from "axios";
+import { useNavigate } from "react-router-dom";
 
 // Type definitions
-type HttpMethod = 'get' | 'post' | 'put' | 'delete';
+type HttpMethod = "get" | "post" | "put" | "delete";
 
 interface RequestOptions {
   data?: any;
@@ -12,13 +13,13 @@ interface RequestOptions {
 
 interface RequestHeaders {
   headers: {
-    'Content-Type': string;
+    "Content-Type": string;
     Authorization?: string;
   };
 }
 
 // Main function to perform requests
-const doRequest = async <T = any>(
+const doRequest = async <T>(
   method: HttpMethod,
   url: string,
   options: RequestOptions = {}
@@ -27,25 +28,25 @@ const doRequest = async <T = any>(
 
   const reqHeader: RequestHeaders = {
     headers: {
-      'Content-Type': isUploadImg ? 'multipart/form-data' : 'application/json',
-      ...(token && { Authorization: `Bearer ${token}` })
-    }
+      "Content-Type": isUploadImg ? "multipart/form-data" : "application/json",
+      ...(token && { Authorization: `Bearer ${token}` }),
+    },
   };
 
   try {
     let response: AxiosResponse<T>;
 
     switch (method.toLowerCase() as HttpMethod) {
-      case 'get':
+      case "get":
         response = await axiosClient.get<T>(url, reqHeader);
         break;
-      case 'post':
+      case "post":
         response = await axiosClient.post<T>(url, data, reqHeader);
         break;
-      case 'put':
+      case "put":
         response = await axiosClient.put<T>(url, data, reqHeader);
         break;
-      case 'delete':
+      case "delete":
         response = await axiosClient.delete<T>(url, { ...reqHeader, data });
         break;
       default:
@@ -53,39 +54,46 @@ const doRequest = async <T = any>(
     }
 
     return response;
-  } catch (error: any) {
+  } catch (error) {
     // Handle 401/403 - Unauthorized/Forbidden errors
-    if (error.response && [401, 403].includes(error.response.status)) {
+    if (
+      error instanceof AxiosError &&
+      error.response &&
+      [401, 403].includes(error.response.status)
+    ) {
       handleUnauthorized();
       throw error; // Still throw so caller can handle
     }
 
-    console.error('Request error:', error);
+    console.error("Request error:", error);
     throw error;
   }
 };
 
 // Handle unauthorized access
-const handleUnauthorized = (): void => {
+const handleUnauthorized = () => {
   // Clear cookies and session
 
   // Redirect to login page
-  window.location.href = '/Login';
+  window.location.href = "/login";
 };
 
 // Export utility functions for each HTTP method
 export const apiService = {
-  get: <T = any>(url: string, options?: Omit<RequestOptions, 'data'>) =>
-    doRequest<T>('get', url, options),
+  get: <T>(url: string, options?: Omit<RequestOptions, "data">) =>
+    doRequest<T>("get", url, options),
 
-  post: <T = any>(url: string, data?: any, options?: Omit<RequestOptions, 'data'>) =>
-    doRequest<T>('post', url, { ...options, data }),
+  post: <T>(url: string, data?: any, options?: Omit<RequestOptions, "data">) =>
+    doRequest<T>("post", url, { ...options, data }),
 
-  put: <T = any>(url: string, data?: any, options?: Omit<RequestOptions, 'data'>) =>
-    doRequest<T>('put', url, { ...options, data }),
+  put: <T>(url: string, data?: any, options?: Omit<RequestOptions, "data">) =>
+    doRequest<T>("put", url, { ...options, data }),
 
-  delete: <T = any>(url: string, data?: any, options?: Omit<RequestOptions, 'data'>) =>
-    doRequest<T>('delete', url, { ...options, data }),
+  delete: <T>(
+    url: string,
+    data?: any,
+    options?: Omit<RequestOptions, "data">
+  ) => doRequest<T>("delete", url, { ...options, data }),
 };
 
 export { doRequest };

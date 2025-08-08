@@ -1,12 +1,11 @@
 import axiosClient from "./axios";
 import { AxiosError, type AxiosResponse } from "axios";
-import { useNavigate } from "react-router-dom";
 
 // Type definitions
 type HttpMethod = "get" | "post" | "put" | "delete";
 
 interface RequestOptions {
-  data?: any;
+  data?: unknown;
   isUploadImg?: boolean;
   token?: string;
 }
@@ -83,15 +82,15 @@ export const apiService = {
   get: <T>(url: string, options?: Omit<RequestOptions, "data">) =>
     doRequest<T>("get", url, options),
 
-  post: <T>(url: string, data?: any, options?: Omit<RequestOptions, "data">) =>
+  post: <T>(url: string, data?: unknown, options?: Omit<RequestOptions, "data">) =>
     doRequest<T>("post", url, { ...options, data }),
 
-  put: <T>(url: string, data?: any, options?: Omit<RequestOptions, "data">) =>
+  put: <T>(url: string, data?: unknown, options?: Omit<RequestOptions, "data">) =>
     doRequest<T>("put", url, { ...options, data }),
 
   delete: <T>(
     url: string,
-    data?: any,
+    data?: unknown,
     options?: Omit<RequestOptions, "data">
   ) => doRequest<T>("delete", url, { ...options, data }),
 };

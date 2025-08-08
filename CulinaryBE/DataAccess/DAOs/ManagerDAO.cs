@@ -1,10 +1,12 @@
 ﻿using BusinessObject.AppDbContext;
 using BusinessObject.Models;
 using BusinessObject.Models.Dto;
+using BusinessObject.Models.Entity;
 using BusinessObject.Models.Enum;
 using DataAccess.IDAOs;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Npgsql;
 
 namespace DataAccess.DAOs
 {
@@ -59,6 +61,71 @@ namespace DataAccess.DAOs
                     throw new DbUpdateException("An error occurred while retrieving the manager account.", ex);
                 }
             
+        }
+
+        public async Task<string> SaveRefreshTokenAsync(Guid userId, string refreshToken, DateTime expiryDate)
+        {
+
+            try
+            {
+                var manager = await _context.Managers
+                    .FirstOrDefaultAsync(m => m.ManagerId == userId);
+
+                if (manager == null)
+                {
+                    throw new NotFoundException("Manager not found");
+                }
+
+                manager.Token = refreshToken;
+                manager.ExpiresAt = expiryDate;
+                manager.Revoked = false;
+
+                _context.Managers.Update(manager);
+                await _context.SaveChangesAsync();
+
+                return manager.Token;
+            }
+            catch (NpgsqlException ex)
+            {
+                throw new DatabaseException("Failed to save refresh token: " + ex.Message);
+            }
+        }
+
+        public async Task<Manager?> GetRefreshTokenAsync(string refreshToken)
+        {
+            try
+            {
+                return await _context.Managers
+                    .Include(m => m.Role)
+                        .ThenInclude(r => r.RolePermissions)
+                            .ThenInclude(rp => rp.Permission)
+                    .FirstOrDefaultAsync(m => m.Token == refreshToken && m.Revoked != true && m.ExpiresAt > DateTime.UtcNow);
+            }
+            catch (NpgsqlException ex)
+            {
+                throw new DatabaseException("Failed to retrieve refresh token: " + ex.Message);
+            }
+        }
+
+        public async Task RevokeRefreshTokenAsync(string refreshToken)
+        {
+
+            try
+            {
+                var manager = await _context.Managers
+                    .FirstOrDefaultAsync(m => m.Token == refreshToken);
+
+                if (manager != null)
+                {
+                    manager.Revoked = true;
+                    _context.Managers.Update(manager);
+                    await _context.SaveChangesAsync();
+                }
+            }
+            catch (NpgsqlException ex)
+            {
+                throw new DatabaseException("Failed to revoke refresh token: " + ex.Message);
+            }
         }
 
         private bool VerifyPassword(string password, string hashedPassword)

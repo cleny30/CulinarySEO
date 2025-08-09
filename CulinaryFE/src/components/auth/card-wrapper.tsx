@@ -10,7 +10,7 @@ interface CardWrapperProps {
 
 export default function CardWrapper({
   children,
-  headerLabel = 'login',
+  headerLabel,
   showSocial,
 }: CardWrapperProps) {
   return (

@@ -2,5 +2,9 @@ import LoginForm from "@/components/auth/login-form";
 import React from "react";
 
 export default function LoginPage() {
-  return <LoginForm />;
+  return (
+    <div className="w-full h-full flex items-center justify-center">
+      <LoginForm />
+    </div>
+  );
 }

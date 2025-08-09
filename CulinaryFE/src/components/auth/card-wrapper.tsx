@@ -1,6 +1,23 @@
 import React from "react";
 import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
+import Social from "./social";
 
-export default function CardWrapper() {
-  return <div>CardWrapper</div>;
+interface CardWrapperProps {
+  children: React.ReactNode;
+  headerLabel?: string;
+  showSocial?: boolean;
+}
+
+export default function CardWrapper({
+  children,
+  headerLabel = 'login',
+  showSocial,
+}: CardWrapperProps) {
+  return (
+    <Card className="w-[400px] shadow-md">
+      <CardHeader>{headerLabel}</CardHeader>
+      <CardContent>{children}</CardContent>
+      <CardFooter>{showSocial && <Social />}</CardFooter>
+    </Card>
+  );
 }

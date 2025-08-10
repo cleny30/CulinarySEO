@@ -11,11 +11,13 @@ namespace ServiceObject.Configurations
         public static void ConfigureDAO(this IServiceCollection services)
         {
             services.AddScoped<IManagerDAO, ManagerDAO>();
+            services.AddScoped<ICustomerDAO, CustomerDAO>();
 
         }
 
         public static void ConfigureService(this IServiceCollection services)
         {
+            services.AddScoped<IJwtService, JwtService>();
             services.AddScoped<IAuthService, AuthService>();
         }
     }

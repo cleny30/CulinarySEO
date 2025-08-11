@@ -8,7 +8,7 @@ import { doRequest } from "@/utils/config/doRequest";
 import { AxiosError } from "axios";
 
 export const loginUser = async (
-  user: LoginSchemaType
+  loginInfo: LoginSchemaType
 ): Promise<ApiResponse<unknown>> => {
   // TODO: Replace 'any' with a proper user/session type
   try {
@@ -16,7 +16,7 @@ export const loginUser = async (
       "post",
       "Auth",
       {
-        data: user,
+        data: loginInfo,
       }
     );
 

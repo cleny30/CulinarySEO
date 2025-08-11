@@ -14,9 +14,21 @@ import { LoginSchema, type LoginSchemaType } from "@/schemas/auth";
 import { Input } from "../ui/input";
 import { Icon } from "@/utils/assets/icon";
 import { Button } from "../ui/button";
+import { login } from "@/redux/auth/apiRequest";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import type { RootState } from "@/redux/store";
+import toast from "@/utils/toast";
 
 export default function LoginForm() {
-  // const [isPending, startTransition] = useTransition();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const pending = useSelector(
+    (state: RootState) => state.auth.login.isFetching
+  );
+  const isError = useSelector(
+    (state: RootState) => state.auth.login.error
+  );
 
   const form = useForm<LoginSchemaType>({
     resolver: zodResolver(LoginSchema),
@@ -26,8 +38,10 @@ export default function LoginForm() {
     },
   });
 
-  const onSubmit = (values: LoginSchemaType) => {
-    
+  const onSubmit = async (values: LoginSchemaType) => {
+    await login(values, dispatch, navigate).then((result) => {
+      if (isError) toast.error(result?.error as string);
+    });
   };
 
   return (
@@ -36,6 +50,7 @@ export default function LoginForm() {
         <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
           <div>
             <FormField
+              disabled={pending}
               control={form.control}
               name="email"
               render={({ field }) => (
@@ -53,6 +68,7 @@ export default function LoginForm() {
               )}
             />
             <FormField
+              disabled={pending}
               control={form.control}
               name="password"
               render={({ field }) => (
@@ -69,7 +85,8 @@ export default function LoginForm() {
                 </FormItem>
               )}
             />
-            <Button type="submit" variant={"outline"}>
+            {/* TODO: add form error here */}
+            <Button type="submit" variant={"outline"} disabled={pending}>
               Login
             </Button>
           </div>

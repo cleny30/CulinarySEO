@@ -10,7 +10,7 @@ using Supabase.Gotrue;
 namespace CulinaryAPI.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/products")]
     public class ProductController : ControllerBase
     {
         private readonly IProductService _productService;
@@ -20,7 +20,7 @@ namespace CulinaryAPI.Controllers
             _productService = productService;
         }
 
-        [HttpGet("GetAllProducts")]
+        [HttpGet("")]
         public async Task<IActionResult> GetAllProducts()
         {
             var apiResponse = new ApiResponse();

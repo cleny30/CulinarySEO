@@ -26,9 +26,7 @@ export default function LoginForm() {
   const pending = useSelector(
     (state: RootState) => state.auth.login.isFetching
   );
-  const isError = useSelector(
-    (state: RootState) => state.auth.login.error
-  );
+  const isError = useSelector((state: RootState) => state.auth.login.error);
 
   const form = useForm<LoginSchemaType>({
     resolver: zodResolver(LoginSchema),
@@ -41,6 +39,7 @@ export default function LoginForm() {
   const onSubmit = async (values: LoginSchemaType) => {
     await login(values, dispatch, navigate).then((result) => {
       if (isError) toast.error(result?.error as string);
+      else toast.success(result?.success as string);
     });
   };
 

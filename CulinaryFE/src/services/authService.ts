@@ -26,9 +26,9 @@ export const loginUser = async (
     if (error instanceof AxiosError) {
       const errorData = error.response?.data as BackendErrorResponse;
       const errorMessage =
-        errorData?.message || error.message || "An unknown error occurred";
+        errorData?.message || error.message || "Đã có lỗi xảy ra!";
       return { error: errorMessage };
     }
-    return { error: "An unexpected error occurred" };
+    return { error: "Đã có lỗi xảy ra!" };
   }
 };

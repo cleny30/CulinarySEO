@@ -7,12 +7,14 @@ const Toaster = () => {
       reverseOrder={false}
       toastOptions={{
         duration: 3000,
-        className: "",
+        style: {
+          fontSize: 15,
+        },
         success: {
-          className: "bg-green text-white",
+          className: "bg-green-600 text-white p-4 rounded-md",
         },
         error: {
-          className: "bg-red text-white",
+          className: "bg-red-600 text-white p-4 rounded-md",
         },
       }}
     />

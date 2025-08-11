@@ -28,7 +28,7 @@ namespace BusinessObject.Models.Entity
 
         [Required]
         [Column("category_id")]
-        public Guid CategoryId { get; set; }
+        public int CategoryId { get; set; }
 
         [Required]
         [Column("created_at")]
@@ -40,7 +40,7 @@ namespace BusinessObject.Models.Entity
         // Navigation properties
         [ForeignKey(nameof(CategoryId))]
         public virtual Category? Category { get; set; }
-        public virtual ProductEmbedding? ProductEmbedding { get; set; }
+        public virtual ICollection<ProductImagesEmbedding>? ProductImagesEmbeddings { get; set; }
         public virtual ICollection<ProductImage>? ProductImages { get; set; }
         public virtual ICollection<ProductHistory>? ProductHistories { get; set; }
         public virtual ICollection<Stock>? Stocks { get; set; }

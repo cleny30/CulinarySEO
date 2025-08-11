@@ -1,4 +1,6 @@
 ﻿using BusinessObject.Models;
+using Microsoft.IdentityModel.Tokens;
+using Npgsql;
 using System.Net;
 using System.Text.Json;
 
@@ -36,6 +38,12 @@ namespace CulinaryAPI.Middleware.ExceptionHelper
                 NotFoundException => (HttpStatusCode.NotFound, exception.Message, "ERR_NOT_FOUND"),
                 ValidationException => (HttpStatusCode.BadRequest, exception.Message, "ERR_VALIDATION"),
                 DatabaseException => (HttpStatusCode.InternalServerError, "Database error occurred", "ERR_DATABASE"),
+                NpgsqlException when exception.Message.Contains("permission denied") =>
+                    (HttpStatusCode.Forbidden, "Permission denied for database operation", "ERR_PERMISSION_DENIED"),
+                NpgsqlException => (HttpStatusCode.InternalServerError, "Failed to connect to database", "ERR_DATABASE_CONNECTION"),
+                InvalidOperationException when exception.Message.Contains("transient failure") =>
+                    (HttpStatusCode.InternalServerError, "Temporary database connection issue", "ERR_TRANSIENT_FAILURE"),
+                SecurityTokenException => (HttpStatusCode.Unauthorized, "Invalid or expired token", "ERR_INVALID_TOKEN"),
                 _ => (HttpStatusCode.InternalServerError, "An unexpected error occurred", "ERR_UNEXPECTED")
             };
 

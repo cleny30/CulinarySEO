@@ -590,6 +590,22 @@ namespace BusinessObject.AppDbContext
                  new Role { RoleId = 1, RoleName = "Admin" },
                  new Role { RoleId = 2, RoleName = "Staff" },
                  new Role { RoleId = 3, RoleName = "Shipper" }
-             );                
-    } }
+             );
+            // modelBuilder.Entity<Category>().HasData(
+            //     new Category { CategoryId = Guid.NewGuid(), CategoryName = "Default Category", CreatedAt = DateTime.UtcNow }
+            // );
+            // modelBuilder.Entity<Product>().HasData(
+            //    new Product
+            //    {
+            //        ProductId = Guid.NewGuid(),
+            //        ProductName = "Sample Product",
+            //        CategoryId = 1,
+            //        Price = 100.00m,
+            //        Description = "This is a sample product.",
+            //        CreatedAt = DateTime.UtcNow,
+            //        UpdatedAt = DateTime.UtcNow
+            //    }
+            // );                
+        }
+    }
 }

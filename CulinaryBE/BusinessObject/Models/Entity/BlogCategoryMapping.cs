@@ -11,7 +11,7 @@ namespace BusinessObject.Models.Entity
 
         [Required]
         [Column("category_id")]
-        public Guid CategoryId { get; set; }
+        public int CategoryId { get; set; }
 
         // Navigation properties
         [ForeignKey(nameof(BlogId))]

@@ -1,6 +1,7 @@
 ﻿using BusinessObject.Models.Enum;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Reactive;
 
 namespace BusinessObject.Models.Entity
 {
@@ -69,5 +70,7 @@ namespace BusinessObject.Models.Entity
         public virtual ICollection<StockTransaction>? StockTransactions { get; set; }
         public virtual ICollection<Order>? ShippedOrders { get; set; }
         public virtual ICollection<OrderStatusHistory>? OrderStatusHistories { get; set; }
+        public virtual ICollection<NotificationManager>? NotificationManagers { get; set; }
+        public virtual ICollection<ChatSession>? ChatSessions { get; set; }
     }
 }

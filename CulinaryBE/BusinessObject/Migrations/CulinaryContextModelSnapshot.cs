@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+using Pgvector;
 
 #nullable disable
 
@@ -20,6 +21,7 @@ namespace BusinessObject.Migrations
                 .HasAnnotation("ProductVersion", "9.0.8")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
+            NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "vector");
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("BusinessObject.Models.Entity.Blog", b =>
@@ -62,10 +64,12 @@ namespace BusinessObject.Migrations
 
             modelBuilder.Entity("BusinessObject.Models.Entity.BlogCategory", b =>
                 {
-                    b.Property<Guid>("CategoryId")
+                    b.Property<int>("CategoryId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
+                        .HasColumnType("integer")
                         .HasColumnName("category_id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("CategoryId"));
 
                     b.Property<string>("CategoryImage")
                         .IsRequired()
@@ -101,8 +105,8 @@ namespace BusinessObject.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("blog_id");
 
-                    b.Property<Guid>("CategoryId")
-                        .HasColumnType("uuid")
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("integer")
                         .HasColumnName("category_id");
 
                     b.HasKey("BlogId", "CategoryId");
@@ -284,10 +288,12 @@ namespace BusinessObject.Migrations
 
             modelBuilder.Entity("BusinessObject.Models.Entity.Category", b =>
                 {
-                    b.Property<Guid>("CategoryId")
+                    b.Property<int>("CategoryId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
+                        .HasColumnType("integer")
                         .HasColumnName("category_id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("CategoryId"));
 
                     b.Property<string>("CategoryImage")
                         .IsRequired()
@@ -316,6 +322,110 @@ namespace BusinessObject.Migrations
                         .HasDatabaseName("idx_category_name");
 
                     b.ToTable("categories");
+
+                    b.HasData(
+                        new
+                        {
+                            CategoryId = 1,
+                            CategoryImage = "abc",
+                            CategoryName = "Thịt heo",
+                            CreatedAt = new DateTime(2025, 8, 11, 20, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "aaa"
+                        },
+                        new
+                        {
+                            CategoryId = 2,
+                            CategoryImage = "abc",
+                            CategoryName = "Trái cây",
+                            CreatedAt = new DateTime(2025, 8, 11, 20, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "aaa"
+                        },
+                        new
+                        {
+                            CategoryId = 3,
+                            CategoryImage = "abc",
+                            CategoryName = "Rau lá",
+                            CreatedAt = new DateTime(2025, 8, 11, 20, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "aaa"
+                        },
+                        new
+                        {
+                            CategoryId = 4,
+                            CategoryImage = "abc",
+                            CategoryName = "Củ quả",
+                            CreatedAt = new DateTime(2025, 8, 11, 20, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "aaaa"
+                        },
+                        new
+                        {
+                            CategoryId = 5,
+                            CategoryImage = "abc",
+                            CategoryName = "Thịt gà, vịt, chim",
+                            CreatedAt = new DateTime(2025, 8, 11, 20, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "aaa"
+                        },
+                        new
+                        {
+                            CategoryId = 6,
+                            CategoryImage = "abc",
+                            CategoryName = "Thịt cầy",
+                            CreatedAt = new DateTime(2025, 8, 11, 20, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "aaa"
+                        });
+                });
+
+            modelBuilder.Entity("BusinessObject.Models.Entity.ChatHistory", b =>
+                {
+                    b.Property<Guid>("ChatId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("chat_id");
+
+                    b.Property<Guid>("ChatSessionId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("message");
+
+                    b.HasKey("ChatId");
+
+                    b.HasIndex("ChatSessionId");
+
+                    b.ToTable("chat_histories");
+                });
+
+            modelBuilder.Entity("BusinessObject.Models.Entity.ChatSession", b =>
+                {
+                    b.Property<Guid>("ChatSessionId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("chat_session_id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<Guid>("CustomerId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("customer_id");
+
+                    b.Property<Guid>("ManagerId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("manager_id");
+
+                    b.Property<int>("SupportType")
+                        .HasColumnType("integer")
+                        .HasColumnName("support_type");
+
+                    b.HasKey("ChatSessionId");
+
+                    b.HasIndex("CustomerId");
+
+                    b.HasIndex("ManagerId");
+
+                    b.ToTable("chat_sessions");
                 });
 
             modelBuilder.Entity("BusinessObject.Models.Entity.Customer", b =>
@@ -425,6 +535,32 @@ namespace BusinessObject.Migrations
                     b.ToTable("customer_addresses");
                 });
 
+            modelBuilder.Entity("BusinessObject.Models.Entity.DeliverySlot", b =>
+                {
+                    b.Property<Guid>("SlotId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("slot_id");
+
+                    b.Property<DateTime>("EndTime")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("end_time");
+
+                    b.Property<Guid>("OrderId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("order_id");
+
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("start_time");
+
+                    b.HasKey("SlotId");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("delivery_slots");
+                });
+
             modelBuilder.Entity("BusinessObject.Models.Entity.Manager", b =>
                 {
                     b.Property<Guid>("ManagerId")
@@ -508,6 +644,74 @@ namespace BusinessObject.Migrations
                     b.ToTable("managers");
                 });
 
+            modelBuilder.Entity("BusinessObject.Models.Entity.NotificationCustomer", b =>
+                {
+                    b.Property<int>("NotificationId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("notification_id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("NotificationId"));
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("create_date");
+
+                    b.Property<Guid>("CustomerId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("customer_id");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_read");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasMaxLength(125)
+                        .HasColumnType("character varying(125)")
+                        .HasColumnName("message");
+
+                    b.HasKey("NotificationId");
+
+                    b.HasIndex("CustomerId");
+
+                    b.ToTable("NotificationCustomers");
+                });
+
+            modelBuilder.Entity("BusinessObject.Models.Entity.NotificationManager", b =>
+                {
+                    b.Property<int>("NotificationId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("notification_id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("NotificationId"));
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("create_date");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_read");
+
+                    b.Property<Guid>("ManagerId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("manager_id");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasMaxLength(125)
+                        .HasColumnType("character varying(125)")
+                        .HasColumnName("message");
+
+                    b.HasKey("NotificationId");
+
+                    b.HasIndex("ManagerId");
+
+                    b.ToTable("NotificationManagers");
+                });
+
             modelBuilder.Entity("BusinessObject.Models.Entity.Order", b =>
                 {
                     b.Property<Guid>("OrderId")
@@ -537,9 +741,13 @@ namespace BusinessObject.Migrations
                         .HasColumnType("text")
                         .HasColumnName("shipping_address");
 
-                    b.Property<decimal>("TotalAmount")
+                    b.Property<decimal>("ShippingFee")
                         .HasColumnType("decimal(10,2)")
-                        .HasColumnName("total_amount");
+                        .HasColumnName("shipping_fee");
+
+                    b.Property<decimal>("TotalPrice")
+                        .HasColumnType("decimal(10,2)")
+                        .HasColumnName("total_price");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone")
@@ -709,8 +917,8 @@ namespace BusinessObject.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("product_id");
 
-                    b.Property<Guid>("CategoryId")
-                        .HasColumnType("uuid")
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("integer")
                         .HasColumnName("category_id");
 
                     b.Property<DateTime>("CreatedAt")
@@ -749,35 +957,6 @@ namespace BusinessObject.Migrations
                         .HasDatabaseName("idx_product_name");
 
                     b.ToTable("products");
-                });
-
-            modelBuilder.Entity("BusinessObject.Models.Entity.ProductEmbedding", b =>
-                {
-                    b.Property<Guid>("ProductId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("product_id");
-
-                    b.Property<string>("DescriptionEmbed")
-                        .IsRequired()
-                        .HasMaxLength(768)
-                        .HasColumnType("character varying(768)")
-                        .HasColumnName("description_embed");
-
-                    b.Property<string>("ImagesEmbedClip")
-                        .IsRequired()
-                        .HasMaxLength(768)
-                        .HasColumnType("character varying(768)")
-                        .HasColumnName("images_embed_clip");
-
-                    b.Property<string>("ImagesEmbedYolo")
-                        .IsRequired()
-                        .HasMaxLength(512)
-                        .HasColumnType("character varying(512)")
-                        .HasColumnName("images_embed_yolo");
-
-                    b.HasKey("ProductId");
-
-                    b.ToTable("product_embedding");
                 });
 
             modelBuilder.Entity("BusinessObject.Models.Entity.ProductHistory", b =>
@@ -866,6 +1045,41 @@ namespace BusinessObject.Migrations
                         .HasDatabaseName("idx_product_id");
 
                     b.ToTable("product_images");
+                });
+
+            modelBuilder.Entity("BusinessObject.Models.Entity.ProductImagesEmbedding", b =>
+                {
+                    b.Property<Guid>("EmbeddingId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("embedding_id");
+
+                    b.Property<string>("DescriptionEmbed")
+                        .IsRequired()
+                        .HasMaxLength(768)
+                        .HasColumnType("character varying(768)")
+                        .HasColumnName("description_embed");
+
+                    b.Property<Vector>("ImageEmbeddingYolo")
+                        .IsRequired()
+                        .HasColumnType("vector(3)")
+                        .HasColumnName("image_embedding_yolo");
+
+                    b.Property<Guid>("ImageId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("image_id");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("product_id");
+
+                    b.HasKey("EmbeddingId");
+
+                    b.HasIndex("ImageId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("product_images_embedding");
                 });
 
             modelBuilder.Entity("BusinessObject.Models.Entity.ProductReview", b =>
@@ -1040,6 +1254,10 @@ namespace BusinessObject.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
+
+                    b.Property<DateTime>("ExpirationDate")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("expiration_date");
 
                     b.Property<Guid>("ManagerId")
                         .HasColumnType("uuid")
@@ -1306,6 +1524,36 @@ namespace BusinessObject.Migrations
                     b.Navigation("Product");
                 });
 
+            modelBuilder.Entity("BusinessObject.Models.Entity.ChatHistory", b =>
+                {
+                    b.HasOne("BusinessObject.Models.Entity.ChatSession", "ChatSession")
+                        .WithMany("ChatHistories")
+                        .HasForeignKey("ChatSessionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ChatSession");
+                });
+
+            modelBuilder.Entity("BusinessObject.Models.Entity.ChatSession", b =>
+                {
+                    b.HasOne("BusinessObject.Models.Entity.Customer", "Customer")
+                        .WithMany("ChatSessions")
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BusinessObject.Models.Entity.Manager", "Manager")
+                        .WithMany("ChatSessions")
+                        .HasForeignKey("ManagerId")
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("Manager");
+                });
+
             modelBuilder.Entity("BusinessObject.Models.Entity.CustomerAddress", b =>
                 {
                     b.HasOne("BusinessObject.Models.Entity.Customer", "Customer")
@@ -1317,6 +1565,17 @@ namespace BusinessObject.Migrations
                     b.Navigation("Customer");
                 });
 
+            modelBuilder.Entity("BusinessObject.Models.Entity.DeliverySlot", b =>
+                {
+                    b.HasOne("BusinessObject.Models.Entity.Order", "Order")
+                        .WithMany("DeliverySlots")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Order");
+                });
+
             modelBuilder.Entity("BusinessObject.Models.Entity.Manager", b =>
                 {
                     b.HasOne("BusinessObject.Models.Entity.Role", "Role")
@@ -1326,6 +1585,28 @@ namespace BusinessObject.Migrations
                         .IsRequired();
 
                     b.Navigation("Role");
+                });
+
+            modelBuilder.Entity("BusinessObject.Models.Entity.NotificationCustomer", b =>
+                {
+                    b.HasOne("BusinessObject.Models.Entity.Customer", "Customer")
+                        .WithMany("NotificationCustomers")
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
+                });
+
+            modelBuilder.Entity("BusinessObject.Models.Entity.NotificationManager", b =>
+                {
+                    b.HasOne("BusinessObject.Models.Entity.Manager", "Manager")
+                        .WithMany("NotificationManagers")
+                        .HasForeignKey("ManagerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Manager");
                 });
 
             modelBuilder.Entity("BusinessObject.Models.Entity.Order", b =>
@@ -1413,17 +1694,6 @@ namespace BusinessObject.Migrations
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("BusinessObject.Models.Entity.ProductEmbedding", b =>
-                {
-                    b.HasOne("BusinessObject.Models.Entity.Product", "Product")
-                        .WithOne("ProductEmbedding")
-                        .HasForeignKey("BusinessObject.Models.Entity.ProductEmbedding", "ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Product");
-                });
-
             modelBuilder.Entity("BusinessObject.Models.Entity.ProductHistory", b =>
                 {
                     b.HasOne("BusinessObject.Models.Entity.Manager", "ChangedByManager")
@@ -1452,6 +1722,25 @@ namespace BusinessObject.Migrations
                         .IsRequired();
 
                     b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("BusinessObject.Models.Entity.ProductImagesEmbedding", b =>
+                {
+                    b.HasOne("BusinessObject.Models.Entity.ProductImage", "ProductImage")
+                        .WithMany("ProductImagesEmbeddings")
+                        .HasForeignKey("ImageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BusinessObject.Models.Entity.Product", "Product")
+                        .WithMany("ProductImagesEmbeddings")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+
+                    b.Navigation("ProductImage");
                 });
 
             modelBuilder.Entity("BusinessObject.Models.Entity.ProductReview", b =>
@@ -1580,6 +1869,11 @@ namespace BusinessObject.Migrations
                     b.Navigation("Products");
                 });
 
+            modelBuilder.Entity("BusinessObject.Models.Entity.ChatSession", b =>
+                {
+                    b.Navigation("ChatHistories");
+                });
+
             modelBuilder.Entity("BusinessObject.Models.Entity.Customer", b =>
                 {
                     b.Navigation("BlogComments");
@@ -1590,7 +1884,11 @@ namespace BusinessObject.Migrations
 
                     b.Navigation("Carts");
 
+                    b.Navigation("ChatSessions");
+
                     b.Navigation("CustomerAddresses");
+
+                    b.Navigation("NotificationCustomers");
 
                     b.Navigation("Orders");
 
@@ -1599,6 +1897,10 @@ namespace BusinessObject.Migrations
 
             modelBuilder.Entity("BusinessObject.Models.Entity.Manager", b =>
                 {
+                    b.Navigation("ChatSessions");
+
+                    b.Navigation("NotificationManagers");
+
                     b.Navigation("OrderStatusHistories");
 
                     b.Navigation("ProductHistories");
@@ -1612,6 +1914,8 @@ namespace BusinessObject.Migrations
 
             modelBuilder.Entity("BusinessObject.Models.Entity.Order", b =>
                 {
+                    b.Navigation("DeliverySlots");
+
                     b.Navigation("OrderDetails");
 
                     b.Navigation("OrderStatusHistories");
@@ -1630,17 +1934,22 @@ namespace BusinessObject.Migrations
 
                     b.Navigation("OrderDetails");
 
-                    b.Navigation("ProductEmbedding");
-
                     b.Navigation("ProductHistories");
 
                     b.Navigation("ProductImages");
+
+                    b.Navigation("ProductImagesEmbeddings");
 
                     b.Navigation("ProductReviews");
 
                     b.Navigation("StockTransactions");
 
                     b.Navigation("Stocks");
+                });
+
+            modelBuilder.Entity("BusinessObject.Models.Entity.ProductImage", b =>
+                {
+                    b.Navigation("ProductImagesEmbeddings");
                 });
 
             modelBuilder.Entity("BusinessObject.Models.Entity.Role", b =>

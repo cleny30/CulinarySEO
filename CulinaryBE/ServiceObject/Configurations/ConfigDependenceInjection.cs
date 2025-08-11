@@ -11,6 +11,7 @@ namespace ServiceObject.Configurations
         public static void ConfigureDAO(this IServiceCollection services)
         {
             services.AddScoped<IManagerDAO, ManagerDAO>();
+            services.AddScoped<ICustomerDAO, CustomerDAO>();
 
         }
 

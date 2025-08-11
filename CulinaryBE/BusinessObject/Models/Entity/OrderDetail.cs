@@ -26,6 +26,8 @@ namespace BusinessObject.Models.Entity
         [Column("unit_price", TypeName = "decimal(10,2)")]
         public decimal UnitPrice { get; set; }
 
+
+        // Subtotal = UnitPrice * Quantity
         [Required]
         [Column("subtotal", TypeName = "decimal(10,2)")]
         public decimal Subtotal { get; set; }

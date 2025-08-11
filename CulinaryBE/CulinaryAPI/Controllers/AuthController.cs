@@ -3,6 +3,7 @@ using BusinessObject.Models.Dto;
 using BusinessObject.Models.Dto.Auth;
 using Microsoft.AspNetCore.Mvc;
 using ServiceObject.IServices;
+using System.Collections.Generic;
 
 namespace CulinaryAPI.Controllers
 {
@@ -23,11 +24,35 @@ namespace CulinaryAPI.Controllers
 
             var response = await _authService.VerifyManager(loginAccountModel);
 
+            if (response == null || string.IsNullOrEmpty(response.AccessToken) || string.IsNullOrEmpty(response.RefreshToken))
+            {
+                return Unauthorized(new ApiResponse
+                {
+                    IsSuccess = false,
+                    Message = "Invalid credentials"
+                });
+            }
+
+            Response.Cookies.Append("AccessToken", response.AccessToken, new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = false, // Set base on develop or producttion
+                SameSite = SameSiteMode.Strict,
+                Expires = DateTime.UtcNow.AddSeconds(response.ExpiresIn)
+            });
+
+            Response.Cookies.Append("RefreshToken", response.RefreshToken, new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = false, //Set base on develop or producttion
+                SameSite = SameSiteMode.Strict,
+                Expires = DateTime.UtcNow.AddDays(7) // Refresh token sống lâu hơn
+            });
+
             return Ok(new ApiResponse
             {
                 IsSuccess = true,
                 Message = "Login successful",
-                Result = response
             });
         }
 
@@ -38,11 +63,35 @@ namespace CulinaryAPI.Controllers
 
             var response = await _authService.VerifyCustomer(loginAccountModel);
 
+            if (response == null || string.IsNullOrEmpty(response.AccessToken) || string.IsNullOrEmpty(response.RefreshToken))
+            {
+                return Unauthorized(new ApiResponse
+                {
+                    IsSuccess = false,
+                    Message = "Invalid credentials"
+                });
+            }
+
+            Response.Cookies.Append("AccessToken", response.AccessToken, new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = false, // Set base on develop or producttion
+                SameSite = SameSiteMode.Strict,
+                Expires = DateTime.UtcNow.AddSeconds(response.ExpiresIn)
+            });
+
+            Response.Cookies.Append("RefreshToken", response.RefreshToken, new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = false, //Set base on develop or producttion
+                SameSite = SameSiteMode.Strict,
+                Expires = DateTime.UtcNow.AddDays(7) // Refresh token sống lâu hơn
+            });
+
             return Ok(new ApiResponse
             {
                 IsSuccess = true,
                 Message = "Login successful",
-                Result = response
             });
         }
 

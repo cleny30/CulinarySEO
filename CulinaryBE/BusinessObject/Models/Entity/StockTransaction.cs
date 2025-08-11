@@ -37,6 +37,10 @@ namespace BusinessObject.Models.Entity
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         [Required]
+        [Column("expiration_date")]
+        public DateTime ExpirationDate { get; set; }
+
+        [Required]
         [Column("manager_id")]
         public Guid ManagerId { get; set; }
 

@@ -20,8 +20,13 @@ namespace BusinessObject.Models.Entity
         public OrderStatus OrderStatus { get; set; }
 
         [Required]
-        [Column("total_amount", TypeName = "decimal(10,2)")]
-        public decimal TotalAmount { get; set; }
+        [Column("shipping_fee", TypeName = "decimal(10,2)")]
+        public decimal ShippingFee { get; set; }
+
+        // TotalPrice = subtotal of all order details + shipping fee
+        [Required]
+        [Column("total_price", TypeName = "decimal(10,2)")]
+        public decimal TotalPrice { get; set; }
 
         [Required]
         [Column("shipping_address")]
@@ -47,5 +52,7 @@ namespace BusinessObject.Models.Entity
         public virtual ICollection<OrderVoucher>? OrderVouchers { get; set; }
         public virtual ICollection<OrderStatusHistory>? OrderStatusHistories { get; set; }
         public virtual ICollection<OrderDetail>? OrderDetails { get; set; }
+        public virtual ICollection<DeliverySlot>? DeliverySlots { get; set; }
+
     }
 }

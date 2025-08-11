@@ -60,5 +60,7 @@ namespace BusinessObject.Models.Entity
         public virtual ICollection<Blog>? Blogs { get; set; }
         public virtual ICollection<BlogSave>? BlogSaves { get; set; }
         public virtual ICollection<BlogComment>? BlogComments { get; set; }
+        public virtual ICollection<NotificationCustomer>? NotificationCustomers { get; set; }
+        public virtual ICollection<ChatSession>? ChatSessions { get; set; }
     }
 }

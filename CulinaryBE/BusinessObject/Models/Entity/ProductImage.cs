@@ -30,5 +30,7 @@ namespace BusinessObject.Models.Entity
         // Navigation properties
         [ForeignKey(nameof(ProductId))]
         public virtual Product? Product { get; set; }
+
+        public virtual ICollection<ProductImagesEmbedding>? ProductImagesEmbeddings { get; set; }
     }
 }

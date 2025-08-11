@@ -1,4 +1,4 @@
-using BusinessObject.AppDbContext;
+﻿using BusinessObject.AppDbContext;
 using CulinaryAPI.Core;
 using CulinaryAPI.Middleware.Authentication;
 using CulinaryAPI.Middleware.ExceptionHelper;
@@ -11,7 +11,11 @@ using ServiceObject.Configurations;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<CulinaryContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("SupabaseConnection")));
+    options.UseNpgsql(
+        builder.Configuration.GetConnectionString("SupabaseConnection"),
+        o => o.UseVector() 
+    )
+);
 
 //Config Serilog
 builder.Host.UseSerilog((context, services, configuration) =>

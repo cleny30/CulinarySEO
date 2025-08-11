@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using BusinessObject.Models;
 using BusinessObject.Models.Dto;
+using BusinessObject.Models.Enum;
 using DataAccess.IDAOs;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using ServiceObject.Background;
 using ServiceObject.IServices;
 using System.IdentityModel.Tokens.Jwt;
 
@@ -15,31 +17,47 @@ namespace ServiceObject.Services
         private readonly ICustomerDAO _customerDAO;
         private readonly IJwtService _jwtService;
         private readonly IMapper _mapper;
+        private readonly ITokenSaveQueue _tokenSaveQueue;
         private ILogger<AuthService> _logger;
 
-        public AuthService(IManagerDAO managerDAO, ICustomerDAO customerDAO, IJwtService jwtService, IMapper mapper, ILogger<AuthService> logger)
+        public AuthService(IManagerDAO managerDAO, ICustomerDAO customerDAO, IJwtService jwtService, IMapper mapper, ITokenSaveQueue tokenSaveQueue, ILogger<AuthService> logger)
         {
             _managerDAO = managerDAO;
             _customerDAO = customerDAO;
             _jwtService = jwtService;
             _mapper = mapper;
+            _tokenSaveQueue = tokenSaveQueue;
             _logger = logger;
         }
 
-        public async Task<LoginResponse> VerifyManager(LoginAccountModel loginAccountModel)
+        private async Task<LoginResponse> VerifyAccountAsync(
+             LoginAccountModel loginAccountModel,
+             Func<LoginAccountModel, Task<AccountData>> verifyFunc,
+             Func<Guid, string, DateTime, Task> saveRefreshTokenAsync,
+             AccountType accountType,
+             bool saveInBackground = false
+        )
         {
-            _logger.LogInformation("Verifying manager with email {Email}", loginAccountModel.Email);
+            _logger.LogInformation("Verifying account with email {Email}", loginAccountModel.Email);
 
             try
             {
-                var accountData = await _managerDAO.VerifyAccountAsync(loginAccountModel);
+                var accountData = await verifyFunc(loginAccountModel);
                 var accessToken = await _jwtService.GenerateJwtToken(accountData);
                 var refreshToken = _jwtService.GenerateRefreshToken();
                 var expiryDate = DateTime.UtcNow.AddDays(7);
 
-                await _managerDAO.SaveRefreshTokenAsync(accountData.UserId, refreshToken, expiryDate);
+                if (saveInBackground)
+                {
+                    _tokenSaveQueue.EnqueueToken(accountData.UserId, refreshToken, expiryDate, accountType);
+                }
+                else
+                {
+                    await saveRefreshTokenAsync(accountData.UserId, refreshToken, expiryDate);
+                }
 
                 _logger.LogInformation("Login successful for email {Email}", loginAccountModel.Email);
+
                 return new LoginResponse
                 {
                     AccessToken = accessToken,
@@ -59,37 +77,26 @@ namespace ServiceObject.Services
             }
         }
 
-        public async Task<LoginResponse> VerifyCustomer(LoginAccountModel loginAccountModel)
+        public Task<LoginResponse> VerifyManager(LoginAccountModel loginAccountModel)
         {
-            _logger.LogInformation("Verifying customer with email {Email}", loginAccountModel.Email);
+            return VerifyAccountAsync(
+                loginAccountModel,
+                _managerDAO.VerifyAccountAsync,
+                _managerDAO.SaveRefreshTokenAsync,
+                AccountType.Manager,
+                saveInBackground: true
+            );
+        }
 
-            try
-            {
-                var accountData = await _customerDAO.VerifyAccountAsync(loginAccountModel);
-                var accessToken = await _jwtService.GenerateJwtToken(accountData);
-                var refreshToken = _jwtService.GenerateRefreshToken();
-                var expiryDate = DateTime.UtcNow.AddDays(7);
-
-                await _customerDAO.SaveRefreshTokenAsync(accountData.UserId, refreshToken, expiryDate);
-
-                _logger.LogInformation("Login successful for email {Email}", loginAccountModel.Email);
-                return new LoginResponse
-                {
-                    AccessToken = accessToken,
-                    RefreshToken = refreshToken,
-                    ExpiresIn = 15 * 60
-                };
-            }
-            catch (NotFoundException ex)
-            {
-                _logger.LogWarning(ex, "Login failed for email {Email}", loginAccountModel.Email);
-                throw;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error processing login for email {Email}", loginAccountModel.Email);
-                throw new ValidationException("Failed to process login request: " + ex.Message);
-            }
+        public Task<LoginResponse> VerifyCustomer(LoginAccountModel loginAccountModel)
+        {
+            return VerifyAccountAsync(
+                loginAccountModel,
+                _customerDAO.VerifyAccountAsync,
+                _customerDAO.SaveRefreshTokenAsync,
+                AccountType.Customer,
+                saveInBackground: true
+            );
         }
 
         public async Task<LoginResponse> RefreshTokenManagerAsync(string accessToken, string refreshToken)

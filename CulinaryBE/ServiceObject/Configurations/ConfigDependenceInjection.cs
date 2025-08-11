@@ -1,6 +1,7 @@
 ﻿using DataAccess.DAOs;
 using DataAccess.IDAOs;
 using Microsoft.Extensions.DependencyInjection;
+using ServiceObject.Background;
 using ServiceObject.IServices;
 using ServiceObject.Services;
 
@@ -17,6 +18,7 @@ namespace ServiceObject.Configurations
 
         public static void ConfigureService(this IServiceCollection services)
         {
+            services.AddScoped<ITokenSaveQueue, TokenSaveQueue>();
             services.AddScoped<IJwtService, JwtService>();
             services.AddScoped<IAuthService, AuthService>();
         }

@@ -1,4 +1,5 @@
-﻿using DataAccess.IDAOs;
+﻿using BusinessObject.Models.Enum;
+using DataAccess.IDAOs;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -17,6 +18,7 @@ namespace ServiceObject.Background
             _serviceProvider = serviceProvider;
             _queue = queue;
         }
+
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             _logger.LogInformation("TokenSaveBackgroundService started.");
@@ -28,23 +30,35 @@ namespace ServiceObject.Background
                     if (_queue.TryDequeue(out var tokenData))
                     {
                         using var scope = _serviceProvider.CreateScope();
-                        var dao = scope.ServiceProvider.GetRequiredService<IManagerDAO>();
 
-                        await dao.SaveRefreshTokenAsync(tokenData.UserId, tokenData.RefreshToken, tokenData.Expiry);
-                        _logger.LogInformation("Saved refresh token for user {UserId}", tokenData.UserId);
+                        switch (tokenData.AccountType)
+                        {
+                            case AccountType.Manager:
+                                var managerDao = scope.ServiceProvider.GetRequiredService<IManagerDAO>();
+                                await managerDao.SaveRefreshTokenAsync(tokenData.UserId, tokenData.RefreshToken, tokenData.Expiry);
+                                break;
+
+                            case AccountType.Customer:
+                                var customerDao = scope.ServiceProvider.GetRequiredService<ICustomerDAO>();
+                                await customerDao.SaveRefreshTokenAsync(tokenData.UserId, tokenData.RefreshToken, tokenData.Expiry);
+                                break;
+                        }
+
+                        _logger.LogInformation("Saved refresh token for user {UserId} ({AccountType})",
+                            tokenData.UserId, tokenData.AccountType);
                     }
                     else
                     {
-                        // Không có dữ liệu, nghỉ 500ms
                         await Task.Delay(500, stoppingToken);
                     }
                 }
                 catch (Exception ex)
                 {
                     _logger.LogError(ex, "Error saving refresh token in background");
-                    await Task.Delay(2000, stoppingToken); // nghỉ lâu hơn nếu lỗi
+                    await Task.Delay(2000, stoppingToken);
                 }
             }
         }
+
     }
 }

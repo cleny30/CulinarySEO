@@ -25,7 +25,6 @@ namespace BusinessObject.Models.Entity
         [Required]
         [Column("created_at")]
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-
         // Navigation properties
         [ForeignKey(nameof(CustomerId))]
         public virtual Customer? Customer { get; set; }

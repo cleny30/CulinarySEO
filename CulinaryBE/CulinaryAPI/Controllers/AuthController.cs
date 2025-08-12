@@ -34,16 +34,16 @@ namespace CulinaryAPI.Controllers
             Response.Cookies.Append("AccessToken", response.AccessToken, new CookieOptions
             {
                 HttpOnly = true,
-                Secure = false, // Set base on develop or producttion
-                SameSite = SameSiteMode.Strict,
+                Secure = true, // Set base on develop or producttion
+                SameSite = SameSiteMode.None,
                 Expires = DateTime.UtcNow.AddSeconds(response.ExpiresIn)
             });
 
             Response.Cookies.Append("RefreshToken", response.RefreshToken, new CookieOptions
             {
                 HttpOnly = true,
-                Secure = false, //Set base on develop or producttion
-                SameSite = SameSiteMode.Strict,
+                Secure = true, //Set base on develop or producttion
+                SameSite = SameSiteMode.None,
                 Expires = DateTime.UtcNow.AddDays(7) // Refresh token sống lâu hơn
             });
 
@@ -74,23 +74,24 @@ namespace CulinaryAPI.Controllers
             Response.Cookies.Append("AccessToken", response.AccessToken, new CookieOptions
             {
                 HttpOnly = true,
-                Secure = false, // Set base on develop or producttion
-                SameSite = SameSiteMode.Strict,
+                Secure = true, // Set base on develop or producttion
+                SameSite = SameSiteMode.None,
                 Expires = DateTime.UtcNow.AddSeconds(response.ExpiresIn)
             });
 
             Response.Cookies.Append("RefreshToken", response.RefreshToken, new CookieOptions
             {
                 HttpOnly = true,
-                Secure = false, //Set base on develop or producttion
-                SameSite = SameSiteMode.Strict,
-                Expires = DateTime.UtcNow.AddDays(7) // Refresh token sống lâu hơn
+                Secure = true, //Set base on develop or producttion
+                SameSite = SameSiteMode.None,
+                Expires = DateTime.UtcNow.AddDays(7)
             });
 
             return Ok(new ApiResponse
             {
                 IsSuccess = true,
                 Message = "Login successful",
+                Result = response.AccountData
             });
         }
 
@@ -127,6 +128,7 @@ namespace CulinaryAPI.Controllers
         [HttpPost("logout-manager")]
         public async Task<IActionResult> LogoutManager()
         {
+
             var refreshToken = Request.Cookies["RefreshToken"];
             if (string.IsNullOrEmpty(refreshToken))
             {
@@ -163,10 +165,19 @@ namespace CulinaryAPI.Controllers
                     Error = "ERR_INVALID_TOKEN"
                 });
             }
-            await _authService.LogoutCustomerAsync(refreshToken);
             // Xóa cookies
-            Response.Cookies.Delete("AccessToken");
-            Response.Cookies.Delete("RefreshToken");
+            Response.Cookies.Delete("AccessToken", new CookieOptions
+            {
+                Secure = true,
+                SameSite = SameSiteMode.None,
+            });
+            Response.Cookies.Delete("RefreshToken", new CookieOptions
+            {
+                Secure = true,
+                SameSite = SameSiteMode.None,
+            });
+
+            await _authService.LogoutCustomerAsync(refreshToken);
 
             return Ok(new ApiResponse
             {

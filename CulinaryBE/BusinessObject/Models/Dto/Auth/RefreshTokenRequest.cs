@@ -1,4 +1,4 @@
-﻿namespace BusinessObject.Models.Dto.Auth
+﻿namespace BusinessObject.Models.Dto
 {
     public class RefreshTokenRequest
     {

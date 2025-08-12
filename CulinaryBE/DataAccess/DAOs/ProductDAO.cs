@@ -30,5 +30,21 @@ namespace DataAccess.DAOs
                 throw new DbUpdateException("An error occurred while retrieving products.", ex);
             }
         }
+
+        public Task<Product?> GetProductById(Guid productId)
+        {
+            try
+            {
+                var product = _context.Products.Include(p => p.Category)
+                    .Include(p => p.ProductImages)
+                    .Include(p => p.Stocks)
+                    .Include(p => p.ProductReviews!).ThenInclude(pr => pr.Customer).FirstOrDefaultAsync(p => p.ProductId == productId);
+                return product;
+            }
+            catch (DbUpdateException ex)
+            {
+                throw new DbUpdateException($"An error occurred while retrieving the product with ID {productId}.", ex);
+            }
+        }
     }
 }

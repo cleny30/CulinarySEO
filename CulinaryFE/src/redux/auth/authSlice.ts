@@ -1,10 +1,10 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import { type User } from "@/types/user";
+import { type UserSession } from "@/types/userSession";
 
 interface authState {
   login: {
     // TODO: định nghĩa lại type cho User ở @/types/user
-    currentUser?: User | null;
+    currentUser?: UserSession | null;
     isFetching: boolean;
     error: boolean;
   };
@@ -25,7 +25,7 @@ const authSlice = createSlice({
     loginStart: (state) => {
       state.login.isFetching = true;
     },
-    loginSuccess: (state, action: PayloadAction<User>) => {
+    loginSuccess: (state, action: PayloadAction<UserSession>) => {
       state.login.isFetching = false;
       state.login.currentUser = action.payload;
       state.login.error = false;

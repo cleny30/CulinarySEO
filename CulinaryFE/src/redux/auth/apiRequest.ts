@@ -3,7 +3,7 @@ import { loginUser } from "@/services/authService";
 import type { AppDispatch } from "../store";
 import { type NavigateFunction } from "react-router-dom";
 import { loginFailure, loginStart, loginSuccess } from "./authSlice";
-import { type User } from "@/types/user";
+import { type UserSession } from "@/types/userSession";
 
 export const login = async (
   values: LoginSchemaType,
@@ -24,12 +24,11 @@ export const login = async (
 
   if (result.error) {
     dispatch(loginFailure());
-    return { error: result.error};
+    return { error: result.error };
   }
 
-  dispatch(loginSuccess(result.data as User));
+  dispatch(loginSuccess(result.data as UserSession));
   navigate("/");
 
-  console.log(result);
   return { success: "Đăng nhập thành công!" };
 };

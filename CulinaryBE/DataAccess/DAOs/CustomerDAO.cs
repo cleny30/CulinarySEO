@@ -43,7 +43,7 @@ namespace DataAccess.DAOs
                     UserId = customer.CustomerId,
                     Username = "",
                     Email = customer.Email,
-                    RoleName = "Customer"                
+                    RoleName = "Customer"
                 };
             }
             catch (DbUpdateException ex)
@@ -128,6 +128,27 @@ namespace DataAccess.DAOs
             var hasher = new PasswordHasher<object>();
             string passwordHash = hasher.HashPassword(null, password);
             return passwordHash;
+        }
+
+        public async Task UpdateCustomerAsync(Customer customer)
+        {
+            try
+            {
+                var cus = await _context.Customers
+                    .FirstOrDefaultAsync(m => m.CustomerId == customer.CustomerId);
+                if (cus == null)
+                {
+                    throw new NotFoundException("Customer not found");
+                }
+
+                _context.Entry(cus).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+                return;
+            }
+            catch (NpgsqlException ex)
+            {
+                throw new DatabaseException("Failed to update customer: " + ex.Message);
+            }
         }
     }
 }

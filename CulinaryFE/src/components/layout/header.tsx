@@ -1,3 +1,12 @@
+import styles from "@/assets/css/home.module.css";
 export default function Header() {
-  return <div>Header</div>;
+  return (
+    <header>
+      <div className="">
+        <div className={`${styles.headerLogo}`}>
+          
+        </div>
+      </div>
+    </header>
+  );
 }

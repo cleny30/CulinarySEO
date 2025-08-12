@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BusinessObject.Models.Dto.Product
+
+namespace BusinessObject.Models.Dto
 {
     public class GetProductDetailDto
     {
@@ -22,6 +23,6 @@ namespace BusinessObject.Models.Dto.Product
         public string CategoryName { get; set; } = string.Empty;
 
         public List<string> ProductImages { get; set; } = new List<string>();
-        public List<string> ProductReviews { get; set; } = new List<string>();
+        public List<ProductReviewDto> Reviews { get; set; } = new List<ProductReviewDto>();
     }
 }

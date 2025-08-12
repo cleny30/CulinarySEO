@@ -13,11 +13,12 @@ using ServiceObject.Configurations;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<CulinaryContext>(options =>
-    options.UseNpgsql(
-        builder.Configuration.GetConnectionString("SupabaseConnection"),
-        o => o.UseVector() 
-    )
-);
+    options.UseNpgsql(builder.Configuration.GetConnectionString("SupabaseConnection"), npgsqlOptions =>
+    {
+        npgsqlOptions.EnableRetryOnFailure(5, TimeSpan.FromSeconds(10), null);
+        npgsqlOptions.CommandTimeout(60); // Tăng thời gian chờ
+        npgsqlOptions.UseVector();
+    }));
 
 //Config Serilog
 builder.Host.UseSerilog((context, services, configuration) =>

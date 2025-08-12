@@ -1,4 +1,10 @@
 // src/utils/validation.ts
+
+/**
+ * 
+ * Những trường này ko cần xài tới. hãy tạo xác thực bằng zod trong folder schemas
+ * - Tham khảo folder schemas/auth/index.ts
+ */
 export const isValidEmail = (email: string): boolean => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email);

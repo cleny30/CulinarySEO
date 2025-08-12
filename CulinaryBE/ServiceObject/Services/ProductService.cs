@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using BusinessObject.Models.Dto;
-using BusinessObject.Models.Dto.Product;
 using DataAccess.IDAOs;
 using Microsoft.Extensions.Logging;
 using ServiceObject.IServices;
@@ -52,7 +51,7 @@ namespace ServiceObject.Services
                 var FinalPrice = product.Price;
                 if (product.Discount.HasValue)
                 {
-                    FinalPrice -= product.Discount.Value;
+                    FinalPrice = product.Price - (product.Price * (product.Discount.Value / 100));
                 }
                 productDto.FinalPrice = FinalPrice;
 

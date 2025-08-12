@@ -38,7 +38,8 @@ namespace DataAccess.DAOs
                 var product = _context.Products.Include(p => p.Category)
                     .Include(p => p.ProductImages)
                     .Include(p => p.Stocks)
-                    .Include(p => p.ProductReviews!).ThenInclude(pr => pr.Customer).FirstOrDefaultAsync(p => p.ProductId == productId);
+                    .Include(p => p.ProductReviews)
+                    .FirstOrDefaultAsync(p => p.ProductId == productId);
                 return product;
             }
             catch (DbUpdateException ex)

@@ -8,6 +8,7 @@ namespace CulinaryAPI.Core
         {
             services.ConfigureDAO();
             services.ConfigureService();
+            services.ConfigureBackgroundService();
         }
     }
 }

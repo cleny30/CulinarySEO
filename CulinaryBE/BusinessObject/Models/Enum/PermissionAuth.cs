@@ -2,7 +2,24 @@
 {
     public enum PermissionAuth
     {
-        Read,
-        Write,
+        ViewDashboard,
+        ManageStaffAccount,
+        ManageOwnProfile,
+        ManageProducts,
+        ManageProductCategories,
+        ManageStock,
+        ViewOrders,
+        UpdateOrderStatus,
+        AssignShipper,
+        ViewAllCustomers,
+        ViewCustomerDetail,
+        UpdateCustomer,
+        ManageVouchers,
+        ManageBlog,
+        ModerateComments,
+        ViewAssignedOrders,
+        ViewAssignedOrderDetail,
+        UpdateDeliveryStatus,
+        ViewDeliveryHistory
     }
 }

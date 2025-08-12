@@ -1,17 +1,23 @@
-using BusinessObject.AppDbContext;
+﻿using BusinessObject.AppDbContext;
 using CulinaryAPI.Core;
 using CulinaryAPI.Middleware.Authentication;
 using CulinaryAPI.Middleware.ExceptionHelper;
+using CulinaryAPI.Middleware.JwtCookie;
 using CulinaryAPI.SignalRHub;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
+using ServiceObject.Background;
 using ServiceObject.Configurations;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<CulinaryContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("SupabaseConnection")));
+    options.UseNpgsql(
+        builder.Configuration.GetConnectionString("SupabaseConnection"),
+        o => o.UseVector() 
+    )
+);
 
 //Config Serilog
 builder.Host.UseSerilog((context, services, configuration) =>
@@ -52,14 +58,18 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigin", policy =>
     {
-        policy.WithOrigins(
-                       "http://localhost:5173"
-                     )
-                     .AllowAnyMethod()
+        policy.WithOrigins("http://localhost:5173")
+              .AllowAnyMethod()
               .AllowAnyHeader()
               .AllowCredentials();
     });
 });
+
+//Config queue-based background saver 
+builder.Services.AddSingleton<ITokenSaveQueue, TokenSaveQueue>();
+builder.Services.AddHostedService<TokenSaveBackgroundService>();
+
+
 var app = builder.Build();
 
 //Add exception and logging handling middleware
@@ -72,6 +82,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseRouting();
+
+app.UseCors("AllowSpecificOrigin");
+
+//Auto set token into header when recieve request
+app.UseMiddleware<JwtCookieMiddleware>();
 
 app.UseAuthentication();
 

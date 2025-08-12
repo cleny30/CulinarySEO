@@ -1,24 +1,26 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Pgvector;
 
 namespace BusinessObject.Models.Entity
 {
-    [Table("product_embedding")]
-    public class ProductEmbedding
+    [Table("product_images_embedding")]
+    public class ProductImagesEmbedding
     {
         [Key]
+        [Column("embedding_id")]
+        public Guid EmbeddingId { get; set; }
+
         [Column("product_id")]
         public Guid ProductId { get; set; }
 
         [Required]
-        [MaxLength(512)]
-        [Column("images_embed_yolo")]
-        public string ImagesEmbedYolo { get; set; } = string.Empty;
+        [Column("image_id")]
+        public Guid ImageId { get; set; }
 
         [Required]
-        [MaxLength(768)]
-        [Column("images_embed_clip")]
-        public string ImagesEmbedClip { get; set; } = string.Empty;
+        [Column("image_embedding_yolo", TypeName = "vector(3)")]
+        public Vector ImageEmbeddingYolo { get; set; } = new Vector(new float[3]);
 
         [Required]
         [MaxLength(768)]
@@ -28,5 +30,8 @@ namespace BusinessObject.Models.Entity
         // Navigation properties
         [ForeignKey(nameof(ProductId))]
         public virtual Product? Product { get; set; }
+
+        [ForeignKey(nameof(ImageId))]
+        public virtual ProductImage? ProductImage { get; set; }
     }
 }

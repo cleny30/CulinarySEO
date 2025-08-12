@@ -1,4 +1,5 @@
 ﻿using BusinessObject.Models.Entity;
+using BusinessObject.Models.Enum;
 using Microsoft.EntityFrameworkCore;
 
 namespace BusinessObject.AppDbContext
@@ -19,7 +20,7 @@ namespace BusinessObject.AppDbContext
         public DbSet<BlogCategoryMapping> BlogCategoryMappings { get; set; }
         public DbSet<Warehouse> Warehouses { get; set; }
         public DbSet<Product> Products { get; set; }
-        public DbSet<ProductEmbedding> ProductEmbeddings { get; set; }
+        public DbSet<ProductImagesEmbedding> ProductEmbeddings { get; set; }
         public DbSet<ProductImage> ProductImages { get; set; }
         public DbSet<ProductHistory> ProductHistories { get; set; }
         public DbSet<Stock> Stocks { get; set; }
@@ -38,6 +39,11 @@ namespace BusinessObject.AppDbContext
         public DbSet<BlogImage> BlogImages { get; set; }
         public DbSet<BlogSave> BlogSaves { get; set; }
         public DbSet<BlogComment> BlogComments { get; set; }
+        public DbSet<NotificationManager> NotificationManagers { get; set; }
+        public DbSet<NotificationCustomer> NotificationCustomers { get; set; }
+        public DbSet<DeliverySlot> DeliverySlots { get; set; }
+        public DbSet<ChatSession> ChatSessions { get; set; }
+        public DbSet<ChatHistory> ChatHistories { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -88,9 +94,6 @@ namespace BusinessObject.AppDbContext
 
             // Configure enum conversions
             ConfigureEnums(modelBuilder);
-
-            // Seed initial data
-            SeedData(modelBuilder);
         }
 
         private void ConfigureIndexes(ModelBuilder modelBuilder)
@@ -302,6 +305,12 @@ namespace BusinessObject.AppDbContext
 
         private void ConfigureRelationships(ModelBuilder modelBuilder)
         {
+            modelBuilder.HasPostgresExtension("vector");
+
+            modelBuilder.Entity<ProductImagesEmbedding>()
+                .Property(p => p.ImageEmbeddingYolo)
+                .HasColumnType("vector(3)");
+
             // Role-Permission many-to-many
             modelBuilder.Entity<RolePermission>()
                 .HasOne(rp => rp.Role)
@@ -349,11 +358,18 @@ namespace BusinessObject.AppDbContext
                 .HasForeignKey(p => p.CategoryId)
                 .OnDelete(DeleteBehavior.SetNull);
 
-            // ProductEmbedding-Product relationship (1:1)
-            modelBuilder.Entity<ProductEmbedding>()
+            // ProductEmbedding-Product relationship (1:n)
+            modelBuilder.Entity<ProductImagesEmbedding>()
                 .HasOne(pe => pe.Product)
-                .WithOne(p => p.ProductEmbedding)
-                .HasForeignKey<ProductEmbedding>(pe => pe.ProductId)
+                .WithMany(p => p.ProductImagesEmbeddings)
+                .HasForeignKey(pe => pe.ProductId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // ProductEmbedding-ProductImage relationship (1:n)
+            modelBuilder.Entity<ProductImagesEmbedding>()
+                .HasOne(pe => pe.ProductImage)
+                .WithMany(p => p.ProductImagesEmbeddings)
+                .HasForeignKey(pe => pe.ImageId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             // ProductImage-Product relationship
@@ -546,6 +562,46 @@ namespace BusinessObject.AppDbContext
                 .WithMany(bc => bc.ChildComments)
                 .HasForeignKey(bc => bc.ParentCommentId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            //Notification relationships
+            modelBuilder.Entity<NotificationManager>()
+                .HasOne(n => n.Manager)
+                .WithMany(m => m.NotificationManagers)
+                .HasForeignKey(n => n.ManagerId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<NotificationCustomer>()
+                .HasOne(n => n.Customer)
+                .WithMany(m => m.NotificationCustomers)
+                .HasForeignKey(n => n.CustomerId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            //Delivery slot relationships
+            modelBuilder.Entity<DeliverySlot>()
+                .HasOne(ds => ds.Order)
+                .WithMany(o => o.DeliverySlots)
+                .HasForeignKey(ds => ds.OrderId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            //Chat session relationships
+            modelBuilder.Entity<ChatSession>()
+                .HasOne(cs => cs.Customer)
+                .WithMany(c => c.ChatSessions)
+                .HasForeignKey(cs => cs.CustomerId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<ChatSession>()
+                .HasOne(cs => cs.Manager)
+                .WithMany(m => m.ChatSessions)
+                .HasForeignKey(cs => cs.ManagerId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            //Chat session relationships
+            modelBuilder.Entity<ChatHistory>()
+                .HasOne(ch => ch.ChatSession)
+                .WithMany(cs => cs.ChatHistories)
+                .HasForeignKey(ch => ch.ChatSessionId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
 
         private void ConfigureEnums(ModelBuilder modelBuilder)
@@ -582,30 +638,6 @@ namespace BusinessObject.AppDbContext
             modelBuilder.Entity<OrderStatusHistory>()
                 .Property(osh => osh.Status)
                 .HasConversion<string>();
-        }
-
-        private void SeedData(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<Role>().HasData(
-                 new Role { RoleId = 1, RoleName = "Admin" },
-                 new Role { RoleId = 2, RoleName = "Staff" },
-                 new Role { RoleId = 3, RoleName = "Shipper" }
-             );
-            // modelBuilder.Entity<Category>().HasData(
-            //     new Category { CategoryId = Guid.NewGuid(), CategoryName = "Default Category", CreatedAt = DateTime.UtcNow }
-            // );
-            // modelBuilder.Entity<Product>().HasData(
-            //    new Product
-            //    {
-            //        ProductId = Guid.NewGuid(),
-            //        ProductName = "Sample Product",
-            //        CategoryId = 1,
-            //        Price = 100.00m,
-            //        Description = "This is a sample product.",
-            //        CreatedAt = DateTime.UtcNow,
-            //        UpdatedAt = DateTime.UtcNow
-            //    }
-            // );                
         }
     }
 }

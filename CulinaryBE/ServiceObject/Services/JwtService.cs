@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using ServiceObject.IServices;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace ServiceObject.Services
@@ -49,10 +50,14 @@ namespace ServiceObject.Services
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
                 };
 
-                foreach (var permission in accountData.Permissions)
+                if (accountData.Permissions != null)
                 {
-                    claims.Add(new Claim("Permission", permission));
+                    foreach (var permission in accountData.Permissions)
+                    {
+                        claims.Add(new Claim("Permission", permission));
+                    }
                 }
+                
 
                 var tokenDescriptor = new SecurityTokenDescriptor
                 {
@@ -74,6 +79,46 @@ namespace ServiceObject.Services
             {
                 _logger.LogError(ex, "Failed to generate JWT for user {Email}", accountData.Email);
                 throw new ValidationException("Failed to generate JWT: " + ex.Message);
+            }
+        }
+
+        public string GenerateRefreshToken()
+        {
+            var randomNumber = new byte[32];
+            using var rng = RandomNumberGenerator.Create();
+            rng.GetBytes(randomNumber);
+            return Convert.ToBase64String(randomNumber);
+        }
+
+        public ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
+        {
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateAudience = true,
+                ValidAudience = _configuration["Jwt:Audience"],
+                ValidateIssuer = true,
+                ValidIssuer = _configuration["Jwt:Issuer"],
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"])),
+                ValidateLifetime = false 
+            };
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            try
+            {
+                var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out var securityToken);
+                if (securityToken is not JwtSecurityToken jwtSecurityToken ||
+                    !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    throw new SecurityTokenException("Invalid token");
+                }
+
+                return principal;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to validate expired token");
+                throw new SecurityTokenException("Invalid token: " + ex.Message);
             }
         }
     }

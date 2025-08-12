@@ -1,10 +1,9 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+using Pgvector;
 
 #nullable disable
-
-#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
 
 namespace BusinessObject.Migrations
 {
@@ -14,11 +13,15 @@ namespace BusinessObject.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.AlterDatabase()
+                .Annotation("Npgsql:PostgresExtension:vector", ",,");
+
             migrationBuilder.CreateTable(
                 name: "blog_categories",
                 columns: table => new
                 {
-                    category_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    category_id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     category_name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     category_image = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
                     description = table.Column<string>(type: "text", nullable: true),
@@ -33,7 +36,8 @@ namespace BusinessObject.Migrations
                 name: "categories",
                 columns: table => new
                 {
-                    category_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    category_id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     category_name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     category_image = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
                     description = table.Column<string>(type: "text", nullable: false),
@@ -49,9 +53,10 @@ namespace BusinessObject.Migrations
                 columns: table => new
                 {
                     customer_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    full_name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    email = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    username = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     password = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
+                    email = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    full_name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     phone = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
                     profile_pic = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
                     status = table.Column<string>(type: "text", nullable: false),
@@ -140,7 +145,7 @@ namespace BusinessObject.Migrations
                     description = table.Column<string>(type: "text", nullable: false),
                     price = table.Column<decimal>(type: "numeric(10,2)", nullable: false),
                     discount = table.Column<decimal>(type: "numeric(5,2)", nullable: true),
-                    category_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    category_id = table.Column<int>(type: "integer", nullable: false),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
@@ -219,6 +224,28 @@ namespace BusinessObject.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "NotificationCustomers",
+                columns: table => new
+                {
+                    notification_id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    customer_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    message = table.Column<string>(type: "character varying(125)", maxLength: 125, nullable: false),
+                    create_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    is_read = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_NotificationCustomers", x => x.notification_id);
+                    table.ForeignKey(
+                        name: "FK_NotificationCustomers_customers_customer_id",
+                        column: x => x.customer_id,
+                        principalTable: "customers",
+                        principalColumn: "customer_id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "managers",
                 columns: table => new
                 {
@@ -268,26 +295,6 @@ namespace BusinessObject.Migrations
                         column: x => x.role_id,
                         principalTable: "roles",
                         principalColumn: "role_id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "product_embedding",
-                columns: table => new
-                {
-                    product_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    images_embed_yolo = table.Column<string>(type: "character varying(512)", maxLength: 512, nullable: false),
-                    images_embed_clip = table.Column<string>(type: "character varying(768)", maxLength: 768, nullable: false),
-                    description_embed = table.Column<string>(type: "character varying(768)", maxLength: 768, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_product_embedding", x => x.product_id);
-                    table.ForeignKey(
-                        name: "FK_product_embedding_products_product_id",
-                        column: x => x.product_id,
-                        principalTable: "products",
-                        principalColumn: "product_id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -372,7 +379,7 @@ namespace BusinessObject.Migrations
                 columns: table => new
                 {
                     blog_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    category_id = table.Column<Guid>(type: "uuid", nullable: false)
+                    category_id = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -500,13 +507,63 @@ namespace BusinessObject.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "chat_sessions",
+                columns: table => new
+                {
+                    chat_session_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    customer_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    manager_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    support_type = table.Column<int>(type: "integer", nullable: false),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_chat_sessions", x => x.chat_session_id);
+                    table.ForeignKey(
+                        name: "FK_chat_sessions_customers_customer_id",
+                        column: x => x.customer_id,
+                        principalTable: "customers",
+                        principalColumn: "customer_id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_chat_sessions_managers_manager_id",
+                        column: x => x.manager_id,
+                        principalTable: "managers",
+                        principalColumn: "manager_id",
+                        onDelete: ReferentialAction.SetNull);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "NotificationManagers",
+                columns: table => new
+                {
+                    notification_id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    manager_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    message = table.Column<string>(type: "character varying(125)", maxLength: 125, nullable: false),
+                    create_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    is_read = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_NotificationManagers", x => x.notification_id);
+                    table.ForeignKey(
+                        name: "FK_NotificationManagers_managers_manager_id",
+                        column: x => x.manager_id,
+                        principalTable: "managers",
+                        principalColumn: "manager_id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "orders",
                 columns: table => new
                 {
                     order_id = table.Column<Guid>(type: "uuid", nullable: false),
                     customer_id = table.Column<Guid>(type: "uuid", nullable: false),
                     order_status = table.Column<string>(type: "text", nullable: false),
-                    total_amount = table.Column<decimal>(type: "numeric(10,2)", nullable: false),
+                    shipping_fee = table.Column<decimal>(type: "numeric(10,2)", nullable: false),
+                    total_price = table.Column<decimal>(type: "numeric(10,2)", nullable: false),
                     shipping_address = table.Column<string>(type: "text", nullable: false),
                     shipper_id = table.Column<Guid>(type: "uuid", nullable: true),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
@@ -590,6 +647,7 @@ namespace BusinessObject.Migrations
                     transaction_type = table.Column<string>(type: "text", nullable: false),
                     reason = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    expiration_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     manager_id = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
@@ -612,6 +670,72 @@ namespace BusinessObject.Migrations
                         column: x => x.warehouse_id,
                         principalTable: "warehouses",
                         principalColumn: "warehouse_id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "product_images_embedding",
+                columns: table => new
+                {
+                    embedding_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    product_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    image_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    image_embedding_yolo = table.Column<Vector>(type: "vector(3)", nullable: false),
+                    description_embed = table.Column<string>(type: "character varying(768)", maxLength: 768, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_product_images_embedding", x => x.embedding_id);
+                    table.ForeignKey(
+                        name: "FK_product_images_embedding_product_images_image_id",
+                        column: x => x.image_id,
+                        principalTable: "product_images",
+                        principalColumn: "image_id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_product_images_embedding_products_product_id",
+                        column: x => x.product_id,
+                        principalTable: "products",
+                        principalColumn: "product_id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "chat_histories",
+                columns: table => new
+                {
+                    chat_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    ChatSessionId = table.Column<Guid>(type: "uuid", nullable: false),
+                    message = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_chat_histories", x => x.chat_id);
+                    table.ForeignKey(
+                        name: "FK_chat_histories_chat_sessions_ChatSessionId",
+                        column: x => x.ChatSessionId,
+                        principalTable: "chat_sessions",
+                        principalColumn: "chat_session_id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "delivery_slots",
+                columns: table => new
+                {
+                    slot_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    order_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    start_time = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    end_time = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_delivery_slots", x => x.slot_id);
+                    table.ForeignKey(
+                        name: "FK_delivery_slots_orders_order_id",
+                        column: x => x.order_id,
+                        principalTable: "orders",
+                        principalColumn: "order_id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -698,16 +822,6 @@ namespace BusinessObject.Migrations
                         onDelete: ReferentialAction.SetNull);
                 });
 
-            migrationBuilder.InsertData(
-                table: "roles",
-                columns: new[] { "role_id", "description", "role_name" },
-                values: new object[,]
-                {
-                    { 1, "", "Admin" },
-                    { 2, "", "Staff" },
-                    { 3, "", "Shipper" }
-                });
-
             migrationBuilder.CreateIndex(
                 name: "idx_category_bloc_name",
                 table: "blog_categories",
@@ -779,6 +893,21 @@ namespace BusinessObject.Migrations
                 column: "category_name");
 
             migrationBuilder.CreateIndex(
+                name: "IX_chat_histories_ChatSessionId",
+                table: "chat_histories",
+                column: "ChatSessionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_chat_sessions_customer_id",
+                table: "chat_sessions",
+                column: "customer_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_chat_sessions_manager_id",
+                table: "chat_sessions",
+                column: "manager_id");
+
+            migrationBuilder.CreateIndex(
                 name: "idx_customer_id_address",
                 table: "customer_addresses",
                 column: "customer_id");
@@ -805,6 +934,11 @@ namespace BusinessObject.Migrations
                 column: "full_name");
 
             migrationBuilder.CreateIndex(
+                name: "IX_delivery_slots_order_id",
+                table: "delivery_slots",
+                column: "order_id");
+
+            migrationBuilder.CreateIndex(
                 name: "idx_email",
                 table: "managers",
                 column: "email",
@@ -820,6 +954,16 @@ namespace BusinessObject.Migrations
                 table: "managers",
                 column: "username",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_NotificationCustomers_customer_id",
+                table: "NotificationCustomers",
+                column: "customer_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_NotificationManagers_manager_id",
+                table: "NotificationManagers",
+                column: "manager_id");
 
             migrationBuilder.CreateIndex(
                 name: "idx_order_id",
@@ -890,6 +1034,16 @@ namespace BusinessObject.Migrations
             migrationBuilder.CreateIndex(
                 name: "idx_product_id",
                 table: "product_images",
+                column: "product_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_product_images_embedding_image_id",
+                table: "product_images_embedding",
+                column: "image_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_product_images_embedding_product_id",
+                table: "product_images_embedding",
                 column: "product_id");
 
             migrationBuilder.CreateIndex(
@@ -994,7 +1148,19 @@ namespace BusinessObject.Migrations
                 name: "cart_items");
 
             migrationBuilder.DropTable(
+                name: "chat_histories");
+
+            migrationBuilder.DropTable(
                 name: "customer_addresses");
+
+            migrationBuilder.DropTable(
+                name: "delivery_slots");
+
+            migrationBuilder.DropTable(
+                name: "NotificationCustomers");
+
+            migrationBuilder.DropTable(
+                name: "NotificationManagers");
 
             migrationBuilder.DropTable(
                 name: "order_details");
@@ -1006,13 +1172,10 @@ namespace BusinessObject.Migrations
                 name: "order_vouchers");
 
             migrationBuilder.DropTable(
-                name: "product_embedding");
-
-            migrationBuilder.DropTable(
                 name: "product_history");
 
             migrationBuilder.DropTable(
-                name: "product_images");
+                name: "product_images_embedding");
 
             migrationBuilder.DropTable(
                 name: "product_reviews");
@@ -1039,16 +1202,19 @@ namespace BusinessObject.Migrations
                 name: "carts");
 
             migrationBuilder.DropTable(
+                name: "chat_sessions");
+
+            migrationBuilder.DropTable(
                 name: "orders");
 
             migrationBuilder.DropTable(
                 name: "vouchers");
 
             migrationBuilder.DropTable(
-                name: "permissions");
+                name: "product_images");
 
             migrationBuilder.DropTable(
-                name: "products");
+                name: "permissions");
 
             migrationBuilder.DropTable(
                 name: "warehouses");
@@ -1060,10 +1226,13 @@ namespace BusinessObject.Migrations
                 name: "managers");
 
             migrationBuilder.DropTable(
-                name: "categories");
+                name: "products");
 
             migrationBuilder.DropTable(
                 name: "roles");
+
+            migrationBuilder.DropTable(
+                name: "categories");
         }
     }
 }

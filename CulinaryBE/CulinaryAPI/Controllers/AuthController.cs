@@ -1,7 +1,9 @@
 ﻿using BusinessObject.Models;
 using BusinessObject.Models.Dto;
+using BusinessObject.Models.Dto.Auth;
 using Microsoft.AspNetCore.Mvc;
 using ServiceObject.IServices;
+using System.Collections.Generic;
 
 namespace CulinaryAPI.Controllers
 {
@@ -9,28 +11,112 @@ namespace CulinaryAPI.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly IAuthService authService;
-        private readonly IJwtService jwtService;
-
-        public AuthController(IAuthService authService, IJwtService jwtService)
+        private readonly IAuthService _authService;
+        public AuthController(IAuthService authService)
         {
-            this.authService = authService;
-            this.jwtService = jwtService;
+            _authService = authService;
         }
 
-        [HttpPost]
+        [HttpPost("login-manager")]
         public async Task<IActionResult> VerifyManager([FromBody] LoginAccountModel loginAccountModel)
         {
             var apiResponse = new ApiResponse();
 
-            var manager = await authService.VerifyManager(loginAccountModel);
+            var response = await _authService.VerifyManager(loginAccountModel);
 
-            var token = await jwtService.GenerateJwtToken(manager);
+            if (response == null || string.IsNullOrEmpty(response.AccessToken) || string.IsNullOrEmpty(response.RefreshToken))
+            {
+                return Unauthorized(new ApiResponse
+                {
+                    IsSuccess = false,
+                    Message = "Invalid credentials"
+                });
+            }
 
-            apiResponse.Result = token;
-            apiResponse.Message = "Login successful";
+            Response.Cookies.Append("AccessToken", response.AccessToken, new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = false, // Set base on develop or producttion
+                SameSite = SameSiteMode.Strict,
+                Expires = DateTime.UtcNow.AddSeconds(response.ExpiresIn)
+            });
 
-            return Ok(apiResponse);
+            Response.Cookies.Append("RefreshToken", response.RefreshToken, new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = false, //Set base on develop or producttion
+                SameSite = SameSiteMode.Strict,
+                Expires = DateTime.UtcNow.AddDays(7) // Refresh token sống lâu hơn
+            });
+
+            return Ok(new ApiResponse
+            {
+                IsSuccess = true,
+                Message = "Login successful",
+            });
+        }
+
+        [HttpPost("login-customer")]
+        public async Task<IActionResult> VerifyCustomer([FromBody] LoginAccountModel loginAccountModel)
+        {
+            var apiResponse = new ApiResponse();
+
+            var response = await _authService.VerifyCustomer(loginAccountModel);
+
+            if (response == null || string.IsNullOrEmpty(response.AccessToken) || string.IsNullOrEmpty(response.RefreshToken))
+            {
+                return Unauthorized(new ApiResponse
+                {
+                    IsSuccess = false,
+                    Message = "Invalid credentials"
+                });
+            }
+
+            Response.Cookies.Append("AccessToken", response.AccessToken, new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = false, // Set base on develop or producttion
+                SameSite = SameSiteMode.Strict,
+                Expires = DateTime.UtcNow.AddSeconds(response.ExpiresIn)
+            });
+
+            Response.Cookies.Append("RefreshToken", response.RefreshToken, new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = false, //Set base on develop or producttion
+                SameSite = SameSiteMode.Strict,
+                Expires = DateTime.UtcNow.AddDays(7) // Refresh token sống lâu hơn
+            });
+
+            return Ok(new ApiResponse
+            {
+                IsSuccess = true,
+                Message = "Login successful",
+            });
+        }
+
+        [HttpPost("refresh-token-manager")]
+        public async Task<IActionResult> RefreshTokenManager([FromBody] RefreshTokenRequest request)
+        {
+            var response = await _authService.RefreshTokenManagerAsync(request.AccessToken, request.RefreshToken);
+            return Ok(new ApiResponse
+            {
+                IsSuccess = true,
+                Message = "Token refreshed successfully",
+                Result = response
+            });
+        }
+
+        [HttpPost("refresh-token-customer")]
+        public async Task<IActionResult> RefreshTokenCustomer([FromBody] RefreshTokenRequest request)
+        {
+            var response = await _authService.RefreshTokenCustomerAsync(request.AccessToken, request.RefreshToken);
+            return Ok(new ApiResponse
+            {
+                IsSuccess = true,
+                Message = "Token refreshed successfully",
+                Result = response
+            });
         }
     }
 }

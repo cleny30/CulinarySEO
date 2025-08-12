@@ -8,7 +8,8 @@ namespace BusinessObject.Models.Entity
     {
         [Key]
         [Column("category_id")]
-        public Guid CategoryId { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int CategoryId { get; set; }
 
         [Required]
         [MaxLength(50)]

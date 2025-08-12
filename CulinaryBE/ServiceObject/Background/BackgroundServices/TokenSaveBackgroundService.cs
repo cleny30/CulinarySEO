@@ -3,8 +3,9 @@ using DataAccess.IDAOs;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using ServiceObject.Background.Queue;
 
-namespace ServiceObject.Background
+namespace ServiceObject.Background.BackgroundServices
 {
     public class TokenSaveBackgroundService : BackgroundService
     {

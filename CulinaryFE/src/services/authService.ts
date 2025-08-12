@@ -14,6 +14,7 @@ export const loginUser = async (
       "/api/auth/login-customer",
       {
         data: loginInfo,
+        withCredentials: true
       }
     );
 

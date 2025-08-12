@@ -5,6 +5,9 @@ namespace BusinessObject.Models.Dto
     public class LoginAccountModel
     {
         [MaxLength(50)]
+        public string? Username { get; set; }
+
+        [MaxLength(50)]
         public string? Email { get; set; }
 
         [MaxLength(35)]

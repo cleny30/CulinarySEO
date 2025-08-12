@@ -25,7 +25,7 @@ namespace DataAccess.DAOs
             try
             {
                 var customer = await _context.Customers
-                    .Where(m => m.Email == model.Email && m.Status != UserStatus.Suspended)
+                    .Where(m => (m.Email == model.Email || m.Username == model.Username) && m.Status != UserStatus.Suspended)
                     .FirstOrDefaultAsync();
 
                 if (customer == null)
@@ -41,7 +41,10 @@ namespace DataAccess.DAOs
                 return new AccountData
                 {
                     UserId = customer.CustomerId,
-                    Username = "",
+                    FullName = customer.FullName,
+                    Username = customer.Username,
+                    Phone = customer.Phone,
+                    ProfilePic = customer.ProfilePic,
                     Email = customer.Email,
                     RoleName = "Customer"                
                 };

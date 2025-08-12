@@ -15,17 +15,15 @@ import { Input } from "../ui/input";
 import { Icon } from "@/utils/assets/icon";
 import { Button } from "../ui/button";
 import { login } from "@/redux/auth/apiRequest";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import type { RootState } from "@/redux/store";
 import toast from "@/utils/toast";
+import { useTransition } from "react";
 
 export default function LoginForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const pending = useSelector(
-    (state: RootState) => state.auth.login.isFetching
-  );
+  const [isPending, startTransition] = useTransition();
 
   const form = useForm<LoginSchemaType>({
     resolver: zodResolver(LoginSchema),
@@ -36,24 +34,27 @@ export default function LoginForm() {
   });
 
   const onSubmit = async (values: LoginSchemaType) => {
-    await login(values, dispatch, navigate).then((result) => {
-      if (result?.error) toast.error(result.error as string);
-      if (result?.success) toast.success(result.success as string);
-    });
+    startTransition(
+      async () =>
+        await login(values, dispatch, navigate).then((result) => {
+          if (result?.error) toast.error(result.error as string);
+          if (result?.success) toast.success(result.success as string);
+        })
+    );
   };
 
   return (
     <CardWrapper>
       <Form {...form}>
         <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
-          <div>
+          <div className="flex flex-col gap-y-4">
             <FormField
-              disabled={pending}
+              disabled={isPending}
               control={form.control}
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel> {Icon.Email} </FormLabel>
+                  <FormLabel> {Icon.Email} Email</FormLabel>
                   <FormControl>
                     <Input
                       {...field}
@@ -66,12 +67,12 @@ export default function LoginForm() {
               )}
             />
             <FormField
-              disabled={pending}
+              disabled={isPending}
               control={form.control}
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel> {Icon.Lock} </FormLabel>
+                  <FormLabel> {Icon.Lock} Password</FormLabel>
                   <FormControl>
                     <Input
                       {...field}
@@ -84,7 +85,7 @@ export default function LoginForm() {
               )}
             />
             {/* TODO: add form error here */}
-            <Button type="submit" variant={"outline"} disabled={pending}>
+            <Button className="cursor-pointer" type="submit" variant={"outline"} disabled={isPending}>
               Login
             </Button>
           </div>

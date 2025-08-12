@@ -1,8 +1,13 @@
 import { LoginSchema, type LoginSchemaType } from "@/schemas/auth";
-import { loginUser } from "@/services/authService";
+import { loginUser, logoutUser } from "@/services/authService";
 import type { AppDispatch } from "../store";
 import { type NavigateFunction } from "react-router-dom";
-import { loginFailure, loginStart, loginSuccess } from "./authSlice";
+import {
+  loginStart,
+  loginSuccess,
+  logoutStart,
+  logoutSuccess,
+} from "./authSlice";
 import { type UserSession } from "@/types/userSession";
 
 export const login = async (
@@ -23,7 +28,6 @@ export const login = async (
   const result = await loginUser({ email, password });
 
   if (result.error) {
-    dispatch(loginFailure());
     return { error: result.error };
   }
 
@@ -31,4 +35,22 @@ export const login = async (
   navigate("/");
 
   return { success: "Đăng nhập thành công!" };
+};
+
+export const logout = async (
+  dispatch: AppDispatch,
+  navigate: NavigateFunction
+) => {
+  dispatch(logoutStart());
+  // Gọi hàm loginUser từ authService để thực hiện đăng nhập
+  const result = await logoutUser();
+
+  if (result?.error) {
+    return { error: result.error };
+  }
+
+  dispatch(logoutSuccess());
+  navigate("/login");
+
+  return { success: "Đăng xuất thành công!" };
 };

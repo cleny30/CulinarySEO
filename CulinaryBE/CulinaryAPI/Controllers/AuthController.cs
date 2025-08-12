@@ -1,6 +1,5 @@
 ﻿using BusinessObject.Models;
 using BusinessObject.Models.Dto;
-using BusinessObject.Models.Dto.Auth;
 using Microsoft.AspNetCore.Mvc;
 using ServiceObject.IServices;
 
@@ -116,6 +115,64 @@ namespace CulinaryAPI.Controllers
                 IsSuccess = true,
                 Message = "Token refreshed successfully",
                 Result = response
+            });
+        }
+
+        [HttpPost("register")]
+        public async Task<IActionResult> CustomerRegister()
+        {
+            return Ok();
+        }
+
+        [HttpPost("logout-manager")]
+        public async Task<IActionResult> LogoutManager()
+        {
+            var refreshToken = Request.Cookies["RefreshToken"];
+            if (string.IsNullOrEmpty(refreshToken))
+            {
+                return Unauthorized(new ApiResponse
+                {
+                    IsSuccess = false,
+                    Message = "Missing refresh token",
+                    Error = "ERR_INVALID_TOKEN"
+                });
+            }
+            await _authService.LogoutManagerAsync(refreshToken);
+            // Xóa cookies
+            Response.Cookies.Delete("AccessToken");
+            Response.Cookies.Delete("RefreshToken");
+
+            return Ok(new ApiResponse
+            {
+                IsSuccess = true,
+                Message = "Logout successful",
+                Result = null
+            });
+        }
+
+        [HttpPost("logout-customer")]
+        public async Task<IActionResult> LogoutCustomer()
+        {
+            var refreshToken = Request.Cookies["RefreshToken"];
+            if (string.IsNullOrEmpty(refreshToken))
+            {
+                return Unauthorized(new ApiResponse
+                {
+                    IsSuccess = false,
+                    Message = "Missing refresh token",
+                    Error = "ERR_INVALID_TOKEN"
+                });
+            }
+            await _authService.LogoutCustomerAsync(refreshToken);
+            // Xóa cookies
+            Response.Cookies.Delete("AccessToken");
+            Response.Cookies.Delete("RefreshToken");
+
+            return Ok(new ApiResponse
+            {
+                IsSuccess = true,
+                Message = "Logout successful",
+                Result = null
             });
         }
     }

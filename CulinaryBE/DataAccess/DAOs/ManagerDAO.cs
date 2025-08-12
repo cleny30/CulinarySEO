@@ -49,6 +49,8 @@ namespace DataAccess.DAOs
                     {
                         UserId = manager.ManagerId,
                         Username = manager.Username,
+                        FullName = manager.FullName,
+                        Phone = manager.Phone,
                         Email = manager.Email,
                         RoleName = manager.Role.RoleName,
                         Permissions = manager.Role.RolePermissions

@@ -41,7 +41,10 @@ namespace DataAccess.DAOs
                 return new AccountData
                 {
                     UserId = customer.CustomerId,
-                    Username = "",
+                    FullName = customer.FullName,
+                    Username = customer.Username,
+                    Phone = customer.Phone,
+                    ProfilePic = customer.ProfilePic,
                     Email = customer.Email,
                     RoleName = "Customer"                
                 };

@@ -62,7 +62,8 @@ namespace ServiceObject.Services
                 {
                     AccessToken = accessToken,
                     RefreshToken = refreshToken,
-                    ExpiresIn = 15 * 60
+                    ExpiresIn = 15 * 60,
+                    AccountData = accountData
                 };
             }
             catch (NotFoundException ex)

@@ -52,6 +52,7 @@ namespace CulinaryAPI.Controllers
             {
                 IsSuccess = true,
                 Message = "Login successful",
+                Result = response.AccountData
             });
         }
 

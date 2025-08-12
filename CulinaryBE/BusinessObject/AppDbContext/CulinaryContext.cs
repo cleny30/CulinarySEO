@@ -1,4 +1,5 @@
 ﻿using BusinessObject.Models.Entity;
+using BusinessObject.Models.Enum;
 using Microsoft.EntityFrameworkCore;
 
 namespace BusinessObject.AppDbContext
@@ -93,9 +94,6 @@ namespace BusinessObject.AppDbContext
 
             // Configure enum conversions
             ConfigureEnums(modelBuilder);
-
-            // Seed initial data
-            SeedData(modelBuilder);
         }
 
         private void ConfigureIndexes(ModelBuilder modelBuilder)
@@ -640,25 +638,6 @@ namespace BusinessObject.AppDbContext
             modelBuilder.Entity<OrderStatusHistory>()
                 .Property(osh => osh.Status)
                 .HasConversion<string>();
-        }
-
-        private void SeedData(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<Role>().HasData(
-                 new Role { RoleId = 1, RoleName = "Admin" },
-                 new Role { RoleId = 2, RoleName = "Staff" },
-                 new Role { RoleId = 3, RoleName = "Shipper" }
-            );
-
-            modelBuilder.Entity<Category>().HasData(
-                new Category { CategoryId = 1, CategoryName = "Thịt heo", CategoryImage = "abc", CreatedAt = new DateTime(2025, 08, 11, 20, 0, 0, DateTimeKind.Utc), Description = "aaa" },
-                new Category { CategoryId = 2, CategoryName = "Trái cây", CategoryImage = "abc", CreatedAt = new DateTime(2025, 08, 11, 20, 0, 0, DateTimeKind.Utc), Description = "aaa" },
-                new Category { CategoryId = 3, CategoryName = "Rau lá", CategoryImage = "abc", CreatedAt = new DateTime(2025, 08, 11, 20, 0, 0, DateTimeKind.Utc), Description = "aaa" },
-                new Category { CategoryId = 4, CategoryName = "Củ quả", CategoryImage = "abc", CreatedAt = new DateTime(2025, 08, 11, 20, 0, 0, DateTimeKind.Utc), Description = "aaaa" },
-                new Category { CategoryId = 5, CategoryName = "Thịt gà, vịt, chim", CategoryImage = "abc", CreatedAt = new DateTime(2025, 08, 11, 20, 0, 0, DateTimeKind.Utc), Description = "aaa" },
-                new Category { CategoryId = 6, CategoryName = "Thịt cầy", CategoryImage = "abc", CreatedAt = new DateTime(2025, 08, 11, 20, 0, 0, DateTimeKind.Utc), Description = "aaa" }
-            );
-
         }
     }
 }

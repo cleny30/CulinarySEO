@@ -5,8 +5,6 @@ using Pgvector;
 
 #nullable disable
 
-#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
-
 namespace BusinessObject.Migrations
 {
     /// <inheritdoc />
@@ -55,9 +53,10 @@ namespace BusinessObject.Migrations
                 columns: table => new
                 {
                     customer_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    full_name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    email = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    username = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     password = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
+                    email = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    full_name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     phone = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
                     profile_pic = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
                     status = table.Column<string>(type: "text", nullable: false),
@@ -821,29 +820,6 @@ namespace BusinessObject.Migrations
                         principalTable: "vouchers",
                         principalColumn: "voucher_id",
                         onDelete: ReferentialAction.SetNull);
-                });
-
-            migrationBuilder.InsertData(
-                table: "categories",
-                columns: new[] { "category_id", "category_image", "category_name", "created_at", "description" },
-                values: new object[,]
-                {
-                    { 1, "abc", "Thịt heo", new DateTime(2025, 8, 11, 20, 0, 0, 0, DateTimeKind.Utc), "aaa" },
-                    { 2, "abc", "Trái cây", new DateTime(2025, 8, 11, 20, 0, 0, 0, DateTimeKind.Utc), "aaa" },
-                    { 3, "abc", "Rau lá", new DateTime(2025, 8, 11, 20, 0, 0, 0, DateTimeKind.Utc), "aaa" },
-                    { 4, "abc", "Củ quả", new DateTime(2025, 8, 11, 20, 0, 0, 0, DateTimeKind.Utc), "aaaa" },
-                    { 5, "abc", "Thịt gà, vịt, chim", new DateTime(2025, 8, 11, 20, 0, 0, 0, DateTimeKind.Utc), "aaa" },
-                    { 6, "abc", "Thịt cầy", new DateTime(2025, 8, 11, 20, 0, 0, 0, DateTimeKind.Utc), "aaa" }
-                });
-
-            migrationBuilder.InsertData(
-                table: "roles",
-                columns: new[] { "role_id", "description", "role_name" },
-                values: new object[,]
-                {
-                    { 1, "", "Admin" },
-                    { 2, "", "Staff" },
-                    { 3, "", "Shipper" }
                 });
 
             migrationBuilder.CreateIndex(

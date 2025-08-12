@@ -23,9 +23,9 @@ const doRequest = async <T>(
     headers: {
       "Content-Type": isUploadImg ? "multipart/form-data" : "application/json",
       ...(token && { Authorization: `Bearer ${token}` }),
-      "ngrok-skip-browser-warning": "true",
+      // "ngrok-skip-browser-warning": "true",
     },
-    withCredentials: withCredentials,
+    withCredentials,
   };
 
   try {

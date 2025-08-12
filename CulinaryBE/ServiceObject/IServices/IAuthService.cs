@@ -8,5 +8,7 @@ namespace ServiceObject.IServices
         Task<LoginResponse> VerifyCustomer(LoginAccountModel loginAccountModel);
         Task<LoginResponse> RefreshTokenManagerAsync(string accessToken, string refreshToken);
         Task<LoginResponse> RefreshTokenCustomerAsync(string accessToken, string refreshToken);
+        Task LogoutManagerAsync(string refreshToken);
+        Task LogoutCustomerAsync(string refreshToken);
     }
 }

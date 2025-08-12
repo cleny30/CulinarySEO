@@ -1,7 +1,8 @@
 ﻿using DataAccess.DAOs;
 using DataAccess.IDAOs;
 using Microsoft.Extensions.DependencyInjection;
-using ServiceObject.Background;
+using ServiceObject.Background.BackgroundServices;
+using ServiceObject.Background.Queue;
 using ServiceObject.IServices;
 using ServiceObject.Services;
 
@@ -22,6 +23,15 @@ namespace ServiceObject.Configurations
             services.AddScoped<IJwtService, JwtService>();
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IProductService, ProductService>();
+        }
+
+        public static void ConfigureBackgroundService(this IServiceCollection services)
+        {
+            services.AddSingleton<ITokenSaveQueue, TokenSaveQueue>();
+            services.AddSingleton<ILogoutQueue, LogoutQueue>();
+
+            services.AddHostedService<TokenSaveBackgroundService>();
+            services.AddHostedService<LogoutBackgroundService>();
         }
     }
 }

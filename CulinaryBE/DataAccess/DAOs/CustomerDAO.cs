@@ -25,7 +25,7 @@ namespace DataAccess.DAOs
             try
             {
                 var customer = await _context.Customers
-                    .Where(m => m.Email == model.Email && m.Status != UserStatus.Suspended)
+                    .Where(m => (m.Email == model.Email || m.Username == model.Username) && m.Status != UserStatus.Suspended)
                     .FirstOrDefaultAsync();
 
                 if (customer == null)

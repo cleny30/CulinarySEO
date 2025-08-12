@@ -29,7 +29,7 @@ namespace DataAccess.DAOs
                         .Include(m => m.Role)
                             .ThenInclude(r => r.RolePermissions)
                                 .ThenInclude(rp => rp.Permission)
-                        .Where(m => m.Email == model.Email && m.Status != UserStatus.Suspended)
+                        .Where(m => (m.Email == model.Email || m.Username == model.Username) && m.Status != UserStatus.Suspended)
                         .FirstOrDefaultAsync();
 
                     // Bước 2: Kiểm tra user có tồn tại không

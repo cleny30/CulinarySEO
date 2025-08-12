@@ -3,11 +3,10 @@ using BusinessObject.Models.Dto;
 using BusinessObject.Models.Dto.Auth;
 using Microsoft.AspNetCore.Mvc;
 using ServiceObject.IServices;
-using System.Collections.Generic;
 
 namespace CulinaryAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/auth")]
     [ApiController]
     public class AuthController : ControllerBase
     {

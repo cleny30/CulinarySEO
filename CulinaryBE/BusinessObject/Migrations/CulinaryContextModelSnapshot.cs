@@ -322,6 +322,56 @@ namespace BusinessObject.Migrations
                         .HasDatabaseName("idx_category_name");
 
                     b.ToTable("categories");
+
+                    b.HasData(
+                        new
+                        {
+                            CategoryId = 1,
+                            CategoryImage = "abc",
+                            CategoryName = "Thịt heo",
+                            CreatedAt = new DateTime(2025, 8, 11, 20, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "aaa"
+                        },
+                        new
+                        {
+                            CategoryId = 2,
+                            CategoryImage = "abc",
+                            CategoryName = "Trái cây",
+                            CreatedAt = new DateTime(2025, 8, 11, 20, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "aaa"
+                        },
+                        new
+                        {
+                            CategoryId = 3,
+                            CategoryImage = "abc",
+                            CategoryName = "Rau lá",
+                            CreatedAt = new DateTime(2025, 8, 11, 20, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "aaa"
+                        },
+                        new
+                        {
+                            CategoryId = 4,
+                            CategoryImage = "abc",
+                            CategoryName = "Củ quả",
+                            CreatedAt = new DateTime(2025, 8, 11, 20, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "aaaa"
+                        },
+                        new
+                        {
+                            CategoryId = 5,
+                            CategoryImage = "abc",
+                            CategoryName = "Thịt gà, vịt, chim",
+                            CreatedAt = new DateTime(2025, 8, 11, 20, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "aaa"
+                        },
+                        new
+                        {
+                            CategoryId = 6,
+                            CategoryImage = "abc",
+                            CategoryName = "Thịt cầy",
+                            CreatedAt = new DateTime(2025, 8, 11, 20, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "aaa"
+                        });
                 });
 
             modelBuilder.Entity("BusinessObject.Models.Entity.ChatHistory", b =>
@@ -434,12 +484,6 @@ namespace BusinessObject.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)")
                         .HasColumnName("token");
-
-                    b.Property<string>("Username")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
-                        .HasColumnName("username");
 
                     b.HasKey("CustomerId");
 
@@ -1104,6 +1148,26 @@ namespace BusinessObject.Migrations
                         .HasDatabaseName("idx_role_name");
 
                     b.ToTable("roles");
+
+                    b.HasData(
+                        new
+                        {
+                            RoleId = 1,
+                            Description = "",
+                            RoleName = "Admin"
+                        },
+                        new
+                        {
+                            RoleId = 2,
+                            Description = "",
+                            RoleName = "Staff"
+                        },
+                        new
+                        {
+                            RoleId = 3,
+                            Description = "",
+                            RoleName = "Shipper"
+                        });
                 });
 
             modelBuilder.Entity("BusinessObject.Models.Entity.RolePermission", b =>

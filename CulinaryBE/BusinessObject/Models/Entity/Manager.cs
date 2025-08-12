@@ -1,6 +1,7 @@
 ﻿using BusinessObject.Models.Enum;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Reactive;
 
 namespace BusinessObject.Models.Entity
 {

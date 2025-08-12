@@ -31,7 +31,7 @@ namespace BusinessObject.Models.Entity
 
         // Navigation properties
         [ForeignKey("ProductId")]
-        public virtual Product? Product { get; set; }
+        public virtual Product? Product { get; set; } 
 
         [ForeignKey("CustomerId")]
         public virtual Customer? Customer { get; set; }

@@ -45,7 +45,7 @@ namespace BusinessObject.Models.Entity
 
         // Navigation properties
         [ForeignKey(nameof(ProductId))]
-        public virtual Product? Product { get; set; }
+        public virtual Product? Product { get; set; } 
 
         [ForeignKey(nameof(ChangedBy))]
         public virtual Manager? ChangedByManager { get; set; }

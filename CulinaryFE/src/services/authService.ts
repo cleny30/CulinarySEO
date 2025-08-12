@@ -11,7 +11,7 @@ export const loginUser = async (
   try {
     const response = await doRequest<BackendApiResponse<UserSession>>(
       "post",
-      "/api/auth/login-manager",
+      "/api/auth/login-customer",
       {
         data: loginInfo,
       }
@@ -27,7 +27,7 @@ export const loginUser = async (
 // ======= Logout
 export const logoutUser = async () => {
   try {
-    await doRequest("post", "/api/auth/logout-manager", {
+    await doRequest("post", "/api/auth/logout-customer", {
       withCredentials: true,
     });
     return;

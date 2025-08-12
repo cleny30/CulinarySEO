@@ -21,6 +21,7 @@ export default function Header() {
     <header>
       <div className="">
         <div className={`${styles.headerLogo} p-4`}>
+          Hello {user?.fullName} 
           {user && (
             <Button variant={"secondary"} type="button" onClick={handleLogout}>
               Logout

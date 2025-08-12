@@ -17,14 +17,15 @@ const doRequest = async <T>(
   url: string,
   options: RequestOptions = {}
 ): Promise<AxiosResponse<T>> => {
-  const { data, isUploadImg = false, token, withCredentials = false } = options;
+  const { data, isUploadImg = false, token, withCredentials = true } = options;
 
   const reqConfig: AxiosRequestConfig = {
     headers: {
       "Content-Type": isUploadImg ? "multipart/form-data" : "application/json",
       ...(token && { Authorization: `Bearer ${token}` }),
+      "ngrok-skip-browser-warning": "true",
     },
-    withCredentials,
+    withCredentials: withCredentials,
   };
 
   try {
@@ -67,9 +68,8 @@ const doRequest = async <T>(
 // Handle unauthorized access
 const handleUnauthorized = () => {
   // Clear cookies and session
-
   // Redirect to login page
-  window.location.href = "/login";
+  // window.location.href = "/login";
 };
 
 // Export utility functions for each HTTP method

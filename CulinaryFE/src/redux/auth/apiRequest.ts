@@ -3,9 +3,7 @@ import { loginUser, logoutUser } from "@/services/authService";
 import type { AppDispatch } from "../store";
 import { type NavigateFunction } from "react-router-dom";
 import {
-  loginStart,
   loginSuccess,
-  logoutStart,
   logoutSuccess,
 } from "./authSlice";
 import { type UserSession } from "@/types/userSession";
@@ -15,8 +13,6 @@ export const login = async (
   dispatch: AppDispatch,
   navigate: NavigateFunction
 ) => {
-  dispatch(loginStart());
-
   const validatedFields = LoginSchema.safeParse(values);
   if (!validatedFields.success) {
     return { error: "Dữ liệu không hợp lệ!" };
@@ -41,7 +37,6 @@ export const logout = async (
   dispatch: AppDispatch,
   navigate: NavigateFunction
 ) => {
-  dispatch(logoutStart());
   // Gọi hàm loginUser từ authService để thực hiện đăng nhập
   const result = await logoutUser();
 

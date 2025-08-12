@@ -1,7 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import publicRoutes from "./publicRoutes";
 import privateRoutes from "./privateRoutes";
-import ProtectedRoute from "../components/common/ProtectedRoute";
+import ProtectedRoute from "../common/ProtectedRoute";
 export default function AppRouter() {
   return (
     <Routes>

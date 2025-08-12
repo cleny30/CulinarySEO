@@ -14,7 +14,7 @@ export const loginUser = async (
   try {
     const response = await doRequest<BackendApiResponse<unknown>>(
       "post",
-      "auth/login-manager",
+      "/api/Auth/login-manager",
       {
         data: loginInfo,
       }

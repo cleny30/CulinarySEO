@@ -13,7 +13,7 @@ namespace ServiceObject.Configurations
         {
             services.AddScoped<IManagerDAO, ManagerDAO>();
             services.AddScoped<ICustomerDAO, CustomerDAO>();
-
+            services.AddScoped<IProductDAO, ProductDAO>();
         }
 
         public static void ConfigureService(this IServiceCollection services)
@@ -21,6 +21,7 @@ namespace ServiceObject.Configurations
             services.AddScoped<ITokenSaveQueue, TokenSaveQueue>();
             services.AddScoped<IJwtService, JwtService>();
             services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<IProductService, ProductService>();
         }
     }
 }

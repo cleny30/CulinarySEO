@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using BusinessObject.Models.Dto;
 
 namespace ServiceObject.IServices
@@ -10,6 +6,7 @@ namespace ServiceObject.IServices
     {
         Task<List<GetProductDto>> GetAllProducts();
         Task<GetProductDetailDto> GetProductDetailById(Guid productId);
+        Task<PagedResult<ProductDto>> GetFilteredProductsAsync(ProductFilterRequest request);
 
     }
 }

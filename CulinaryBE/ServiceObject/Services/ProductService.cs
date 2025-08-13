@@ -1,4 +1,4 @@
-using AutoMapper;
+﻿using AutoMapper;
 using BusinessObject.Models.Dto;
 using BusinessObject.Models.Entity;
 using DataAccess.DAOs;
@@ -29,24 +29,10 @@ namespace ServiceObject.Services
         {
             try
             {
-                var products = await productDAO.GetAllProducts();
-                var productDtos = _mapper.Map<List<GetProductDto>>(products);
-                foreach (var productDto in productDtos)
-                {
-                    var FinalPrice = productDto.Price;
-                    if (productDto.Discount.HasValue)
-                    {
-                        FinalPrice = productDto.Price - (productDto.Price * (productDto.Discount.Value / 100));
-                    }
-                    productDto.FinalPrice = FinalPrice;
-                    var ratings = products
-                        .Where(p => p.ProductId == productDto.ProductId)
-                        .SelectMany(p => p.ProductReviews.Where(r => r.Rating.HasValue))
-                        .Select(r => r.Rating.Value);
-                    var averageRating = ratings.Any() ? ratings.Average() : 0;
-                    productDto.AverageRating = (decimal)averageRating;
-                }
-                return productDtos;
+                var products = await productDAO.GetAllProducts(); 
+
+                return _mapper.Map<List<GetProductDto>>(products); ;
+
             }
             catch (Exception ex)
             {
@@ -65,15 +51,7 @@ namespace ServiceObject.Services
                     _logger.LogWarning($"Product with ID {productId} not found.");
                     throw new KeyNotFoundException($"Product with ID {productId} not found.");
                 }
-                var productDto = _mapper.Map<GetProductDetailDto>(product);
-                var FinalPrice = product.Price;
-                if (product.Discount.HasValue)
-                {
-                    FinalPrice = product.Price - (product.Price * (product.Discount.Value / 100));
-                }
-                productDto.FinalPrice = FinalPrice;
-
-                return productDto;
+                return _mapper.Map<GetProductDetailDto>(product);
             }
             catch (Exception ex)
             {

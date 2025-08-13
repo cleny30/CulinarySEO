@@ -65,8 +65,14 @@ namespace DataAccess.DAOs
                     query = query.Where(p => p.Price <= request.MaxPrice.Value);
 
                 // Filter available
-                if (request.IsAvailable.HasValue && request.IsAvailable.Value)
-                    query = query.Where(p => p.Stocks.Sum(s => s.Quantity) > 0);
+                if (request.IsAvailable.HasValue)
+                {
+                    query = request.IsAvailable.Value
+                        ? query.Where(p => p.Stocks.Sum(s => s.Quantity) > 0)
+                        : query.Where(p => p.Stocks.Sum(s => s.Quantity) == 0);
+                }
+
+
 
                 // Sort
                 query = request.SortBy?.ToLower() switch
@@ -102,12 +108,12 @@ namespace DataAccess.DAOs
                             Quantity = s.Quantity
                         }).ToList(),
 
-                          ProductImages = p.ProductImages
+                        ProductImages = p.ProductImages
                         .Select(img => new ProductImage
                         {
                             ImageUrl = img.ImageUrl
                         }).ToList()
-                                })
+                    })
                     .AsNoTracking()
                     .ToListAsync(); // Trả nguyên Product entity
 

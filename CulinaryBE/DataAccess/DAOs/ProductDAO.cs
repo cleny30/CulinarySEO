@@ -1,4 +1,3 @@
-using System.Data.Common;
 using BusinessObject.AppDbContext;
 using BusinessObject.Models.Entity;
 using DataAccess.IDAOs;
@@ -33,7 +32,33 @@ namespace DataAccess.DAOs
             }
         }
 
-        public Task<Product?> GetProductById(Guid productId)
+        public async Task<List<Product>> GetBestSellingProducts(int topN = 10)
+        {
+            try
+            {
+                var threshold = DateTime.UtcNow.AddDays(-30); // Last 30 days
+
+                var bestSellingProducts = await _context.OrderDetails
+                    .Where(o => o.Order.CreatedAt >= threshold) // Filter orders from the last 30 days
+                    .GroupBy(o => o.ProductId) // Group by ProductId
+                    .Select(g => new
+                    {
+                        ProductId = g.Key,
+                        TotalQuantity = g.Sum(o => o.Quantity)  // Sum the quantity of each product
+                    })
+                    .OrderByDescending(g => g.TotalQuantity)
+                    .Take(topN)
+                    .Join(_context.Products, bsp => bsp.ProductId, p => p.ProductId, (bsp, p) => p) // Join with Products to get product details
+                    .ToListAsync();
+                return bestSellingProducts;
+            }
+            catch (DbUpdateException ex)
+            {
+                throw new DbUpdateException("An error occurred while retrieving best-selling products.", ex);
+            }
+        }
+
+        public Task<Product?> GetProductDetailById(Guid productId)
         {
             try
             {
@@ -47,6 +72,21 @@ namespace DataAccess.DAOs
             catch (DbUpdateException ex)
             {
                 throw new DbUpdateException($"An error occurred while retrieving the product with ID {productId}.", ex);
+            }
+        }
+
+        public async Task<List<Product>> GetProductSummariesById(IEnumerable<Guid> ids)
+        {
+            try
+            {
+                return await _context.Products
+                .Include(p => p.ProductImages.Where(img => img.IsPrimary))
+                .Where(p => ids.Contains(p.ProductId))
+                .ToListAsync();
+            }
+            catch (DbUpdateException ex)
+            {
+                throw new DbUpdateException("An error occurred while retrieving product summaries.", ex);
             }
         }
     }

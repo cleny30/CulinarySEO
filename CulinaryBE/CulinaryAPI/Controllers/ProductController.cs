@@ -28,6 +28,7 @@ namespace CulinaryAPI.Controllers
             apiResponse.Result = products;
             return Ok(apiResponse);
         }
+
         [HttpGet("{productId}")]
         public async Task<IActionResult> GetProductDetailById(Guid productId)
         {

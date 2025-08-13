@@ -2,7 +2,7 @@
 using BusinessObject.Models.Enum;
 using System.Collections.Concurrent;
 
-namespace ServiceObject.Background
+namespace ServiceObject.Background.Queue
 {
     public interface ITokenSaveQueue
     {

@@ -19,6 +19,12 @@ namespace ServiceObject.Configurations
             .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category.CategoryName))
             .ForMember(dest => dest.ProductImages, opt => opt.MapFrom(src => src.ProductImages.Select(pi => pi.ImageUrl).ToList()))
             .ForMember(dest => dest.Reviews, opt => opt.MapFrom(src => src.ProductReviews));
+            
+            CreateMap<RegisterCustomerRequest, Customer>()
+                .AfterMap((src,dest) =>
+                { 
+                    dest.CustomerId = Guid.NewGuid();
+                });
         }
     }
 }

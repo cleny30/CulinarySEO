@@ -1,12 +1,14 @@
-import HomePage from "../pages/Home/page";
 // This file defines the private routes for the application.
+
+import AccountPage from "@/pages/accounts/page";
+
 // Private routes are typically accessible only to authenticated users.
 const privateRoutes = [
-    {
-    path: "/",
-    name: "Home",
-    component: HomePage,
-    allowPermissions: [""], 
+  {
+    path: "/account",
+    name: "Account",
+    component: AccountPage,
+    allowPermissions: [""],
   },
-]
+];
 export default privateRoutes;

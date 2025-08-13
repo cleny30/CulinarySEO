@@ -1,4 +1,5 @@
 ﻿using BusinessObject.AppDbContext;
+using BusinessObject.Models.Dto;
 using CulinaryAPI.Core;
 using CulinaryAPI.Middleware.Authentication;
 using CulinaryAPI.Middleware.ExceptionHelper;
@@ -7,7 +8,6 @@ using CulinaryAPI.SignalRHub;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
-using ServiceObject.Background;
 using ServiceObject.Configurations;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,6 +19,10 @@ builder.Services.AddDbContext<CulinaryContext>(options =>
         npgsqlOptions.CommandTimeout(60); // Tăng thời gian chờ
         npgsqlOptions.UseVector();
     }));
+
+//Config Email setting
+builder.Services.Configure<EmailSetting>(
+    builder.Configuration.GetSection("EmailSettings"));
 
 //Config Serilog
 builder.Host.UseSerilog((context, services, configuration) =>
@@ -38,6 +42,9 @@ builder.Services.AddJwtAuthentication();
 
 // Configure Swagger with JWT
 builder.Services.AddSwaggerWithJwt();
+
+//Add Memory Cache
+builder.Services.AddMemoryCache();
 
 // Configure Dependency Injection
 builder.Services.Configure();
@@ -59,16 +66,12 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigin", policy =>
     {
-        policy.WithOrigins("http://localhost:5173")
+        policy.WithOrigins("https://localhost:5173")
               .AllowAnyMethod()
               .AllowAnyHeader()
               .AllowCredentials();
     });
 });
-
-//Config queue-based background saver 
-builder.Services.AddSingleton<ITokenSaveQueue, TokenSaveQueue>();
-builder.Services.AddHostedService<TokenSaveBackgroundService>();
 
 
 var app = builder.Build();
@@ -83,6 +86,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
 app.UseRouting();
 
 app.UseCors("AllowSpecificOrigin");

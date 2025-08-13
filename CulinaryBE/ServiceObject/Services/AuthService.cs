@@ -5,7 +5,7 @@ using BusinessObject.Models.Enum;
 using DataAccess.IDAOs;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
-using ServiceObject.Background;
+using ServiceObject.Background.Queue;
 using ServiceObject.IServices;
 using System.IdentityModel.Tokens.Jwt;
 
@@ -18,15 +18,17 @@ namespace ServiceObject.Services
         private readonly IJwtService _jwtService;
         private readonly IMapper _mapper;
         private readonly ITokenSaveQueue _tokenSaveQueue;
+        private readonly ILogoutQueue _logoutQueue;
         private ILogger<AuthService> _logger;
 
-        public AuthService(IManagerDAO managerDAO, ICustomerDAO customerDAO, IJwtService jwtService, IMapper mapper, ITokenSaveQueue tokenSaveQueue, ILogger<AuthService> logger)
+        public AuthService(IManagerDAO managerDAO, ICustomerDAO customerDAO, IJwtService jwtService, IMapper mapper, ITokenSaveQueue tokenSaveQueue, ILogoutQueue logoutQueue, ILogger<AuthService> logger)
         {
             _managerDAO = managerDAO;
             _customerDAO = customerDAO;
             _jwtService = jwtService;
             _mapper = mapper;
             _tokenSaveQueue = tokenSaveQueue;
+            _logoutQueue = logoutQueue;
             _logger = logger;
         }
 
@@ -62,7 +64,8 @@ namespace ServiceObject.Services
                 {
                     AccessToken = accessToken,
                     RefreshToken = refreshToken,
-                    ExpiresIn = 15 * 60
+                    ExpiresIn = 15 * 60,
+                    AccountData = accountData
                 };
             }
             catch (NotFoundException ex)
@@ -207,5 +210,31 @@ namespace ServiceObject.Services
                 throw new ValidationException("Failed to refresh token: " + ex.Message);
             }
         }
+
+        private Task LogoutAsync(string refreshToken, AccountType accountType, bool runInBackground = true)
+        {
+            _logger.LogInformation("Logging out user of type {AccountType}", accountType);
+
+            if (runInBackground)
+            {
+                _logoutQueue.Enqueue(refreshToken, accountType);
+                return Task.CompletedTask;
+            }
+
+            return accountType switch
+            {
+                AccountType.Manager => _managerDAO.RevokeRefreshTokenAsync(refreshToken),
+                AccountType.Customer => _customerDAO.RevokeRefreshTokenAsync(refreshToken),
+                _ => throw new ArgumentOutOfRangeException(nameof(accountType), accountType, null)
+            };
+        }
+
+        public Task LogoutManagerAsync(string refreshToken)
+            => LogoutAsync(refreshToken, AccountType.Manager, runInBackground: true);
+
+        public Task LogoutCustomerAsync(string refreshToken)
+            => LogoutAsync(refreshToken, AccountType.Customer, runInBackground: true);
+
+
     }
 }

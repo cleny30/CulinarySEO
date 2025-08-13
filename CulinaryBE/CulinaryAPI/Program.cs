@@ -18,6 +18,7 @@ builder.Services.AddDbContext<CulinaryContext>(options =>
         npgsqlOptions.EnableRetryOnFailure(5, TimeSpan.FromSeconds(10), null);
         npgsqlOptions.CommandTimeout(60); // Tăng thời gian chờ
         npgsqlOptions.UseVector();
+        npgsqlOptions.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
     }));
 
 //Config Email setting

@@ -21,6 +21,8 @@ namespace DataAccess.DAOs
             {
                 var products = await _context.Products
                     .Include(p => p.Category)
+                    .Include(p => p.ProductReviews)
+                    .Include(p => p.Stocks)
                     .Include(p => p.ProductImages)
                     .ToListAsync();
                 return products;
@@ -38,7 +40,7 @@ namespace DataAccess.DAOs
                 var product = _context.Products.Include(p => p.Category)
                     .Include(p => p.ProductImages)
                     .Include(p => p.Stocks)
-                    .Include(p => p.ProductReviews)
+                    .Include(p => p.ProductReviews).ThenInclude(pr => pr.Customer)
                     .FirstOrDefaultAsync(p => p.ProductId == productId);
                 return product;
             }

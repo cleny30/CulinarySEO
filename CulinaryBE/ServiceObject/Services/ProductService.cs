@@ -1,12 +1,14 @@
+using AutoMapper;
+using BusinessObject.Models.Dto;
+using BusinessObject.Models.Entity;
+using DataAccess.DAOs;
+using DataAccess.IDAOs;
+using Microsoft.Extensions.Logging;
+using ServiceObject.IServices;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AutoMapper;
-using BusinessObject.Models.Dto;
-using DataAccess.IDAOs;
-using Microsoft.Extensions.Logging;
-using ServiceObject.IServices;
 
 namespace ServiceObject.Services
 {
@@ -28,7 +30,23 @@ namespace ServiceObject.Services
             try
             {
                 var products = await productDAO.GetAllProducts();
-                return _mapper.Map<List<GetProductDto>>(products);
+                var productDtos = _mapper.Map<List<GetProductDto>>(products);
+                foreach (var productDto in productDtos)
+                {
+                    var FinalPrice = productDto.Price;
+                    if (productDto.Discount.HasValue)
+                    {
+                        FinalPrice = productDto.Price - (productDto.Price * (productDto.Discount.Value / 100));
+                    }
+                    productDto.FinalPrice = FinalPrice;
+                    var ratings = products
+                        .Where(p => p.ProductId == productDto.ProductId)
+                        .SelectMany(p => p.ProductReviews.Where(r => r.Rating.HasValue))
+                        .Select(r => r.Rating.Value);
+                    var averageRating = ratings.Any() ? ratings.Average() : 0;
+                    productDto.AverageRating = (decimal)averageRating;
+                }
+                return productDtos;
             }
             catch (Exception ex)
             {

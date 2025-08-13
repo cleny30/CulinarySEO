@@ -1,9 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-
 namespace BusinessObject.Models.Dto
 {
     public class GetProductDetailDto
@@ -20,7 +14,7 @@ namespace BusinessObject.Models.Dto
 
         public decimal? FinalPrice { get; set; }
 
-        public string CategoryName { get; set; } = string.Empty;
+        public List<string> CategoryName { get; set; } = new List<string>();
 
         public List<string> ProductImages { get; set; } = new List<string>();
         public List<ProductReviewDto> Reviews { get; set; } = new List<ProductReviewDto>();

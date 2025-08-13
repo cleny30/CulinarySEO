@@ -3,22 +3,22 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BusinessObject.Models.Entity
 {
-    [Table("blog_category_mappings")]
-    public class BlogCategoryMapping
+    [Table("product_category_mappings")]
+    public class ProductCategoryMapping
     {
         [Required]
-        [Column("blog_id")]
-        public Guid BlogId { get; set; }
+        [Column("product_id")]
+        public Guid ProductId { get; set; }
 
         [Required]
         [Column("category_id")]
         public int CategoryId { get; set; }
 
         // Navigation properties
-        [ForeignKey(nameof(BlogId))]
-        public virtual Blog? Blog { get; set; }
+        [ForeignKey(nameof(ProductId))]
+        public virtual Product? Product { get; set; }
 
         [ForeignKey(nameof(CategoryId))]
-        public virtual BlogCategory? BlogCategory { get; set; }
+        public virtual Category? Category { get; set; }
     }
 }

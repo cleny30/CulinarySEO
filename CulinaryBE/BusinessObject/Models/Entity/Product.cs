@@ -26,9 +26,8 @@ namespace BusinessObject.Models.Entity
         [Column("discount", TypeName = "decimal(5,2)")]
         public decimal? Discount { get; set; }
 
-        [Required]
-        [Column("category_id")]
-        public int CategoryId { get; set; }
+        [Column("total_sold")]
+        public int? TotalSold { get; set; }
 
         [Required]
         [Column("created_at")]
@@ -38,8 +37,7 @@ namespace BusinessObject.Models.Entity
         public DateTime? UpdatedAt { get; set; }
 
         // Navigation properties
-        [ForeignKey(nameof(CategoryId))]
-        public virtual Category? Category { get; set; }
+        public virtual ICollection<ProductCategoryMapping>? ProductCategoryMappings { get; set; }
         public virtual ICollection<ProductImagesEmbedding>? ProductImagesEmbeddings { get; set; }
         public virtual ICollection<ProductImage>? ProductImages { get; set; }
         public virtual ICollection<ProductHistory>? ProductHistories { get; set; }
@@ -48,5 +46,7 @@ namespace BusinessObject.Models.Entity
         public virtual ICollection<CartItem>? CartItems { get; set; }
         public virtual ICollection<OrderDetail>? OrderDetails { get; set; }
         public virtual ICollection<ProductReview>? ProductReviews { get; set; }
+        public ICollection<ProductRecommendation> RecommendationsAsA { get; set; }
+        public ICollection<ProductRecommendation> RecommendationsAsB { get; set; }
     }
 }

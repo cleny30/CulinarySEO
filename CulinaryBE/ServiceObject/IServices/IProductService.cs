@@ -9,5 +9,7 @@ namespace ServiceObject.IServices
     public interface IProductService
     {
         Task<List<GetProductDto>> GetAllProducts();
+        Task<GetProductDetailDto> GetProductDetailById(Guid productId);
+
     }
 }

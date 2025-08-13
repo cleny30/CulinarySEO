@@ -19,10 +19,13 @@ namespace ServiceObject.Configurations
 
         public static void ConfigureService(this IServiceCollection services)
         {
-            services.AddScoped<ITokenSaveQueue, TokenSaveQueue>();
             services.AddScoped<IJwtService, JwtService>();
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<ICustomerService, CustomerService>();
+            services.AddScoped<IOtpService, OtpService>();
+            services.AddScoped<IEmailService, EmailService>();
+
         }
 
         public static void ConfigureBackgroundService(this IServiceCollection services)

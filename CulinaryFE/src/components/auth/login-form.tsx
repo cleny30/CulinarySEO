@@ -16,9 +16,10 @@ import { Icon } from "@/utils/assets/icon";
 import { Button } from "../ui/button";
 import { login } from "@/redux/auth/apiRequest";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import toast from "@/utils/toast";
 import { useTransition } from "react";
+import styles from "@/assets/css/auth.module.css";
 
 export default function LoginForm() {
   const dispatch = useDispatch();
@@ -44,22 +45,29 @@ export default function LoginForm() {
   };
 
   return (
-    <CardWrapper>
+    <CardWrapper
+      showSocial
+      backButtonLabel="Don't have an account"
+      backButtonHref="/register"
+    >
       <Form {...form}>
         <form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
-          <div className="flex flex-col gap-y-4">
+          <div className="flex flex-col mb-2">
             <FormField
               disabled={isPending}
               control={form.control}
               name="email"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel> {Icon.Email} Email</FormLabel>
+                <FormItem className={`${styles.formItem} mb-4`}>
+                  <FormLabel className="text-gray-500">
+                    <Icon.Email className="w-5" />
+                  </FormLabel>
                   <FormControl>
                     <Input
                       {...field}
                       type="email"
                       placeholder="example@gmail.com"
+                      className={`${styles.formInput} border-none shadow-none focus-visible:ring-0`}
                     />
                   </FormControl>
                   <FormMessage />
@@ -71,21 +79,33 @@ export default function LoginForm() {
               control={form.control}
               name="password"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel> {Icon.Lock} Password</FormLabel>
+                <FormItem className={`${styles.formItem} mb-1`}>
+                  <FormLabel className="text-gray-500">
+                    <Icon.Lock className="w-5" />
+                  </FormLabel>
                   <FormControl>
                     <Input
                       {...field}
                       type="password"
                       placeholder="password from 6 to 18 character"
+                      className={`${styles.formInput} border-none shadow-none focus-visible:ring-0`}
                     />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            {/* TODO: add form error here */}
-            <Button className="cursor-pointer" type="submit" variant={"outline"} disabled={isPending}>
+            <div className="flex justify-end mb-4">
+              <Button variant={"link"} className="p-0 font-normal" asChild>
+                <Link to={""}>Forgot password ?</Link>
+              </Button>
+            </div>
+            <Button
+              className="cursor-pointer p-5"
+              type="submit"
+              variant={"default"}
+              disabled={isPending}
+            >
               Login
             </Button>
           </div>

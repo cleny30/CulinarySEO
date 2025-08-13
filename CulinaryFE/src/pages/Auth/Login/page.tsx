@@ -1,6 +1,5 @@
 import HeaderCard from "@/components/auth/header-card";
 import LoginForm from "@/components/auth/login-form";
-import React from "react";
 
 export default function LoginPage() {
   return (

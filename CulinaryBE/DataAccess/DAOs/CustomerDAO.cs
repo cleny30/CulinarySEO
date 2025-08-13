@@ -132,5 +132,45 @@ namespace DataAccess.DAOs
             string passwordHash = hasher.HashPassword(null, password);
             return passwordHash;
         }
+
+        public async Task<bool> IsEmailExist(string email)
+        {
+            try
+            {
+                return await _context.Customers.AnyAsync(m => m.Email == email);
+            }
+            catch (NpgsqlException ex)
+            {
+                throw new DatabaseException("Failed to check email exist: " + ex.Message);
+            }
+        }
+
+        public async Task<bool> IsUsernameExist(string username)
+        {
+            try
+            {
+                return await _context.Customers.AnyAsync(m => m.Username == username);
+            }
+            catch (NpgsqlException ex)
+            {
+                throw new DatabaseException("Failed to check username exist: " + ex.Message);
+            }
+        }
+
+        public async Task<bool> AddNewCustomer(Customer customer)
+        {
+            try
+            {
+                customer.Password = GeneratePasswordHash(customer.Password!);
+
+                await _context.Customers.AddAsync(customer);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (NpgsqlException ex)
+            {
+                throw new DatabaseException("Failed to add new customer: " + ex.Message);
+            }
+        }
     }
 }

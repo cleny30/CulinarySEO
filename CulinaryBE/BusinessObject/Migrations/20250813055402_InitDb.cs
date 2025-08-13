@@ -85,6 +85,24 @@ namespace BusinessObject.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "products",
+                columns: table => new
+                {
+                    product_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    product_name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    description = table.Column<string>(type: "text", nullable: false),
+                    price = table.Column<decimal>(type: "numeric(10,2)", nullable: false),
+                    discount = table.Column<decimal>(type: "numeric(5,2)", nullable: true),
+                    total_sold = table.Column<int>(type: "integer", nullable: true),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_products", x => x.product_id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "roles",
                 columns: table => new
                 {
@@ -134,30 +152,6 @@ namespace BusinessObject.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_warehouses", x => x.warehouse_id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "products",
-                columns: table => new
-                {
-                    product_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    product_name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    description = table.Column<string>(type: "text", nullable: false),
-                    price = table.Column<decimal>(type: "numeric(10,2)", nullable: false),
-                    discount = table.Column<decimal>(type: "numeric(5,2)", nullable: true),
-                    category_id = table.Column<int>(type: "integer", nullable: false),
-                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_products", x => x.product_id);
-                    table.ForeignKey(
-                        name: "FK_products_categories_category_id",
-                        column: x => x.category_id,
-                        principalTable: "categories",
-                        principalColumn: "category_id",
-                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateTable(
@@ -246,55 +240,26 @@ namespace BusinessObject.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "managers",
+                name: "product_category_mappings",
                 columns: table => new
                 {
-                    manager_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    username = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    password = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
-                    email = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    full_name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    phone = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
-                    role_id = table.Column<int>(type: "integer", nullable: false),
-                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    token = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
-                    expires_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    revoked = table.Column<bool>(type: "boolean", nullable: true),
-                    status = table.Column<string>(type: "text", nullable: false)
+                    product_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    category_id = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_managers", x => x.manager_id);
+                    table.PrimaryKey("PK_product_category_mappings", x => new { x.product_id, x.category_id });
                     table.ForeignKey(
-                        name: "FK_managers_roles_role_id",
-                        column: x => x.role_id,
-                        principalTable: "roles",
-                        principalColumn: "role_id",
-                        onDelete: ReferentialAction.SetNull);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "role_permissions",
-                columns: table => new
-                {
-                    role_id = table.Column<int>(type: "integer", nullable: false),
-                    permission_id = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_role_permissions", x => new { x.role_id, x.permission_id });
-                    table.ForeignKey(
-                        name: "FK_role_permissions_permissions_permission_id",
-                        column: x => x.permission_id,
-                        principalTable: "permissions",
-                        principalColumn: "permission_id",
+                        name: "FK_product_category_mappings_categories_category_id",
+                        column: x => x.category_id,
+                        principalTable: "categories",
+                        principalColumn: "category_id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_role_permissions_roles_role_id",
-                        column: x => x.role_id,
-                        principalTable: "roles",
-                        principalColumn: "role_id",
+                        name: "FK_product_category_mappings_products_product_id",
+                        column: x => x.product_id,
+                        principalTable: "products",
+                        principalColumn: "product_id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -344,6 +309,86 @@ namespace BusinessObject.Migrations
                         column: x => x.product_id,
                         principalTable: "products",
                         principalColumn: "product_id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "products_recommendation",
+                columns: table => new
+                {
+                    pair_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    product_id_a = table.Column<Guid>(type: "uuid", nullable: false),
+                    product_id_b = table.Column<Guid>(type: "uuid", nullable: false),
+                    score = table.Column<int>(type: "integer", nullable: false),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_products_recommendation", x => x.pair_id);
+                    table.ForeignKey(
+                        name: "FK_products_recommendation_products_product_id_a",
+                        column: x => x.product_id_a,
+                        principalTable: "products",
+                        principalColumn: "product_id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_products_recommendation_products_product_id_b",
+                        column: x => x.product_id_b,
+                        principalTable: "products",
+                        principalColumn: "product_id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "managers",
+                columns: table => new
+                {
+                    manager_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    username = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    password = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    email = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    full_name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    phone = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
+                    role_id = table.Column<int>(type: "integer", nullable: false),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    token = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
+                    expires_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    revoked = table.Column<bool>(type: "boolean", nullable: true),
+                    status = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_managers", x => x.manager_id);
+                    table.ForeignKey(
+                        name: "FK_managers_roles_role_id",
+                        column: x => x.role_id,
+                        principalTable: "roles",
+                        principalColumn: "role_id",
+                        onDelete: ReferentialAction.SetNull);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "role_permissions",
+                columns: table => new
+                {
+                    role_id = table.Column<int>(type: "integer", nullable: false),
+                    permission_id = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_role_permissions", x => new { x.role_id, x.permission_id });
+                    table.ForeignKey(
+                        name: "FK_role_permissions_permissions_permission_id",
+                        column: x => x.permission_id,
+                        principalTable: "permissions",
+                        principalColumn: "permission_id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_role_permissions_roles_role_id",
+                        column: x => x.role_id,
+                        principalTable: "roles",
+                        principalColumn: "role_id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -500,6 +545,33 @@ namespace BusinessObject.Migrations
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_cart_items_products_product_id",
+                        column: x => x.product_id,
+                        principalTable: "products",
+                        principalColumn: "product_id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "product_images_embedding",
+                columns: table => new
+                {
+                    embedding_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    product_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    image_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    image_embedding_yolo = table.Column<Vector>(type: "vector(3)", nullable: false),
+                    description_embed = table.Column<string>(type: "character varying(768)", maxLength: 768, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_product_images_embedding", x => x.embedding_id);
+                    table.ForeignKey(
+                        name: "FK_product_images_embedding_product_images_image_id",
+                        column: x => x.image_id,
+                        principalTable: "product_images",
+                        principalColumn: "image_id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_product_images_embedding_products_product_id",
                         column: x => x.product_id,
                         principalTable: "products",
                         principalColumn: "product_id",
@@ -670,33 +742,6 @@ namespace BusinessObject.Migrations
                         column: x => x.warehouse_id,
                         principalTable: "warehouses",
                         principalColumn: "warehouse_id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "product_images_embedding",
-                columns: table => new
-                {
-                    embedding_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    product_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    image_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    image_embedding_yolo = table.Column<Vector>(type: "vector(3)", nullable: false),
-                    description_embed = table.Column<string>(type: "character varying(768)", maxLength: 768, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_product_images_embedding", x => x.embedding_id);
-                    table.ForeignKey(
-                        name: "FK_product_images_embedding_product_images_image_id",
-                        column: x => x.image_id,
-                        principalTable: "product_images",
-                        principalColumn: "image_id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_product_images_embedding_products_product_id",
-                        column: x => x.product_id,
-                        principalTable: "products",
-                        principalColumn: "product_id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -1022,6 +1067,11 @@ namespace BusinessObject.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_product_category_mappings_category_id",
+                table: "product_category_mappings",
+                column: "category_id");
+
+            migrationBuilder.CreateIndex(
                 name: "idx_changed_by",
                 table: "product_history",
                 column: "changed_by");
@@ -1057,14 +1107,20 @@ namespace BusinessObject.Migrations
                 column: "product_id");
 
             migrationBuilder.CreateIndex(
-                name: "idx_category_id",
-                table: "products",
-                column: "category_id");
-
-            migrationBuilder.CreateIndex(
                 name: "idx_product_name",
                 table: "products",
                 column: "product_name");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_products_recommendation_product_id_b",
+                table: "products_recommendation",
+                column: "product_id_b");
+
+            migrationBuilder.CreateIndex(
+                name: "UQ_RecommendProductPair",
+                table: "products_recommendation",
+                columns: new[] { "product_id_a", "product_id_b" },
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_role_permissions_permission_id",
@@ -1172,6 +1228,9 @@ namespace BusinessObject.Migrations
                 name: "order_vouchers");
 
             migrationBuilder.DropTable(
+                name: "product_category_mappings");
+
+            migrationBuilder.DropTable(
                 name: "product_history");
 
             migrationBuilder.DropTable(
@@ -1179,6 +1238,9 @@ namespace BusinessObject.Migrations
 
             migrationBuilder.DropTable(
                 name: "product_reviews");
+
+            migrationBuilder.DropTable(
+                name: "products_recommendation");
 
             migrationBuilder.DropTable(
                 name: "role_permissions");
@@ -1211,6 +1273,9 @@ namespace BusinessObject.Migrations
                 name: "vouchers");
 
             migrationBuilder.DropTable(
+                name: "categories");
+
+            migrationBuilder.DropTable(
                 name: "product_images");
 
             migrationBuilder.DropTable(
@@ -1230,9 +1295,6 @@ namespace BusinessObject.Migrations
 
             migrationBuilder.DropTable(
                 name: "roles");
-
-            migrationBuilder.DropTable(
-                name: "categories");
         }
     }
 }

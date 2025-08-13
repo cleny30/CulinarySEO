@@ -1,11 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using BusinessObject.Models;
+using BusinessObject.Models.Dto;
 using Microsoft.AspNetCore.Mvc;
 using ServiceObject.IServices;
-using Supabase.Gotrue;
 
 namespace CulinaryAPI.Controllers
 {
@@ -26,6 +22,27 @@ namespace CulinaryAPI.Controllers
             var apiResponse = new ApiResponse();
             var products = await _productService.GetAllProducts();
             apiResponse.Result = products;
+            return Ok(apiResponse);
+        }
+
+        [HttpGet("filter-product")]
+        public async Task<IActionResult> GetFilteredProducts([FromQuery] ProductFilterRequest request)
+        {
+            var result = await _productService.GetFilteredProductsAsync(request);
+
+            return Ok(new ApiResponse
+            {
+                IsSuccess = true,
+                Result = result
+            });
+        }
+
+        [HttpGet("{productId}")]
+        public async Task<IActionResult> GetProductDetailById(Guid productId)
+        {
+            var apiResponse = new ApiResponse();
+            var product = await _productService.GetProductDetailById(productId);
+            apiResponse.Result = product;
             return Ok(apiResponse);
         }
     }

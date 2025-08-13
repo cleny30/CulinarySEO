@@ -6,6 +6,7 @@ namespace BusinessObject.Models.Entity
     [Table("blog_category_mappings")]
     public class BlogCategoryMapping
     {
+        [Required]
         [Column("blog_id")]
         public Guid BlogId { get; set; }
 

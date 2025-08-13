@@ -1,4 +1,6 @@
-﻿using BusinessObject.Models.Dto.Customer;
+﻿using BusinessObject.Models;
+using BusinessObject.Models.Dto;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ServiceObject.IServices;
 
@@ -15,23 +17,17 @@ namespace CulinaryAPI.Controllers
             _customerService = customerService;
         }
 
-        [HttpPost("update_customer")]
+        [HttpPost("update-customer")]
+        [Authorize(Roles = "Customer")]
         public async Task<IActionResult> UpdateCustomer([FromBody] UpdateCustomerDto updateCustomerDto)
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest("Information is incorect!");
+                return BadRequest("Information's fields is incorect!");
             }
-
-            try
-            {
-                await _customerService.UpdateCustomer(updateCustomerDto);
-                return Ok("Update information sucessfully");
-            }
-            catch (Exception ex)
-            {
-                return BadRequest("Update failed!");
-            }
+            var apiResponse = new ApiResponse();
+            apiResponse.IsSuccess = await _customerService.UpdateCustomer(updateCustomerDto);
+            return Ok(apiResponse);
         }
     }
 }

@@ -221,8 +221,8 @@ namespace CulinaryAPI.Controllers
             });
         }
 
-        [HttpPost("resend-otp")]
-        public async Task<IActionResult> ReSendOtp([FromBody] RegisterCustomerRequest registerData)
+        [HttpPost("resend-otp-register")]
+        public async Task<IActionResult> ReSendOtpRegister([FromBody] RegisterCustomerRequest registerData)
         {
             string otp = _otpService.GenerateAndStoreOtp(registerData.Email, registerData, 30);
 
@@ -234,8 +234,8 @@ namespace CulinaryAPI.Controllers
             });
         }
 
-        [HttpPost("verify-otp")]
-        public async Task<IActionResult> VerifyOtp([FromBody] OtpVerifyModel model)
+        [HttpPost("verify-otp-register")]
+        public async Task<IActionResult> VerifyOtpRegister([FromBody] OtpVerifyModel model)
         {
             var (isValid, registerData) = _otpService.VerifyOtp<RegisterCustomerRequest>(model.Email, model.Otp);
 

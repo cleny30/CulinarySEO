@@ -1,4 +1,5 @@
 ﻿using BusinessObject.AppDbContext;
+using BusinessObject.Models.Dto;
 using CulinaryAPI.Core;
 using CulinaryAPI.Middleware.Authentication;
 using CulinaryAPI.Middleware.ExceptionHelper;
@@ -19,6 +20,10 @@ builder.Services.AddDbContext<CulinaryContext>(options =>
         npgsqlOptions.UseVector();
     }));
 
+//Config Email setting
+builder.Services.Configure<EmailSetting>(
+    builder.Configuration.GetSection("EmailSettings"));
+
 //Config Serilog
 builder.Host.UseSerilog((context, services, configuration) =>
 {
@@ -37,6 +42,9 @@ builder.Services.AddJwtAuthentication();
 
 // Configure Swagger with JWT
 builder.Services.AddSwaggerWithJwt();
+
+//Add Memory Cache
+builder.Services.AddMemoryCache();
 
 // Configure Dependency Injection
 builder.Services.Configure();

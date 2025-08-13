@@ -10,9 +10,15 @@ namespace CulinaryAPI.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
-        public AuthController(IAuthService authService)
+        private readonly ICustomerService _customerService;
+        private readonly IOtpService _otpService;
+        private readonly IEmailService _emailService;
+        public AuthController(IAuthService authService, ICustomerService customerService, IOtpService otpService, IEmailService emailService)
         {
             _authService = authService;
+            _customerService = customerService;
+            _otpService = otpService;
+            _emailService = emailService;
         }
 
         [HttpPost("login-manager")]
@@ -119,12 +125,6 @@ namespace CulinaryAPI.Controllers
             });
         }
 
-        [HttpPost("register")]
-        public async Task<IActionResult> CustomerRegister()
-        {
-            return Ok();
-        }
-
         [HttpPost("logout-manager")]
         public async Task<IActionResult> LogoutManager()
         {
@@ -184,6 +184,85 @@ namespace CulinaryAPI.Controllers
                 IsSuccess = true,
                 Message = "Logout successful",
                 Result = null
+            });
+        }
+
+        [HttpPost("register")]
+        public async Task<IActionResult> CustomerRegister([FromBody] RegisterCustomerRequest registerData)
+        {
+            bool isEmailExist = await _customerService.IsEmailExist(registerData.Email);
+            if (isEmailExist)
+            {
+                return BadRequest(new ApiResponse
+                {
+                    IsSuccess = false,
+                    Message = "Email already used",
+                });
+            }
+
+            bool isUsernameExist = await _customerService.IsUsernameExist(registerData.Username);
+
+            if (isUsernameExist)
+            {
+                return BadRequest(new ApiResponse
+                {
+                    IsSuccess = false,
+                    Message = "Username already used",
+                });
+            }
+
+            string otp = _otpService.GenerateAndStoreOtp(registerData.Email, registerData, 30);
+
+            await _emailService.SendOtpEmailAsync(registerData.Email, otp);
+            return Ok(new ApiResponse
+            {
+                IsSuccess = true,
+                Message = "Send OTP to guess email"
+            });
+        }
+
+        [HttpPost("resend-otp")]
+        public async Task<IActionResult> ReSendOtp([FromBody] RegisterCustomerRequest registerData)
+        {
+            string otp = _otpService.GenerateAndStoreOtp(registerData.Email, registerData, 30);
+
+            await _emailService.SendOtpEmailAsync(registerData.Email, otp);
+            return Ok(new ApiResponse
+            {
+                IsSuccess = true,
+                Message = "Re send OTP to guess email"
+            });
+        }
+
+        [HttpPost("verify-otp")]
+        public async Task<IActionResult> VerifyOtp([FromBody] OtpVerifyModel model)
+        {
+            var (isValid, registerData) = _otpService.VerifyOtp<RegisterCustomerRequest>(model.Email, model.Otp);
+
+            if (!isValid || registerData == null)
+                return BadRequest(new ApiResponse
+                {
+                    IsSuccess = false,
+                    Message = "OTP is invalid or expired"
+                });
+
+            _otpService.RemoveOtp(model.Email);
+
+            var result = await _customerService.AddNewCustomer(registerData);
+
+            if (!result)
+            {
+                return BadRequest(new ApiResponse
+                {
+                    IsSuccess = false,
+                    Message = "Failed to register customer"
+                });
+            }
+
+            return Ok(new ApiResponse
+            {
+                IsSuccess = true,
+                Message = "Register sucessfull"
             });
         }
     }

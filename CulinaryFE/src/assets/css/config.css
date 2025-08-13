@@ -1,3 +1,7 @@
+:root{
+  --border-form-text-color: 235, 200, 182;
+}
+
 @font-face {
   font-family: "LuckiestGuy"; /* Choose a name for your font family */
   src: local("LuckiestGuy"),

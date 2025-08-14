@@ -58,20 +58,22 @@ export default function LoginForm() {
               control={form.control}
               name="email"
               render={({ field }) => (
-                <FormItem className={`${styles.formItem} mb-4`}>
-                  <FormLabel className="text-gray-500">
-                    <Icon.Email className="w-5" />
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      type="email"
-                      placeholder="example@gmail.com"
-                      className={`${styles.formInput} border-none shadow-none focus-visible:ring-0`}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
+                <div className="flex flex-col gap-y-1 mb-4">
+                  <FormItem className={`${styles.formItem}`}>
+                    <FormLabel className="text-gray-500">
+                      <Icon.Email className="w-5" />
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        type="email"
+                        placeholder="example@gmail.com"
+                        className={`${styles.formInput} border-none shadow-none focus-visible:ring-0`}
+                      />
+                    </FormControl>
+                  </FormItem>
+                  <FormMessage className="pl-1"/>
+                </div>
               )}
             />
             <FormField
@@ -79,20 +81,22 @@ export default function LoginForm() {
               control={form.control}
               name="password"
               render={({ field }) => (
-                <FormItem className={`${styles.formItem} mb-1`}>
-                  <FormLabel className="text-gray-500">
-                    <Icon.Lock className="w-5" />
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      type="password"
-                      placeholder="password from 6 to 18 character"
-                      className={`${styles.formInput} border-none shadow-none focus-visible:ring-0`}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
+                <div className="flex flex-col gap-y-1 mb-1">
+                  <FormItem className={`${styles.formItem}`}>
+                    <FormLabel className="text-gray-500">
+                      <Icon.Lock className="w-5" />
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        type="password"
+                        placeholder="password from 6 to 18 character"
+                        className={`${styles.formInput} border-none shadow-none focus-visible:ring-0`}
+                      />
+                    </FormControl>
+                  </FormItem>
+                  <FormMessage  className="pl-1"/>
+                </div>
               )}
             />
             <div className="flex justify-end mb-4">
@@ -101,10 +105,11 @@ export default function LoginForm() {
               </Button>
             </div>
             <Button
-              className="cursor-pointer p-5"
+              className="cursor-pointer"
               type="submit"
               variant={"default"}
               disabled={isPending}
+              size={"xl"}
             >
               Login
             </Button>

@@ -1,0 +1,15 @@
+import { z } from "zod";
+
+export const filterSchema = z.object({
+  categories: z.array(z.string()), // array of category IDs
+  price: z.object({
+    from: z.number().min(0),
+    to: z.number().min(0)
+  }).refine(data => data.to >= data.from, {
+    message: "Max price must be greater than min price"
+  }),
+  availability: z.boolean(),
+  sortBy: z.string().nullable() // or use z.nativeEnum(SortBy) if enum
+});
+
+export type FilterFormValues = z.infer<typeof filterSchema>;

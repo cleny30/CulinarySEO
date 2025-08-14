@@ -93,6 +93,7 @@ namespace ServiceObject.Configurations
                         opt => opt.MapFrom(src =>
                             src.ProductImages.Select(img => img.ImageUrl).ToList()
                         ));
+            CreateMap<Category, CategoryForShop>();
 
         }
     }

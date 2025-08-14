@@ -72,8 +72,6 @@ namespace DataAccess.DAOs
                         : query.Where(p => p.Stocks.Sum(s => s.Quantity) == 0);
                 }
 
-
-
                 // Sort
                 query = request.SortBy?.ToLower() switch
                 {

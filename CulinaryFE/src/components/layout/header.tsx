@@ -4,17 +4,14 @@ import { logout } from "@/redux/auth/apiRequest";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import type { RootState } from "@/redux/store";
-import toast from "@/utils/toast";
+import { printToast } from "@/utils/constants/toast/printToast";
 export default function Header() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const user = useSelector((state: RootState) => state.auth.login?.currentUser);
   const handleLogout = async () => {
-    await logout(dispatch, navigate).then((result) => {
-      if (result?.error) toast.error(result.error as string);
-      if (result?.success) toast.success(result.success as string);
-    });
+    await logout(dispatch, navigate).then(printToast);
   };
 
   return (

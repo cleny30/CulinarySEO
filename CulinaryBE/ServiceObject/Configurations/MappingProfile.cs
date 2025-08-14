@@ -9,7 +9,11 @@ namespace ServiceObject.Configurations
     {
         public MappingProfile()
         {
+            #region Account
             CreateMap<Manager, AccountData>();
+            #endregion
+
+            #region Product
             CreateMap<Product, GetProductDto>()
                 .ForMember(dest => dest.FinalPrice,
                 opt => opt.MapFrom(src =>
@@ -61,14 +65,6 @@ namespace ServiceObject.Configurations
                             ? src.Price - (src.Price * (src.Discount.Value / 100))
                             : src.Price
                     ));
-
-
-            CreateMap<RegisterCustomerRequest, Customer>()
-                .AfterMap((src, dest) =>
-                {
-                    dest.CustomerId = Guid.NewGuid();
-                });
-
             CreateMap<Product, ProductDto>()
                 .ForMember(dest => dest.ReviewCount,
                 opt => opt.MapFrom(src =>
@@ -95,7 +91,43 @@ namespace ServiceObject.Configurations
                             src.ProductImages.Select(img => img.ImageUrl).ToList()
                         ));
             CreateMap<Category, CategoryForShop>();
+
             CreateMap<Product, ProductSummaryDto>();
+            #endregion
+
+            #region Customer
+            CreateMap<RegisterCustomerRequest, Customer>()
+               .AfterMap((src, dest) =>
+               {
+                   dest.CustomerId = Guid.NewGuid();
+               });
+            #endregion
+
+            #region Cart
+            CreateMap<Cart, CartDto>()
+                .ForMember(dest => dest.SubTotal, opt => opt.MapFrom(src =>
+                src.CartItems.Sum(ci =>
+                    (ci.Product.Discount.HasValue
+                        ? ci.Product.Price - (ci.Product.Price * ci.Product.Discount.Value / 100)
+                        : ci.Product.Price) * ci.Quantity
+                )
+            ));
+
+            CreateMap<CartItem, CartItemDto>()
+                .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.Product.ProductName))
+                .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.Product.Price))
+                .ForMember(dest => dest.FinalPrice, opt => opt.MapFrom(src =>
+                src.Product.Discount.HasValue
+                    ? src.Product.Price - (src.Product.Price * src.Product.Discount.Value / 100)
+                    : src.Product.Price
+            ))
+            .ForMember(dest => dest.ProductImage, opt => opt.MapFrom(src =>
+                src.Product.ProductImages
+                    .FirstOrDefault(pi => pi.IsPrimary)!.ImageUrl
+            ));
+
+
+            #endregion
         }
     }
 }

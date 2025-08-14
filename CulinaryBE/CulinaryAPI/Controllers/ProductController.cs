@@ -3,8 +3,10 @@ using BusinessObject.Models.Dto;
 using BusinessObject.Models.Enum;
 using CulinaryAPI.Middleware.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using BusinessObject.Models.Dto;
 using Microsoft.AspNetCore.Mvc;
 using ServiceObject.IServices;
+using System.Security.Claims;
 
 namespace CulinaryAPI.Controllers
 {
@@ -13,10 +15,13 @@ namespace CulinaryAPI.Controllers
     public class ProductController : ControllerBase
     {
         private readonly IProductService _productService;
+        private readonly IRecommendationService _recommendationService;
 
-        public ProductController(IProductService productService)
+        public ProductController(IProductService productService, IRecommendationService recommendationService)
         {
             _productService = productService;
+            _recommendationService = recommendationService;
+
         }
 
         [HttpGet("")]
@@ -47,6 +52,16 @@ namespace CulinaryAPI.Controllers
             var product = await _productService.GetProductDetailById(productId);
             apiResponse.Result = product;
             return Ok(apiResponse);
+        }
+        [HttpGet("recommendations")]
+        public async Task<IActionResult> GetRecommendations()
+        {
+            var customerIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            Guid? customerId = !string.IsNullOrEmpty(customerIdString) ? Guid.Parse(customerIdString) : null;
+
+            var result = await _recommendationService.GetHomepageRecommendations(customerId);
+
+            return Ok(result);
         }
     }
 }

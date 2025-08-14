@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BusinessObject.Models.Dto;
+using BusinessObject.Models.Dto.Product;
 using BusinessObject.Models.Entity;
 
 namespace ServiceObject.Configurations
@@ -69,7 +70,7 @@ namespace ServiceObject.Configurations
                 });
 
             CreateMap<Product, ProductDto>()
-                .ForMember(dest => dest.ReviewCount, 
+                .ForMember(dest => dest.ReviewCount,
                 opt => opt.MapFrom(src =>
                     src.ProductReviews.Count()
                 ))
@@ -94,7 +95,7 @@ namespace ServiceObject.Configurations
                             src.ProductImages.Select(img => img.ImageUrl).ToList()
                         ));
             CreateMap<Category, CategoryForShop>();
-
+            CreateMap<Product, ProductSummaryDto>();
         }
     }
 }

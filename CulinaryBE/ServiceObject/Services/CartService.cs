@@ -25,8 +25,7 @@ namespace ServiceObject.Services
             {
                 var cart = await _cartDAO.GetCartDataAsync(customerId);
 
-
-                return null;
+                return _mapper.Map<CartDto>(cart);
             }
             catch (Exception ex)
             {

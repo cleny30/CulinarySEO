@@ -43,12 +43,6 @@ namespace DataAccess.DAOs
                                 Price = ci.Product.Price,
                                 Discount = ci.Product.Discount,
                                 ProductImages = ci.Product.ProductImages
-                                    .Select(pi => new ProductImage
-                                    {
-                                        ProductId = pi.ProductId,
-                                        ImageUrl = pi.ImageUrl
-                                    })
-                                    .ToList()
                             }
                         }).ToList()
                     })

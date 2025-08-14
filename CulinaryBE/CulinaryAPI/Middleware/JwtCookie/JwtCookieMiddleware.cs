@@ -11,7 +11,6 @@
 
         public async Task Invoke(HttpContext context)
         {
-            // Chỉ thêm Authorization header nếu chưa có
             if (!context.Request.Headers.ContainsKey("Authorization"))
             {
                 var token = context.Request.Cookies["AccessToken"];

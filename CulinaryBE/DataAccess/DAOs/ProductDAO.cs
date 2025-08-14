@@ -37,6 +37,32 @@ namespace DataAccess.DAOs
             }
         }
 
+        public async Task<List<Product>> GetBestSellingProducts(int topN = 10)
+        {
+            try
+            {
+                var threshold = DateTime.UtcNow.AddDays(-30); // Last 30 days
+
+                var bestSellingProducts = await _context.OrderDetails
+                    .Where(o => o.Order.CreatedAt >= threshold) // Filter orders from the last 30 days
+                    .GroupBy(o => o.ProductId) // Group by ProductId
+                    .Select(g => new
+                    {
+                        ProductId = g.Key,
+                        TotalQuantity = g.Sum(o => o.Quantity)  // Sum the quantity of each product
+                    })
+                    .OrderByDescending(g => g.TotalQuantity)
+                    .Take(topN)
+                    .Join(_context.Products, bsp => bsp.ProductId, p => p.ProductId, (bsp, p) => p) // Join with Products to get product details
+                    .ToListAsync();
+                return bestSellingProducts;
+            }
+            catch (DbUpdateException ex)
+            {
+                throw new DbUpdateException("An error occurred while retrieving best-selling products.", ex);
+            }
+        }
+
         public async Task<(int TotalItems, List<Product> Items)> GetFilteredProductsAsync(ProductFilterRequest request)
         {
             try
@@ -127,14 +153,14 @@ namespace DataAccess.DAOs
             }
         }
 
-        public async Task<Product?> GetProductById(Guid productId)
+        public async Task<Product?> GetProductDetailById(Guid productId)
         {
             try
             {
                 var product = await _context.Products
                     .AsNoTracking()
-                 .Include(p => p.ProductCategoryMappings)
-                 .ThenInclude(pcm => pcm.Category).Include(p => p.ProductImages)
+                    .Include(p => p.ProductCategoryMappings)
+                        .ThenInclude(pcm => pcm.Category).Include(p => p.ProductImages)
                     .Include(p => p.Stocks)
                     .Include(p => p.ProductReviews.Where(r => r.Rating.HasValue))
                         .ThenInclude(pr => pr.Customer)
@@ -145,6 +171,21 @@ namespace DataAccess.DAOs
             catch (DbUpdateException ex)
             {
                 throw new DbUpdateException($"An error occurred while retrieving the product with ID {productId}.", ex);
+            }
+        }
+
+        public async Task<List<Product>> GetProductSummariesById(IEnumerable<Guid> ids)
+        {
+            try
+            {
+                return await _context.Products
+                .Include(p => p.ProductImages.Where(img => img.IsPrimary))
+                .Where(p => ids.Contains(p.ProductId))
+                .ToListAsync();
+            }
+            catch (DbUpdateException ex)
+            {
+                throw new DbUpdateException("An error occurred while retrieving product summaries.", ex);
             }
         }
     }

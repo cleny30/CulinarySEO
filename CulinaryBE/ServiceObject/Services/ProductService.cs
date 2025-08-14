@@ -42,7 +42,7 @@ namespace ServiceObject.Services
         {
             try
             {
-                var product = await productDAO.GetProductById(productId);
+                var product = await productDAO.GetProductDetailById(productId);
                 if (product == null)
                 {
                     _logger.LogWarning($"Product with ID {productId} not found.");

@@ -9,7 +9,11 @@ namespace ServiceObject.Configurations
     {
         public MappingProfile()
         {
+            #region Account
             CreateMap<Manager, AccountData>();
+            #endregion
+
+            #region Product
             CreateMap<Product, GetProductDto>()
                 .ForMember(dest => dest.FinalPrice,
                 opt => opt.MapFrom(src =>
@@ -61,14 +65,6 @@ namespace ServiceObject.Configurations
                             ? src.Price - (src.Price * (src.Discount.Value / 100))
                             : src.Price
                     ));
-
-
-            CreateMap<RegisterCustomerRequest, Customer>()
-                .AfterMap((src, dest) =>
-                {
-                    dest.CustomerId = Guid.NewGuid();
-                });
-
             CreateMap<Product, ProductDto>()
                 .ForMember(dest => dest.ReviewCount,
                 opt => opt.MapFrom(src =>
@@ -95,7 +91,17 @@ namespace ServiceObject.Configurations
                             src.ProductImages.Select(img => img.ImageUrl).ToList()
                         ));
             CreateMap<Category, CategoryForShop>();
+
             CreateMap<Product, ProductSummaryDto>();
+            #endregion
+
+            #region Customer
+            CreateMap<RegisterCustomerRequest, Customer>()
+               .AfterMap((src, dest) =>
+               {
+                   dest.CustomerId = Guid.NewGuid();
+               });
+            #endregion
         }
     }
 }

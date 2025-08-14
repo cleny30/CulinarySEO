@@ -1225,7 +1225,7 @@ namespace BusinessObject.Migrations
                     b.HasIndex("WarehouseId")
                         .HasDatabaseName("idx_warehouse_id");
 
-                    b.ToTable("stock");
+                    b.ToTable("stocks");
                 });
 
             modelBuilder.Entity("BusinessObject.Models.Entity.StockTransaction", b =>

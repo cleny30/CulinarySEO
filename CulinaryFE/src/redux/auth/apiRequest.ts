@@ -42,7 +42,7 @@ export const login = async (
   }
 
   dispatch(loginSuccess(result.data as UserSession));
-  navigate("/");
+  navigate("/", { replace: true });
 
   return { success: "Đăng nhập thành công!" };
 };
@@ -74,7 +74,7 @@ export const sentOtp = async (
     fullName,
     phone,
     repassword,
-    username
+    username,
   });
 
   if (result.error) {

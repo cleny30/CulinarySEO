@@ -18,10 +18,11 @@ import { login } from "@/redux/auth/apiRequest";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import toast from "@/utils/toast";
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
 import styles from "@/assets/css/auth.module.css";
 
 export default function LoginForm() {
+  const [isVisible, setVisible] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [isPending, startTransition] = useTransition();
@@ -33,6 +34,10 @@ export default function LoginForm() {
       password: "",
     },
   });
+
+  const handleTogglePass = () => {
+    setVisible(!isVisible);
+  };
 
   const onSubmit = async (values: LoginSchemaType) => {
     startTransition(
@@ -72,7 +77,7 @@ export default function LoginForm() {
                       />
                     </FormControl>
                   </FormItem>
-                  <FormMessage className="pl-1"/>
+                  <FormMessage className="pl-1" />
                 </div>
               )}
             />
@@ -89,13 +94,23 @@ export default function LoginForm() {
                     <FormControl>
                       <Input
                         {...field}
-                        type="password"
+                        type={isVisible ? "text" : "password"}
                         placeholder="password from 6 to 18 character"
                         className={`${styles.formInput} border-none shadow-none focus-visible:ring-0`}
                       />
                     </FormControl>
+                    <FormLabel className={`text-gray-500`}>
+                      {isVisible ? (
+                        <Icon.Eye className="w-5" onClick={handleTogglePass} />
+                      ) : (
+                        <Icon.EyeClosed
+                          className="w-5"
+                          onClick={handleTogglePass}
+                        />
+                      )}
+                    </FormLabel>
                   </FormItem>
-                  <FormMessage  className="pl-1"/>
+                  <FormMessage className="pl-1" />
                 </div>
               )}
             />

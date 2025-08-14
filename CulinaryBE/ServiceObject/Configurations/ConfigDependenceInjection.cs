@@ -17,6 +17,8 @@ namespace ServiceObject.Configurations
             services.AddScoped<IProductDAO, ProductDAO>();
             services.AddScoped<ICategoryDAO, CategoryDAO>();
             services.AddScoped<IPermissionDAO, PermissionDAO>();
+            services.AddScoped<IOrderDAO, OrderDAO>();
+            services.AddScoped<IRecommendationDAO, RecommendationDAO>();
         }
 
         public static void ConfigureService(this IServiceCollection services)
@@ -30,6 +32,7 @@ namespace ServiceObject.Configurations
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IPermissionService, PermissionService>();
 
+            services.AddScoped<IRecommendationService, RecommendationService>();
         }
 
         public static void ConfigureBackgroundService(this IServiceCollection services)

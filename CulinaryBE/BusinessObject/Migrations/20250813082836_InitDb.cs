@@ -393,7 +393,7 @@ namespace BusinessObject.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "stock",
+                name: "stocks",
                 columns: table => new
                 {
                     stock_id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -404,15 +404,15 @@ namespace BusinessObject.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_stock", x => x.stock_id);
+                    table.PrimaryKey("PK_stocks", x => x.stock_id);
                     table.ForeignKey(
-                        name: "FK_stock_products_product_id",
+                        name: "FK_stocks_products_product_id",
                         column: x => x.product_id,
                         principalTable: "products",
                         principalColumn: "product_id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_stock_warehouses_warehouse_id",
+                        name: "FK_stocks_warehouses_warehouse_id",
                         column: x => x.warehouse_id,
                         principalTable: "warehouses",
                         principalColumn: "warehouse_id",
@@ -1139,16 +1139,6 @@ namespace BusinessObject.Migrations
                 column: "status");
 
             migrationBuilder.CreateIndex(
-                name: "idx_product_id_stock",
-                table: "stock",
-                column: "product_id");
-
-            migrationBuilder.CreateIndex(
-                name: "idx_warehouse_id",
-                table: "stock",
-                column: "warehouse_id");
-
-            migrationBuilder.CreateIndex(
                 name: "idx_manager_id_transaction",
                 table: "stock_transactions",
                 column: "manager_id");
@@ -1161,6 +1151,16 @@ namespace BusinessObject.Migrations
             migrationBuilder.CreateIndex(
                 name: "idx_warehouse_id_transaction",
                 table: "stock_transactions",
+                column: "warehouse_id");
+
+            migrationBuilder.CreateIndex(
+                name: "idx_product_id_stock",
+                table: "stocks",
+                column: "product_id");
+
+            migrationBuilder.CreateIndex(
+                name: "idx_warehouse_id",
+                table: "stocks",
                 column: "warehouse_id");
 
             migrationBuilder.CreateIndex(
@@ -1249,10 +1249,10 @@ namespace BusinessObject.Migrations
                 name: "shipper_status");
 
             migrationBuilder.DropTable(
-                name: "stock");
+                name: "stock_transactions");
 
             migrationBuilder.DropTable(
-                name: "stock_transactions");
+                name: "stocks");
 
             migrationBuilder.DropTable(
                 name: "blog_categories");

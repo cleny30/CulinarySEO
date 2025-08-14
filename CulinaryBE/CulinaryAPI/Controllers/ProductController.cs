@@ -1,11 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using BusinessObject.Models;
+using BusinessObject.Models.Dto;
 using Microsoft.AspNetCore.Mvc;
 using ServiceObject.IServices;
-using Supabase.Gotrue;
+using System.Security.Claims;
 
 namespace CulinaryAPI.Controllers
 {
@@ -14,10 +11,13 @@ namespace CulinaryAPI.Controllers
     public class ProductController : ControllerBase
     {
         private readonly IProductService _productService;
+        private readonly IRecommendationService _recommendationService;
 
-        public ProductController(IProductService productService)
+        public ProductController(IProductService productService, IRecommendationService recommendationService)
         {
             _productService = productService;
+            _recommendationService = recommendationService;
+
         }
 
         [HttpGet("")]
@@ -29,6 +29,18 @@ namespace CulinaryAPI.Controllers
             return Ok(apiResponse);
         }
 
+        [HttpGet("filter-product")]
+        public async Task<IActionResult> GetFilteredProducts([FromQuery] ProductFilterRequest request)
+        {
+            var result = await _productService.GetFilteredProductsAsync(request);
+
+            return Ok(new ApiResponse
+            {
+                IsSuccess = true,
+                Result = result
+            });
+        }
+
         [HttpGet("{productId}")]
         public async Task<IActionResult> GetProductDetailById(Guid productId)
         {
@@ -36,6 +48,16 @@ namespace CulinaryAPI.Controllers
             var product = await _productService.GetProductDetailById(productId);
             apiResponse.Result = product;
             return Ok(apiResponse);
+        }
+        [HttpGet("recommendations")]
+        public async Task<IActionResult> GetRecommendations()
+        {
+            var customerIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            Guid? customerId = !string.IsNullOrEmpty(customerIdString) ? Guid.Parse(customerIdString) : null;
+
+            var result = await _recommendationService.GetHomepageRecommendations(customerId);
+
+            return Ok(result);
         }
     }
 }

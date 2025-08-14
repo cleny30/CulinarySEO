@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess.DAOs
 {
-    internal class RecommendationDAO : IRecommendationDAO
+    public class RecommendationDAO : IRecommendationDAO
     {
         private readonly CulinaryContext _context;
         public RecommendationDAO(CulinaryContext context)
@@ -34,14 +34,13 @@ namespace DataAccess.DAOs
         {
             try
             {
-                //return await _context.ProductRecommendations
-                //.Where(pr => productIds.Contains(pr.ProductId))
-                //.OrderByDescending(pr => pr.Score)
-                //.Select(pr => pr.RecommendedProductId)
-                //.Distinct()
-                //.Take(topN)
-                //.ToListAsync();
-                return null;
+                return await _context.ProductRecommendations
+                    .Where(pr => productIds.Contains(pr.ProductIdA) || productIds.Contains(pr.ProductIdB))
+                    .OrderByDescending(pr => pr.Score)
+                    .Select(pr => productIds.Contains(pr.ProductIdA) ? pr.ProductIdB : pr.ProductIdA)
+                    .Distinct()
+                    .Take(topN)
+                    .ToListAsync();
             }
             catch (DbUpdateException ex)
             {

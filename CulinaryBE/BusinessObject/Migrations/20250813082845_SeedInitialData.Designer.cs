@@ -13,7 +13,7 @@ using Pgvector;
 namespace BusinessObject.Migrations
 {
     [DbContext(typeof(CulinaryContext))]
-    [Migration("20250813055433_SeedInitialData")]
+    [Migration("20250813082845_SeedInitialData")]
     partial class SeedInitialData
     {
         /// <inheritdoc />
@@ -1228,7 +1228,7 @@ namespace BusinessObject.Migrations
                     b.HasIndex("WarehouseId")
                         .HasDatabaseName("idx_warehouse_id");
 
-                    b.ToTable("stock");
+                    b.ToTable("stocks");
                 });
 
             modelBuilder.Entity("BusinessObject.Models.Entity.StockTransaction", b =>

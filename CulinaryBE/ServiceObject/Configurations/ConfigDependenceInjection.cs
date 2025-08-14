@@ -19,6 +19,7 @@ namespace ServiceObject.Configurations
             services.AddScoped<IPermissionDAO, PermissionDAO>();
             services.AddScoped<IOrderDAO, OrderDAO>();
             services.AddScoped<IRecommendationDAO, RecommendationDAO>();
+            services.AddScoped<ICartDAO, CartDAO>();
         }
 
         public static void ConfigureService(this IServiceCollection services)
@@ -31,6 +32,7 @@ namespace ServiceObject.Configurations
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IPermissionService, PermissionService>();
+            services.AddScoped<ICartService, CartService>();
 
             services.AddScoped<IRecommendationService, RecommendationService>();
         }

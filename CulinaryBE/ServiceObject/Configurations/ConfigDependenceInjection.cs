@@ -15,6 +15,8 @@ namespace ServiceObject.Configurations
             services.AddScoped<IManagerDAO, ManagerDAO>();
             services.AddScoped<ICustomerDAO, CustomerDAO>();
             services.AddScoped<IProductDAO, ProductDAO>();
+            services.AddScoped<ICategoryDAO, CategoryDAO>();
+            services.AddScoped<IPermissionDAO, PermissionDAO>();
             services.AddScoped<IOrderDAO, OrderDAO>();
             services.AddScoped<IRecommendationDAO, RecommendationDAO>();
         }
@@ -27,6 +29,9 @@ namespace ServiceObject.Configurations
             services.AddScoped<ICustomerService, CustomerService>();
             services.AddScoped<IOtpService, OtpService>();
             services.AddScoped<IEmailService, EmailService>();
+            services.AddScoped<ICategoryService, CategoryService>();
+            services.AddScoped<IPermissionService, PermissionService>();
+
             services.AddScoped<IRecommendationService, RecommendationService>();
         }
 

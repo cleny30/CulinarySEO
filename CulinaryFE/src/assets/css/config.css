@@ -1,34 +1,49 @@
-:root{
-  --border-form-text-color: 235, 200, 182;
+:root {
+  --mau-nau-vien: 235, 200, 182;
+  --mau-sua-bo: 255, 250, 238;
+  --mau-be: 248, 239, 216;
+  --mau-do-color: 185, 46, 45;
 }
 
+/* ======================== CUSTOM TAILWIND COLOR =============================== */
+
+@theme {
+  --color-mau-sua-bo: rgba(var(--mau-sua-bo), 1);
+  --color-mau-be: rgba(var(--mau-be), 1);
+  --color-mau-nau-vien: rgba(var(--mau-nau-vien), 1);
+  --color-mau-do-color: rgba(var(--mau-do-color), 1);
+  --font-Lucky: "LuckiestGuy", sans-serif; 
+  --font-Mont: "Montserrat", sans-serif; 
+}
+
+/* ======================== INIT FONT FACE ====================== */
 @font-face {
   font-family: "LuckiestGuy"; /* Choose a name for your font family */
   src: local("LuckiestGuy"),
-    url("../fonts/LuckiestGuy-Regular.ttf") format("truetype"); 
+    url("../fonts/LuckiestGuy-Regular.ttf") format("truetype");
   font-weight: normal;
 }
 @font-face {
   font-family: "Montserrat"; /* Choose a name for your font family */
   src: local("Montserrat"),
-    url("../fonts/Montserrat-Bold.ttf") format("truetype"); 
+    url("../fonts/Montserrat-Bold.ttf") format("truetype");
   font-weight: 600;
 }
 @font-face {
   font-family: "Montserrat"; /* Choose a name for your font family */
   src: local("Montserrat"),
-    url("../fonts/Montserrat-Light.ttf") format("truetype"); 
+    url("../fonts/Montserrat-Light.ttf") format("truetype");
   font-weight: 300;
 }
 @font-face {
   font-family: "Montserrat"; /* Choose a name for your font family */
   src: local("Montserrat"),
-    url("../fonts/Montserrat-Medium.ttf") format("truetype"); 
+    url("../fonts/Montserrat-Medium.ttf") format("truetype");
   font-weight: 500;
 }
 @font-face {
   font-family: "Montserrat"; /* Choose a name for your font family */
   src: local("Montserrat"),
-    url("../fonts/Montserrat-Regular.ttf") format("truetype"); 
+    url("../fonts/Montserrat-Regular.ttf") format("truetype");
   font-weight: 400;
 }

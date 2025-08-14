@@ -42,7 +42,8 @@ namespace CulinaryAPI.Controllers
                 HttpOnly = true,
                 Secure = true, // Set base on develop or producttion
                 SameSite = SameSiteMode.None,
-                Expires = DateTime.UtcNow.AddSeconds(response.ExpiresIn)
+                Expires = DateTime.UtcNow.AddSeconds(response.ExpiresIn),
+                Path = "/"
             });
 
             Response.Cookies.Append("RefreshToken", response.RefreshToken, new CookieOptions
@@ -50,7 +51,8 @@ namespace CulinaryAPI.Controllers
                 HttpOnly = true,
                 Secure = true, //Set base on develop or producttion
                 SameSite = SameSiteMode.None,
-                Expires = DateTime.UtcNow.AddDays(7) // Refresh token sống lâu hơn
+                Expires = DateTime.UtcNow.AddDays(7),
+                Path = "/"
             });
 
             return Ok(new ApiResponse
@@ -82,7 +84,8 @@ namespace CulinaryAPI.Controllers
                 HttpOnly = true,
                 Secure = true, // Set base on develop or producttion
                 SameSite = SameSiteMode.None,
-                Expires = DateTime.UtcNow.AddSeconds(response.ExpiresIn)
+                Expires = DateTime.UtcNow.AddSeconds(response.ExpiresIn),
+                Path = "/"
             });
 
             Response.Cookies.Append("RefreshToken", response.RefreshToken, new CookieOptions
@@ -90,7 +93,8 @@ namespace CulinaryAPI.Controllers
                 HttpOnly = true,
                 Secure = true, //Set base on develop or producttion
                 SameSite = SameSiteMode.None,
-                Expires = DateTime.UtcNow.AddDays(7)
+                Expires = DateTime.UtcNow.AddDays(7),
+                Path = "/"
             });
 
             return Ok(new ApiResponse
@@ -140,9 +144,20 @@ namespace CulinaryAPI.Controllers
                 });
             }
             await _authService.LogoutManagerAsync(refreshToken);
+
             // Xóa cookies
-            Response.Cookies.Delete("AccessToken");
-            Response.Cookies.Delete("RefreshToken");
+            Response.Cookies.Delete("AccessToken", new CookieOptions
+            {
+                Secure = true,
+                SameSite = SameSiteMode.None,
+                Path = "/"
+            });
+            Response.Cookies.Delete("RefreshToken", new CookieOptions
+            {
+                Secure = true,
+                SameSite = SameSiteMode.None,
+                Path = "/"
+            });
 
             return Ok(new ApiResponse
             {
@@ -170,11 +185,13 @@ namespace CulinaryAPI.Controllers
             {
                 Secure = true,
                 SameSite = SameSiteMode.None,
+                Path = "/"
             });
             Response.Cookies.Delete("RefreshToken", new CookieOptions
             {
                 Secure = true,
                 SameSite = SameSiteMode.None,
+                Path = "/"
             });
 
             await _authService.LogoutCustomerAsync(refreshToken);

@@ -45,7 +45,7 @@ namespace DataAccess.DAOs
                     Phone = customer.Phone,
                     ProfilePic = customer.ProfilePic,
                     Email = customer.Email,
-                    RoleName = "Customer"                
+                    RoleName = "Customer"
                 };
             }
             catch (DbUpdateException ex)
@@ -148,7 +148,10 @@ namespace DataAccess.DAOs
         {
             try
             {
-                customer.Password = GeneratePasswordHash(customer.Password!);
+                if (!string.IsNullOrEmpty(customer.Password))
+                {
+                    customer.Password = GeneratePasswordHash(customer.Password!);
+                }
 
                 await _context.Customers.AddAsync(customer);
                 await _context.SaveChangesAsync();

@@ -29,7 +29,11 @@ namespace BusinessObject.Models.Entity
         [Column("created_at")]
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
+
         // Navigation properties
-        public virtual ICollection<Product>? Products { get; set; }
+        public virtual ICollection<ProductCategoryMapping>? ProductCategoryMappings { get; set; }
+
+        [NotMapped]
+        public int ProductCount { get; set; }
     }
 }

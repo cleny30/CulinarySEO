@@ -13,7 +13,7 @@ using Pgvector;
 namespace BusinessObject.Migrations
 {
     [DbContext(typeof(CulinaryContext))]
-    [Migration("20250812030622_InitDb")]
+    [Migration("20250813082836_InitDb")]
     partial class InitDb
     {
         /// <inheritdoc />
@@ -876,10 +876,6 @@ namespace BusinessObject.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("product_id");
 
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("integer")
-                        .HasColumnName("category_id");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
@@ -903,19 +899,37 @@ namespace BusinessObject.Migrations
                         .HasColumnType("character varying(100)")
                         .HasColumnName("product_name");
 
+                    b.Property<int?>("TotalSold")
+                        .HasColumnType("integer")
+                        .HasColumnName("total_sold");
+
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("updated_at");
 
                     b.HasKey("ProductId");
 
-                    b.HasIndex("CategoryId")
-                        .HasDatabaseName("idx_category_id");
-
                     b.HasIndex("ProductName")
                         .HasDatabaseName("idx_product_name");
 
                     b.ToTable("products");
+                });
+
+            modelBuilder.Entity("BusinessObject.Models.Entity.ProductCategoryMapping", b =>
+                {
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("product_id");
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("integer")
+                        .HasColumnName("category_id");
+
+                    b.HasKey("ProductId", "CategoryId");
+
+                    b.HasIndex("CategoryId");
+
+                    b.ToTable("product_category_mappings");
                 });
 
             modelBuilder.Entity("BusinessObject.Models.Entity.ProductHistory", b =>
@@ -1039,6 +1053,40 @@ namespace BusinessObject.Migrations
                     b.HasIndex("ProductId");
 
                     b.ToTable("product_images_embedding");
+                });
+
+            modelBuilder.Entity("BusinessObject.Models.Entity.ProductRecommendation", b =>
+                {
+                    b.Property<Guid>("PairId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("pair_id");
+
+                    b.Property<Guid>("ProductIdA")
+                        .HasColumnType("uuid")
+                        .HasColumnName("product_id_a");
+
+                    b.Property<Guid>("ProductIdB")
+                        .HasColumnType("uuid")
+                        .HasColumnName("product_id_b");
+
+                    b.Property<int>("Score")
+                        .HasColumnType("integer")
+                        .HasColumnName("score");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.HasKey("PairId");
+
+                    b.HasIndex("ProductIdB");
+
+                    b.HasIndex("ProductIdA", "ProductIdB")
+                        .IsUnique()
+                        .HasDatabaseName("UQ_RecommendProductPair");
+
+                    b.ToTable("products_recommendation");
                 });
 
             modelBuilder.Entity("BusinessObject.Models.Entity.ProductReview", b =>
@@ -1180,7 +1228,7 @@ namespace BusinessObject.Migrations
                     b.HasIndex("WarehouseId")
                         .HasDatabaseName("idx_warehouse_id");
 
-                    b.ToTable("stock");
+                    b.ToTable("stocks");
                 });
 
             modelBuilder.Entity("BusinessObject.Models.Entity.StockTransaction", b =>
@@ -1622,15 +1670,23 @@ namespace BusinessObject.Migrations
                     b.Navigation("Voucher");
                 });
 
-            modelBuilder.Entity("BusinessObject.Models.Entity.Product", b =>
+            modelBuilder.Entity("BusinessObject.Models.Entity.ProductCategoryMapping", b =>
                 {
                     b.HasOne("BusinessObject.Models.Entity.Category", "Category")
-                        .WithMany("Products")
+                        .WithMany("ProductCategoryMappings")
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.SetNull)
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BusinessObject.Models.Entity.Product", "Product")
+                        .WithMany("ProductCategoryMappings")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Category");
+
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("BusinessObject.Models.Entity.ProductHistory", b =>
@@ -1680,6 +1736,25 @@ namespace BusinessObject.Migrations
                     b.Navigation("Product");
 
                     b.Navigation("ProductImage");
+                });
+
+            modelBuilder.Entity("BusinessObject.Models.Entity.ProductRecommendation", b =>
+                {
+                    b.HasOne("BusinessObject.Models.Entity.Product", "ProductA")
+                        .WithMany("RecommendationsAsA")
+                        .HasForeignKey("ProductIdA")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("BusinessObject.Models.Entity.Product", "ProductB")
+                        .WithMany("RecommendationsAsB")
+                        .HasForeignKey("ProductIdB")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("ProductA");
+
+                    b.Navigation("ProductB");
                 });
 
             modelBuilder.Entity("BusinessObject.Models.Entity.ProductReview", b =>
@@ -1805,7 +1880,7 @@ namespace BusinessObject.Migrations
 
             modelBuilder.Entity("BusinessObject.Models.Entity.Category", b =>
                 {
-                    b.Navigation("Products");
+                    b.Navigation("ProductCategoryMappings");
                 });
 
             modelBuilder.Entity("BusinessObject.Models.Entity.ChatSession", b =>
@@ -1873,6 +1948,8 @@ namespace BusinessObject.Migrations
 
                     b.Navigation("OrderDetails");
 
+                    b.Navigation("ProductCategoryMappings");
+
                     b.Navigation("ProductHistories");
 
                     b.Navigation("ProductImages");
@@ -1880,6 +1957,10 @@ namespace BusinessObject.Migrations
                     b.Navigation("ProductImagesEmbeddings");
 
                     b.Navigation("ProductReviews");
+
+                    b.Navigation("RecommendationsAsA");
+
+                    b.Navigation("RecommendationsAsB");
 
                     b.Navigation("StockTransactions");
 

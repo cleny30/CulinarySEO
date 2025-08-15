@@ -40,9 +40,15 @@ namespace BusinessObject.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
-                    b.Property<Guid>("CustomerId")
+                    b.Property<string>("ImageTitle")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)")
+                        .HasColumnName("image_title");
+
+                    b.Property<Guid>("ManagerId")
                         .HasColumnType("uuid")
-                        .HasColumnName("customer_id");
+                        .HasColumnName("manager_id");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -56,8 +62,8 @@ namespace BusinessObject.Migrations
 
                     b.HasKey("BlogId");
 
-                    b.HasIndex("CustomerId")
-                        .HasDatabaseName("idx_customer_id_blog");
+                    b.HasIndex("ManagerId")
+                        .HasDatabaseName("idx_manager_id_blog");
 
                     b.ToTable("blogs");
                 });
@@ -160,39 +166,6 @@ namespace BusinessObject.Migrations
                         .HasDatabaseName("idx_parent_comment_id");
 
                     b.ToTable("blog_comments");
-                });
-
-            modelBuilder.Entity("BusinessObject.Models.Entity.BlogImage", b =>
-                {
-                    b.Property<Guid>("ImageId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("image_id");
-
-                    b.Property<Guid>("BlogId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("blog_id");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_at");
-
-                    b.Property<string>("ImageUrl")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)")
-                        .HasColumnName("image_url");
-
-                    b.Property<bool>("IsPrimary")
-                        .HasColumnType("boolean")
-                        .HasColumnName("is_primary");
-
-                    b.HasKey("ImageId");
-
-                    b.HasIndex("BlogId")
-                        .HasDatabaseName("idx_blog_id");
-
-                    b.ToTable("blog_images");
                 });
 
             modelBuilder.Entity("BusinessObject.Models.Entity.BlogSave", b =>
@@ -411,7 +384,6 @@ namespace BusinessObject.Migrations
                         .HasColumnName("password");
 
                     b.Property<string>("Phone")
-                        .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("character varying(20)")
                         .HasColumnName("phone");
@@ -434,12 +406,6 @@ namespace BusinessObject.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)")
                         .HasColumnName("token");
-
-                    b.Property<string>("Username")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
-                        .HasColumnName("username");
 
                     b.HasKey("CustomerId");
 
@@ -578,12 +544,6 @@ namespace BusinessObject.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("updated_at");
 
-                    b.Property<string>("Username")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
-                        .HasColumnName("username");
-
                     b.HasKey("ManagerId");
 
                     b.HasIndex("Email")
@@ -592,10 +552,6 @@ namespace BusinessObject.Migrations
 
                     b.HasIndex("RoleId")
                         .HasDatabaseName("idx_role_id");
-
-                    b.HasIndex("Username")
-                        .IsUnique()
-                        .HasDatabaseName("idx_username");
 
                     b.ToTable("managers");
                 });
@@ -1394,13 +1350,13 @@ namespace BusinessObject.Migrations
 
             modelBuilder.Entity("BusinessObject.Models.Entity.Blog", b =>
                 {
-                    b.HasOne("BusinessObject.Models.Entity.Customer", "Customer")
+                    b.HasOne("BusinessObject.Models.Entity.Manager", "Manager")
                         .WithMany("Blogs")
-                        .HasForeignKey("CustomerId")
+                        .HasForeignKey("ManagerId")
                         .OnDelete(DeleteBehavior.SetNull)
                         .IsRequired();
 
-                    b.Navigation("Customer");
+                    b.Navigation("Manager");
                 });
 
             modelBuilder.Entity("BusinessObject.Models.Entity.BlogCategoryMapping", b =>
@@ -1446,17 +1402,6 @@ namespace BusinessObject.Migrations
                     b.Navigation("Customer");
 
                     b.Navigation("ParentComment");
-                });
-
-            modelBuilder.Entity("BusinessObject.Models.Entity.BlogImage", b =>
-                {
-                    b.HasOne("BusinessObject.Models.Entity.Blog", "Blog")
-                        .WithMany("BlogImages")
-                        .HasForeignKey("BlogId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Blog");
                 });
 
             modelBuilder.Entity("BusinessObject.Models.Entity.BlogSave", b =>
@@ -1855,8 +1800,6 @@ namespace BusinessObject.Migrations
 
                     b.Navigation("BlogComments");
 
-                    b.Navigation("BlogImages");
-
                     b.Navigation("BlogSaves");
                 });
 
@@ -1891,8 +1834,6 @@ namespace BusinessObject.Migrations
 
                     b.Navigation("BlogSaves");
 
-                    b.Navigation("Blogs");
-
                     b.Navigation("Carts");
 
                     b.Navigation("ChatSessions");
@@ -1908,6 +1849,8 @@ namespace BusinessObject.Migrations
 
             modelBuilder.Entity("BusinessObject.Models.Entity.Manager", b =>
                 {
+                    b.Navigation("Blogs");
+
                     b.Navigation("ChatSessions");
 
                     b.Navigation("NotificationManagers");

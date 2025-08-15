@@ -1,5 +1,4 @@
 ﻿using BusinessObject.Models.Entity;
-using BusinessObject.Models.Enum;
 using Microsoft.EntityFrameworkCore;
 
 namespace BusinessObject.AppDbContext
@@ -35,6 +34,8 @@ namespace BusinessObject.AppDbContext
         public DbSet<OrderStatusHistory> OrderStatusHistories { get; set; }
         public DbSet<OrderDetail> OrderDetails { get; set; }
         public DbSet<ProductReview> ProductReviews { get; set; }
+        public DbSet<ProductRecommendation> ProductRecommendations { get; set; }
+        public DbSet<ProductCategoryMapping> ProductCategoryMappings { get; set; }
         public DbSet<Blog> Blogs { get; set; }
         public DbSet<BlogImage> BlogImages { get; set; }
         public DbSet<BlogSave> BlogSaves { get; set; }
@@ -54,6 +55,9 @@ namespace BusinessObject.AppDbContext
 
             modelBuilder.Entity<BlogCategoryMapping>()
                 .HasKey(bcm => new { bcm.BlogId, bcm.CategoryId });
+
+            modelBuilder.Entity<ProductCategoryMapping>()
+                .HasKey(pcm => new { pcm.ProductId, pcm.CategoryId });
 
             // Configure unique constraints
             modelBuilder.Entity<Role>()
@@ -135,10 +139,6 @@ namespace BusinessObject.AppDbContext
             modelBuilder.Entity<Product>()
                 .HasIndex(p => p.ProductName)
                 .HasDatabaseName("idx_product_name");
-
-            modelBuilder.Entity<Product>()
-                .HasIndex(p => p.CategoryId)
-                .HasDatabaseName("idx_category_id");
 
             // ProductImage indexes
             modelBuilder.Entity<ProductImage>()
@@ -301,6 +301,11 @@ namespace BusinessObject.AppDbContext
             modelBuilder.Entity<BlogComment>()
                 .HasIndex(bc => bc.ParentCommentId)
                 .HasDatabaseName("idx_parent_comment_id");
+
+            modelBuilder.Entity<ProductRecommendation>()
+                .HasIndex(e => new { e.ProductIdA, e.ProductIdB })
+                .IsUnique()
+                .HasDatabaseName("UQ_RecommendProductPair");
         }
 
         private void ConfigureRelationships(ModelBuilder modelBuilder)
@@ -351,12 +356,18 @@ namespace BusinessObject.AppDbContext
                 .HasForeignKey(bcm => bcm.CategoryId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // Product-Category relationship
-            modelBuilder.Entity<Product>()
-                .HasOne(p => p.Category)
-                .WithMany(c => c.Products)
-                .HasForeignKey(p => p.CategoryId)
-                .OnDelete(DeleteBehavior.SetNull);
+            // Product-ProductCategory many-to-many through ProductCategoryMapping
+            modelBuilder.Entity<ProductCategoryMapping>()
+                .HasOne(pcm => pcm.Product)
+                .WithMany(b => b.ProductCategoryMappings)
+                .HasForeignKey(pcm => pcm.ProductId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<ProductCategoryMapping>()
+                .HasOne(pcm => pcm.Category)
+                .WithMany(bc => bc.ProductCategoryMappings)
+                .HasForeignKey(pcm => pcm.CategoryId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             // ProductEmbedding-Product relationship (1:n)
             modelBuilder.Entity<ProductImagesEmbedding>()
@@ -398,6 +409,19 @@ namespace BusinessObject.AppDbContext
                 .WithMany(m => m.ProductHistories)
                 .HasForeignKey(ph => ph.ChangedBy)
                 .OnDelete(DeleteBehavior.SetNull);
+
+            //ProductRecommendation relationships
+            modelBuilder.Entity<ProductRecommendation>()
+                .HasOne(ph => ph.ProductA)
+                .WithMany(p => p.RecommendationsAsA)
+                .HasForeignKey(ph => ph.ProductIdA)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<ProductRecommendation>()
+                .HasOne(ph => ph.ProductB)
+                .WithMany(p => p.RecommendationsAsB)
+                .HasForeignKey(ph => ph.ProductIdB)
+                .OnDelete(DeleteBehavior.Restrict);
 
             // Stock relationships
             modelBuilder.Entity<Stock>()

@@ -12,11 +12,6 @@ namespace BusinessObject.Models.Entity
         public Guid ManagerId { get; set; }
 
         [Required]
-        [MaxLength(50)]
-        [Column("username")]
-        public string Username { get; set; } = string.Empty;
-
-        [Required]
         [MaxLength(255)]
         [Column("password")]
         public string Password { get; set; } = string.Empty;
@@ -71,5 +66,6 @@ namespace BusinessObject.Models.Entity
         public virtual ICollection<OrderStatusHistory>? OrderStatusHistories { get; set; }
         public virtual ICollection<NotificationManager>? NotificationManagers { get; set; }
         public virtual ICollection<ChatSession>? ChatSessions { get; set; }
+        public virtual ICollection<Blog>? Blogs { get; set; }
     }
 }

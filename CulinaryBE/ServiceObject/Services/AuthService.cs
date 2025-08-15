@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
 using BusinessObject.Models;
 using BusinessObject.Models.Dto;
+using BusinessObject.Models.Entity;
 using BusinessObject.Models.Enum;
 using DataAccess.IDAOs;
+using Google.Apis.Auth;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using ServiceObject.Background.Queue;
@@ -20,8 +23,15 @@ namespace ServiceObject.Services
         private readonly ITokenSaveQueue _tokenSaveQueue;
         private readonly ILogoutQueue _logoutQueue;
         private ILogger<AuthService> _logger;
+        private readonly IConfiguration _configuration;
 
-        public AuthService(IManagerDAO managerDAO, ICustomerDAO customerDAO, IJwtService jwtService, IMapper mapper, ITokenSaveQueue tokenSaveQueue, ILogoutQueue logoutQueue, ILogger<AuthService> logger)
+        public AuthService(IManagerDAO managerDAO, 
+            ICustomerDAO customerDAO, 
+            IJwtService jwtService, IMapper mapper, 
+            ITokenSaveQueue tokenSaveQueue, 
+            ILogoutQueue logoutQueue, 
+            ILogger<AuthService> logger, 
+            IConfiguration configuration)
         {
             _managerDAO = managerDAO;
             _customerDAO = customerDAO;
@@ -30,6 +40,7 @@ namespace ServiceObject.Services
             _tokenSaveQueue = tokenSaveQueue;
             _logoutQueue = logoutQueue;
             _logger = logger;
+            _configuration = configuration;
         }
 
         private async Task<LoginResponse> VerifyAccountAsync(
@@ -102,6 +113,69 @@ namespace ServiceObject.Services
             );
         }
 
+        public async Task<LoginResponse> VerifyGoogle(GoogleLoginRequest request)
+        {
+            try
+            {
+                var clientId = _configuration["Google:ClientId"];
+
+                var payload = await GoogleJsonWebSignature.ValidateAsync(
+                    request.IdToken,
+                    new GoogleJsonWebSignature.ValidationSettings
+                    {
+                        Audience = new[] { clientId }
+                    });
+                var account = new RegisterCustomerRequest
+                {
+                    Email = payload.Email,
+                    FullName = payload.Name,
+                };
+                var accountData = new AccountData();
+
+                //1. Check is account exist in db
+                bool isExist =  await _customerDAO.IsEmailExist(payload.Email);
+
+                if (!isExist)
+                {
+                    //Add new Customer account
+                    var entity = _mapper.Map<Customer>(account);
+                    bool isSucess = await _customerDAO.AddNewCustomer(entity);
+
+                    if (isSucess)
+                    {
+                        accountData = new AccountData
+                        {
+                            UserId = entity.CustomerId,
+                            FullName = entity.FullName,
+                            Email = entity.Email,
+                            RoleName = "Customer"
+                        };
+                    }
+                        
+                }
+
+                var accessToken = await _jwtService.GenerateJwtToken(accountData);
+                var refreshToken = _jwtService.GenerateRefreshToken();
+                var expiryDate = DateTime.UtcNow.AddDays(7);
+
+                _tokenSaveQueue.EnqueueToken(accountData.UserId, refreshToken, expiryDate, AccountType.Customer);
+
+                _logger.LogInformation("Login successful for email {Email}", accountData.Email);
+
+                return new LoginResponse
+                {
+                    AccessToken = accessToken,
+                    RefreshToken = refreshToken,
+                    ExpiresIn = 15 * 60,
+                    AccountData = accountData
+                };
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
         public async Task<LoginResponse> RefreshTokenManagerAsync(string accessToken, string refreshToken)
         {
             _logger.LogInformation("Refreshing token");
@@ -123,7 +197,6 @@ namespace ServiceObject.Services
                 var accountData = new AccountData
                 {
                     UserId = manager.ManagerId,
-                    Username = manager.Username,
                     Email = manager.Email,
                     RoleName = manager.Role.RoleName,
                     Permissions = manager.Role.RolePermissions
@@ -179,7 +252,6 @@ namespace ServiceObject.Services
                 var accountData = new AccountData
                 {
                     UserId = customer.CustomerId,
-                    Username = "",
                     Email = customer.Email,
                     RoleName = "Customer",
                 };

@@ -11,11 +11,6 @@ namespace BusinessObject.Models.Entity
         [Column("customer_id")]
         public Guid CustomerId { get; set; }
 
-        [Required]
-        [MaxLength(50)]
-        [Column("username")]
-        public string Username { get; set; } = string.Empty;
-
         [MaxLength(255)]
         [Column("password")]
         public string? Password { get; set; }
@@ -30,10 +25,9 @@ namespace BusinessObject.Models.Entity
         [Column("full_name")]
         public string FullName { get; set; } = string.Empty;
 
-        [Required]
         [MaxLength(20)]
         [Column("phone")]
-        public string Phone { get; set; } = string.Empty;
+        public string? Phone { get; set; }
 
         [MaxLength(255)]
         [Column("profile_pic")]
@@ -62,7 +56,6 @@ namespace BusinessObject.Models.Entity
         public virtual ICollection<Cart>? Carts { get; set; }
         public virtual ICollection<Order>? Orders { get; set; }
         public virtual ICollection<ProductReview>? ProductReviews { get; set; }
-        public virtual ICollection<Blog>? Blogs { get; set; }
         public virtual ICollection<BlogSave>? BlogSaves { get; set; }
         public virtual ICollection<BlogComment>? BlogComments { get; set; }
         public virtual ICollection<NotificationCustomer>? NotificationCustomers { get; set; }

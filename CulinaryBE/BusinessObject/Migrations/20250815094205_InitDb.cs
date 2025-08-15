@@ -53,11 +53,10 @@ namespace BusinessObject.Migrations
                 columns: table => new
                 {
                     customer_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    username = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     password = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
                     email = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     full_name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    phone = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
+                    phone = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
                     profile_pic = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
                     status = table.Column<string>(type: "text", nullable: false),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
@@ -152,28 +151,6 @@ namespace BusinessObject.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_warehouses", x => x.warehouse_id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "blogs",
-                columns: table => new
-                {
-                    blog_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    customer_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    title = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
-                    content = table.Column<string>(type: "text", nullable: false),
-                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_blogs", x => x.blog_id);
-                    table.ForeignKey(
-                        name: "FK_blogs_customers_customer_id",
-                        column: x => x.customer_id,
-                        principalTable: "customers",
-                        principalColumn: "customer_id",
-                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateTable(
@@ -344,7 +321,6 @@ namespace BusinessObject.Migrations
                 columns: table => new
                 {
                     manager_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    username = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     password = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
                     email = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     full_name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
@@ -420,111 +396,6 @@ namespace BusinessObject.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "blog_category_mappings",
-                columns: table => new
-                {
-                    blog_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    category_id = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_blog_category_mappings", x => new { x.blog_id, x.category_id });
-                    table.ForeignKey(
-                        name: "FK_blog_category_mappings_blog_categories_category_id",
-                        column: x => x.category_id,
-                        principalTable: "blog_categories",
-                        principalColumn: "category_id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_blog_category_mappings_blogs_blog_id",
-                        column: x => x.blog_id,
-                        principalTable: "blogs",
-                        principalColumn: "blog_id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "blog_comments",
-                columns: table => new
-                {
-                    comment_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    blog_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    customer_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    content = table.Column<string>(type: "text", nullable: false),
-                    parent_comment_id = table.Column<Guid>(type: "uuid", nullable: true),
-                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_blog_comments", x => x.comment_id);
-                    table.ForeignKey(
-                        name: "FK_blog_comments_blog_comments_parent_comment_id",
-                        column: x => x.parent_comment_id,
-                        principalTable: "blog_comments",
-                        principalColumn: "comment_id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_blog_comments_blogs_blog_id",
-                        column: x => x.blog_id,
-                        principalTable: "blogs",
-                        principalColumn: "blog_id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_blog_comments_customers_customer_id",
-                        column: x => x.customer_id,
-                        principalTable: "customers",
-                        principalColumn: "customer_id",
-                        onDelete: ReferentialAction.SetNull);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "blog_images",
-                columns: table => new
-                {
-                    image_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    blog_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    image_url = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
-                    is_primary = table.Column<bool>(type: "boolean", nullable: false),
-                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_blog_images", x => x.image_id);
-                    table.ForeignKey(
-                        name: "FK_blog_images_blogs_blog_id",
-                        column: x => x.blog_id,
-                        principalTable: "blogs",
-                        principalColumn: "blog_id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "blog_saves",
-                columns: table => new
-                {
-                    save_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    blog_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    customer_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    saved_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_blog_saves", x => x.save_id);
-                    table.ForeignKey(
-                        name: "FK_blog_saves_blogs_blog_id",
-                        column: x => x.blog_id,
-                        principalTable: "blogs",
-                        principalColumn: "blog_id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_blog_saves_customers_customer_id",
-                        column: x => x.customer_id,
-                        principalTable: "customers",
-                        principalColumn: "customer_id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "cart_items",
                 columns: table => new
                 {
@@ -576,6 +447,29 @@ namespace BusinessObject.Migrations
                         principalTable: "products",
                         principalColumn: "product_id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "blogs",
+                columns: table => new
+                {
+                    blog_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    manager_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    title = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    content = table.Column<string>(type: "text", nullable: false),
+                    image_title = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_blogs", x => x.blog_id);
+                    table.ForeignKey(
+                        name: "FK_blogs_managers_manager_id",
+                        column: x => x.manager_id,
+                        principalTable: "managers",
+                        principalColumn: "manager_id",
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateTable(
@@ -746,6 +640,90 @@ namespace BusinessObject.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "blog_category_mappings",
+                columns: table => new
+                {
+                    blog_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    category_id = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_blog_category_mappings", x => new { x.blog_id, x.category_id });
+                    table.ForeignKey(
+                        name: "FK_blog_category_mappings_blog_categories_category_id",
+                        column: x => x.category_id,
+                        principalTable: "blog_categories",
+                        principalColumn: "category_id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_blog_category_mappings_blogs_blog_id",
+                        column: x => x.blog_id,
+                        principalTable: "blogs",
+                        principalColumn: "blog_id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "blog_comments",
+                columns: table => new
+                {
+                    comment_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    blog_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    customer_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    content = table.Column<string>(type: "text", nullable: false),
+                    parent_comment_id = table.Column<Guid>(type: "uuid", nullable: true),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_blog_comments", x => x.comment_id);
+                    table.ForeignKey(
+                        name: "FK_blog_comments_blog_comments_parent_comment_id",
+                        column: x => x.parent_comment_id,
+                        principalTable: "blog_comments",
+                        principalColumn: "comment_id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_blog_comments_blogs_blog_id",
+                        column: x => x.blog_id,
+                        principalTable: "blogs",
+                        principalColumn: "blog_id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_blog_comments_customers_customer_id",
+                        column: x => x.customer_id,
+                        principalTable: "customers",
+                        principalColumn: "customer_id",
+                        onDelete: ReferentialAction.SetNull);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "blog_saves",
+                columns: table => new
+                {
+                    save_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    blog_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    customer_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    saved_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_blog_saves", x => x.save_id);
+                    table.ForeignKey(
+                        name: "FK_blog_saves_blogs_blog_id",
+                        column: x => x.blog_id,
+                        principalTable: "blogs",
+                        principalColumn: "blog_id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_blog_saves_customers_customer_id",
+                        column: x => x.customer_id,
+                        principalTable: "customers",
+                        principalColumn: "customer_id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "chat_histories",
                 columns: table => new
                 {
@@ -898,11 +876,6 @@ namespace BusinessObject.Migrations
                 column: "parent_comment_id");
 
             migrationBuilder.CreateIndex(
-                name: "idx_blog_id",
-                table: "blog_images",
-                column: "blog_id");
-
-            migrationBuilder.CreateIndex(
                 name: "idx_blog_id_save",
                 table: "blog_saves",
                 column: "blog_id");
@@ -913,9 +886,9 @@ namespace BusinessObject.Migrations
                 column: "customer_id");
 
             migrationBuilder.CreateIndex(
-                name: "idx_customer_id_blog",
+                name: "idx_manager_id_blog",
                 table: "blogs",
-                column: "customer_id");
+                column: "manager_id");
 
             migrationBuilder.CreateIndex(
                 name: "idx_cart_id",
@@ -993,12 +966,6 @@ namespace BusinessObject.Migrations
                 name: "idx_role_id",
                 table: "managers",
                 column: "role_id");
-
-            migrationBuilder.CreateIndex(
-                name: "idx_username",
-                table: "managers",
-                column: "username",
-                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_NotificationCustomers_customer_id",
@@ -1193,9 +1160,6 @@ namespace BusinessObject.Migrations
 
             migrationBuilder.DropTable(
                 name: "blog_comments");
-
-            migrationBuilder.DropTable(
-                name: "blog_images");
 
             migrationBuilder.DropTable(
                 name: "blog_saves");

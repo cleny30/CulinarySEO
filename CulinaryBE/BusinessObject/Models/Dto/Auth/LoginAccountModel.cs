@@ -4,8 +4,6 @@ namespace BusinessObject.Models.Dto
 {
     public class LoginAccountModel
     {
-        [MaxLength(50)]
-        public string? Username { get; set; }
 
         [MaxLength(50)]
         public string? Email { get; set; }
@@ -18,5 +16,10 @@ namespace BusinessObject.Models.Dto
 
         [MaxLength(35)]
         public string? OldPassword { get; set; }
+    }
+
+    public class GoogleLoginRequest
+    {
+        public string IdToken { get; set; }
     }
 }

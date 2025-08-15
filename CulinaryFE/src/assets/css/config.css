@@ -12,16 +12,22 @@
   --color-mau-be: rgba(var(--mau-be), 1);
   --color-mau-nau-vien: rgba(var(--mau-nau-vien), 1);
   --color-mau-do-color: rgba(var(--mau-do-color), 1);
-  --font-Lucky: "LuckiestGuy", sans-serif; 
+  --font-Lucky: "BDStreetSignSans", sans-serif; 
   --font-Mont: "Montserrat", sans-serif; 
 }
 
 /* ======================== INIT FONT FACE ====================== */
 @font-face {
-  font-family: "LuckiestGuy"; /* Choose a name for your font family */
-  src: local("LuckiestGuy"),
-    url("../fonts/LuckiestGuy-Regular.ttf") format("truetype");
+  font-family: "BDStreetSignSans"; /* Choose a name for your font family */
+  src: local("BDStreetSignSans"),
+    url("../fonts/BDStreetSignSans-SlightlyRaised.otf") format("otf");
   font-weight: normal;
+}
+@font-face {
+  font-family: "BDStreetSignSans"; /* Choose a name for your font family */
+  src: local("BDStreetSignSans"),
+    url("../fonts/BDStreetSignSans-SlightlyRaisedExtremeInktrap.otf") format("otf");
+  font-weight: 600;
 }
 @font-face {
   font-family: "Montserrat"; /* Choose a name for your font family */

@@ -50,14 +50,7 @@ export default function VerifyOtpContainer() {
   return (
     <CardWrapper backButtonHref="/register" backButtonLabel="Quay lại">
       <div className="flex flex-col items-center space-y-2">
-        <InputOTP
-          maxLength={6}
-          onComplete={(values) => {
-            setOtp(values);
-            handleVerify();
-          }}
-          className="w-full"
-        >
+        <InputOTP maxLength={6} onComplete={setOtp} className="w-full">
           <InputOTPGroup className="bg-transparent px-4 py-2 w-full">
             <InputOTPSlot index={0} />
             <InputOTPSlot index={1} />
@@ -72,7 +65,7 @@ export default function VerifyOtpContainer() {
             className="px-0"
             variant="link"
             onClick={handleResendOtp}
-            disabled={countdown > 0}
+            disabled={pending || countdown > 0}
           >
             {countdown > 0 ? `Gửi lại otp sau ${countdown}s` : "Gửi lại OTP"}
           </Button>

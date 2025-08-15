@@ -1,6 +1,6 @@
 // This file defines the private routes for the application.
 
-import AccountPage from "@/pages/accounts/page";
+import AccountPage from "@/pages/Accounts/page";
 
 // Private routes are typically accessible only to authenticated users.
 const privateRoutes = [

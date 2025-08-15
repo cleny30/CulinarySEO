@@ -1,5 +1,7 @@
 import axiosClient from "./axios";
 import { AxiosError, type AxiosResponse, type AxiosRequestConfig } from "axios";
+import { logoutSuccess } from "@/redux/auth/authSlice";
+import { store } from "@/redux/store";
 
 // Type definitions
 type HttpMethod = "get" | "post" | "put" | "delete";
@@ -67,9 +69,8 @@ const doRequest = async <T>(
 
 // Handle unauthorized access
 const handleUnauthorized = () => {
-  // Clear cookies and session
-  // Redirect to login page
-  // window.location.href = "/login";
+  store.dispatch(logoutSuccess());
+  window.location.href = "/";
 };
 
 // Export utility functions for each HTTP method

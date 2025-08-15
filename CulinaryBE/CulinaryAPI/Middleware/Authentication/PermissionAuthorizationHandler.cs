@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using ServiceObject.IServices;
 using System.Security.Claims;
 
 namespace CulinaryAPI.Middleware.Authentication
@@ -6,49 +7,41 @@ namespace CulinaryAPI.Middleware.Authentication
     public class PermissionAuthorizationHandler : AuthorizationHandler<PermissionRequirement>
     {
         private readonly IServiceScopeFactory _serviceScopeFactory;
+        private readonly ILogger<PermissionAuthorizationHandler> _logger;
 
-        public PermissionAuthorizationHandler(IServiceScopeFactory serviceScopeFactory)
+        public PermissionAuthorizationHandler(IServiceScopeFactory serviceScopeFactory, ILogger<PermissionAuthorizationHandler> logger)
         {
             _serviceScopeFactory = serviceScopeFactory;
+            _logger = logger;
         }
 
         protected override async Task HandleRequirementAsync(
             AuthorizationHandlerContext context,
             PermissionRequirement requirement)
         {
-            string? userId = context.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
 
-            if (!Guid.TryParse(userId, out Guid parseUserId))
+            //1. Get userId from Claim
+            var userIdClaim = context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (!Guid.TryParse(userIdClaim, out Guid userId))
             {
+                _logger.LogWarning("Authorization failed: Invalid or missing UserId claim.");
                 return;
             }
+
+            // 2. Get service from DI
             using IServiceScope scope = _serviceScopeFactory.CreateScope();
 
-            //IPermissionRepository permissionRepository = scope.ServiceProvider.GetRequiredService<IPermissionRepository>();
+            var permissionService = scope.ServiceProvider.GetRequiredService<IPermissionService>();
 
-            HashSet<KeyValuePair<string, bool>> permissions = null;
+            var permissions = await permissionService.GetUserPermissionsAsync(userId);
 
-            if (permissions == null || !permissions.Any())
-            {
-                return; // Từ chối nếu không có quyền
-            }
+            if (!permissions.Any())
+                return;
 
-            // Kiểm tra nếu IsRevoked == true
             if (permissions.Any(kvp => kvp.Value))
-            {
-                return; // Quyền bị thu hồi (IsRevoked == true), từ chối ngay lập tức
-            }
+                return;
 
-            if (!requirement.Permissions.Any() || requirement.Permissions.All(p => p == ""))
-            {
-                // Nếu không có quyền bị thu hồi, chấp nhận
-                if (!permissions.Any(kvp => kvp.Value))
-                {
-                    context.Succeed(requirement);
-                }
-            }
-
-            // Kiểm tra quyền theo logic RequireAllPermissions
             if (requirement.RequireAllPermissions)
             {
                 if (requirement.Permissions.All(permission => permissions.Any(kvp => kvp.Key == permission && !kvp.Value)))

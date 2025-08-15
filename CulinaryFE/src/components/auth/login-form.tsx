@@ -15,16 +15,15 @@ import { Input } from "../ui/input";
 import { Icon } from "@/utils/assets/icon";
 import { Button } from "../ui/button";
 import { login } from "@/redux/auth/apiRequest";
-import { useDispatch } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import toast from "@/utils/toast";
 import { useState, useTransition } from "react";
 import styles from "@/assets/css/auth.module.css";
+import { useDependencyInjection } from "@/utils/hooks/useDependencyInjection";
 
 export default function LoginForm() {
   const [isVisible, setVisible] = useState(false);
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+  const { dispatch, navigate } = useDependencyInjection();
   const [isPending, startTransition] = useTransition();
 
   const form = useForm<LoginSchemaType>({

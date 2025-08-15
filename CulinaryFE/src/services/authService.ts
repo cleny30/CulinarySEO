@@ -5,6 +5,7 @@ import type { UserSession } from "@/types/userSession";
 import { doRequest } from "@/utils/config/doRequest";
 import { errorMessage } from "@/utils/constants/error/errorMessage";
 
+
 export const loginUserService = async (
   loginInfo: LoginSchemaType
 ): Promise<ApiResponse<UserSession>> => {
@@ -30,7 +31,6 @@ export const signUpUserService = async (
   signUpInfo: RegisterSchemaType
 ): Promise<ApiResponse<UserRegister>> => {
   // TODO: Replace 'any' with a proper user/session type
- 
 
   try {
     const response = await doRequest<BackendApiResponse<UserRegister>>(
@@ -92,6 +92,23 @@ export const logoutUserService = async () => {
       withCredentials: true,
     });
     return;
+  } catch (error) {
+    return errorMessage(error);
+  }
+};
+
+export const loginGoogleService = async (
+  idToken: string
+): Promise<ApiResponse<UserSession>> => {
+  try {
+    const response = await doRequest<BackendApiResponse<UserSession>>(
+      "post",
+      "/api/auth/google-login",
+      {
+        data: JSON.stringify({ idToken: idToken }),
+      }
+    );
+    return { data: response.data.result };
   } catch (error) {
     return errorMessage(error);
   }

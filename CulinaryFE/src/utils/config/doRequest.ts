@@ -2,6 +2,7 @@ import axiosClient from "./axios";
 import { AxiosError, type AxiosResponse, type AxiosRequestConfig } from "axios";
 import { logoutSuccess } from "@/redux/auth/authSlice";
 import { store } from "@/redux/store";
+import toast from "../toast";
 
 // Type definitions
 type HttpMethod = "get" | "post" | "put" | "delete";
@@ -70,6 +71,7 @@ const doRequest = async <T>(
 // Handle unauthorized access
 const handleUnauthorized = () => {
   store.dispatch(logoutSuccess());
+  toast.custom("Phiên đăng nhập đã hết hạn!");
   window.location.href = "/";
 };
 

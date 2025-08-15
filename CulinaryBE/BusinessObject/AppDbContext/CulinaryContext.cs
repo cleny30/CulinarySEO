@@ -71,11 +71,6 @@ namespace BusinessObject.AppDbContext
                 .HasDatabaseName("idx_permission_name");
 
             modelBuilder.Entity<Manager>()
-                .HasIndex(u => u.Username)
-                .IsUnique()
-                .HasDatabaseName("idx_username");
-
-            modelBuilder.Entity<Manager>()
                 .HasIndex(u => u.Email)
                 .IsUnique()
                 .HasDatabaseName("idx_email");
@@ -272,8 +267,8 @@ namespace BusinessObject.AppDbContext
 
             // Blog indexes
             modelBuilder.Entity<Blog>()
-                .HasIndex(b => b.CustomerId)
-                .HasDatabaseName("idx_customer_id_blog");
+                .HasIndex(b => b.ManagerId)
+                .HasDatabaseName("idx_manager_id_blog");
 
             // BlogImage indexes
             modelBuilder.Entity<BlogImage>()
@@ -547,11 +542,11 @@ namespace BusinessObject.AppDbContext
                 .HasForeignKey(pr => pr.CustomerId)
                 .OnDelete(DeleteBehavior.SetNull);
 
-            // Blog-Customer relationship
+            // Blog-Manager relationship
             modelBuilder.Entity<Blog>()
-                .HasOne(b => b.Customer)
+                .HasOne(b => b.Manager)
                 .WithMany(c => c.Blogs)
-                .HasForeignKey(b => b.CustomerId)
+                .HasForeignKey(b => b.ManagerId)
                 .OnDelete(DeleteBehavior.SetNull);
 
             // BlogSave relationships

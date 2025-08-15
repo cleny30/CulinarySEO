@@ -217,17 +217,6 @@ namespace CulinaryAPI.Controllers
                 });
             }
 
-            bool isUsernameExist = await _customerService.IsUsernameExist(registerData.Username);
-
-            if (isUsernameExist)
-            {
-                return BadRequest(new ApiResponse
-                {
-                    IsSuccess = false,
-                    Message = "Username already used",
-                });
-            }
-
             string otp = _otpService.GenerateAndStoreOtp(registerData.Email, registerData, 30);
 
             await _emailService.SendOtpEmailAsync(registerData.Email, otp);

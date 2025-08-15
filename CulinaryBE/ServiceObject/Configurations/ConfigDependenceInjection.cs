@@ -41,9 +41,11 @@ namespace ServiceObject.Configurations
         {
             services.AddSingleton<ITokenSaveQueue, TokenSaveQueue>();
             services.AddSingleton<ILogoutQueue, LogoutQueue>();
+            services.AddSingleton<IEmailQueue, EmailQueue>();
 
             services.AddHostedService<TokenSaveBackgroundService>();
             services.AddHostedService<LogoutBackgroundService>();
+            services.AddHostedService<EmailBackgroundService>();
         }
     }
 }

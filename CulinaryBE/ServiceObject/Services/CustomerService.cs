@@ -51,20 +51,5 @@ namespace ServiceObject.Services
                 throw new ValidationException("Failed to process check email: " + ex.Message);
             }
         }
-
-        public async Task<bool> IsUsernameExist(string username)
-        {
-            _logger.LogInformation("Checking if username exists in database: {Username}", username);
-
-            try
-            {
-                return await _customerDAO.IsUsernameExist(username);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error processing check for username: {Username}", username);
-                throw new ValidationException("Failed to process check username: " + ex.Message);
-            }
-        }
     }
 }

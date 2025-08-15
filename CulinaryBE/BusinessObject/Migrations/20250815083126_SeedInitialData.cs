@@ -27,14 +27,13 @@ namespace BusinessObject.Migrations
         table: "managers",
         columns: new[]
         {
-    "manager_id", "username", "password", "email", "full_name",
+    "manager_id",  "password", "email", "full_name",
     "phone", "role_id", "created_at", "status"
         },
         values: new object[,]
         {
     {
         Guid.NewGuid(), // admin
-        "admin",
         "AQAAAAIAAYagAAAAEK2axMrYmK+26cgOaYFkOHqYXJkDtPzpHoTqoVnE9iEzEY9Q507c9rGMJ71qg4awKw==",
         "admin@gmail.com",
         "Admin User",
@@ -45,7 +44,6 @@ namespace BusinessObject.Migrations
     },
     {
         Guid.NewGuid(), // staff
-        "staff",
         "AQAAAAIAAYagAAAAEGwzTJksBrsx/77arwOi0akV3h7cgmuwx+w8UCkiG0dWvMYZu5/UH6xTuLfFi1PtIA==",
         "staff@gmail.com",
         "Staff User",
@@ -56,7 +54,6 @@ namespace BusinessObject.Migrations
     },
     {
         Guid.NewGuid(), // shipper
-        "shipper",
         "AQAAAAIAAYagAAAAEFU/k2/qR9NZem4aFktsHVr2KUmZhdyyoldnsYafTCftq5PM7QmnR4lGQO+fHpUhgw==",
         "shipper@gmail.com",
         "Shipper User",
@@ -73,13 +70,12 @@ namespace BusinessObject.Migrations
                         table: "customers",
                         columns: new[]
                         {
-        "customer_id", "username", "password", "email", "full_name",
+        "customer_id", "password", "email", "full_name",
         "phone", "profile_pic", "status", "created_at"
                         },
                         values: new object[]
                         {
         Guid.NewGuid(),
-        "customer",
         "AQAAAAIAAYagAAAAEDVpmlt9TqchZLDL9AV0woZ4TThB42D8rtsLA4aiO6MeeG5IQG+qmBxufO1pD8sigw==",
         "customer@gmail.com",
         "Customer User",

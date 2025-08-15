@@ -4,11 +4,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using ServiceObject.Background.Queue;
-using ServiceObject.IServices;
 using System.Net;
 using System.Net.Mail;
-using System.Reflection;
-using System.Resources;
 
 namespace ServiceObject.Background.BackgroundServices
 {
@@ -38,23 +35,8 @@ namespace ServiceObject.Background.BackgroundServices
                         using var scope = _serviceProvider.CreateScope();
                         var emailSettings = scope.ServiceProvider.GetRequiredService<IOptions<EmailSetting>>().Value;
 
-                        // Tạo template email
-                        string resxFilePath = "ServiceObject.Resources.EmailTemplates";
-                        var resourceManager = new ResourceManager(resxFilePath, Assembly.GetExecutingAssembly());
-
-                        string template = resourceManager.GetString("OtpEmailTemplate")!;
-                        string subject = resourceManager.GetString("EmailVerificationSubject")!;
-                        string supportEmail = resourceManager.GetString("SupportEmail")!;
-
-                        string body = template
-                            .Replace("{Date}", DateTime.UtcNow.ToString("dd/MM/yyyy"))
-                            .Replace("{OtpCode}", emailItem.Otp)
-                            .Replace("{SupportEmail}", supportEmail);
-
-                        // Gửi email SMTP
-                        await SendEmailAsync(emailItem.ToEmail, subject, body, emailSettings);
-
-                        _logger.LogInformation("Sent OTP email to {Email}", emailItem.ToEmail);
+                        await SendEmailAsync(emailItem, emailSettings);
+                        _logger.LogInformation("Sent email to {Email}", emailItem.ToEmail);
                     }
                     else
                     {
@@ -69,7 +51,7 @@ namespace ServiceObject.Background.BackgroundServices
             }
         }
 
-        private async Task SendEmailAsync(string toEmail, string subject, string body, EmailSetting settings)
+        private async Task SendEmailAsync(EmailQueueItem emailItem, EmailSetting settings)
         {
             using var smtpClient = new SmtpClient("smtp.gmail.com")
             {
@@ -81,11 +63,11 @@ namespace ServiceObject.Background.BackgroundServices
             using var mailMessage = new MailMessage
             {
                 From = new MailAddress(settings.Email),
-                Subject = subject,
-                Body = body,
+                Subject = emailItem.Subject,
+                Body = emailItem.Body,
                 IsBodyHtml = true,
             };
-            mailMessage.To.Add(toEmail);
+            mailMessage.To.Add(emailItem.ToEmail);
 
             await smtpClient.SendMailAsync(mailMessage);
         }

@@ -6,6 +6,6 @@
         public string Password { get; set; } = string.Empty;
     }
 
-    public record EmailQueueItem(string ToEmail, string Otp);
+    public record EmailQueueItem(string ToEmail, string Subject, string Body);
 
 }

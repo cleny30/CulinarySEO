@@ -44,7 +44,6 @@ namespace ServiceObject.Services
                 var claims = new List<Claim>
                 {
                     new Claim(JwtRegisteredClaimNames.Sub, accountData.UserId.ToString()),
-                    new Claim(JwtRegisteredClaimNames.Name, accountData.Username),
                     new Claim(JwtRegisteredClaimNames.Email, accountData.Email),
                     new Claim("Role", accountData.RoleName),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())

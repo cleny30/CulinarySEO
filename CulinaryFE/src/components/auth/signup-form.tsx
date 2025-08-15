@@ -14,18 +14,17 @@ import { RegisterSchema, type RegisterSchemaType } from "@/schemas/auth";
 import { Input } from "../ui/input";
 import { Icon } from "@/utils/assets/icon";
 import { Button } from "../ui/button";
-import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import toast from "@/utils/toast";
 import { useState, useTransition } from "react";
 import styles from "@/assets/css/auth.module.css";
 import { store_email, store_phone_number } from "@/utils/config/storeInfo";
 import { sentOtp } from "@/redux/auth/apiRequest";
+import { useDependencyInjection } from "@/utils/hooks/useDependencyInjection";
 
 export default function SignUpForm() {
+  const { dispatch, navigate } = useDependencyInjection();
+
   const [isVisible, setVisible] = useState(false);
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
   const [isPending, startTransition] = useTransition();
 
   const handleTogglePass = () => {

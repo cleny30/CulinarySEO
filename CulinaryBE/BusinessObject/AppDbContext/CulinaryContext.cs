@@ -37,7 +37,6 @@ namespace BusinessObject.AppDbContext
         public DbSet<ProductRecommendation> ProductRecommendations { get; set; }
         public DbSet<ProductCategoryMapping> ProductCategoryMappings { get; set; }
         public DbSet<Blog> Blogs { get; set; }
-        public DbSet<BlogImage> BlogImages { get; set; }
         public DbSet<BlogSave> BlogSaves { get; set; }
         public DbSet<BlogComment> BlogComments { get; set; }
         public DbSet<NotificationManager> NotificationManagers { get; set; }
@@ -270,11 +269,6 @@ namespace BusinessObject.AppDbContext
                 .HasIndex(b => b.ManagerId)
                 .HasDatabaseName("idx_manager_id_blog");
 
-            // BlogImage indexes
-            modelBuilder.Entity<BlogImage>()
-                .HasIndex(bi => bi.BlogId)
-                .HasDatabaseName("idx_blog_id");
-
             // BlogSave indexes
             modelBuilder.Entity<BlogSave>()
                 .HasIndex(bs => bs.BlogId)
@@ -383,13 +377,6 @@ namespace BusinessObject.AppDbContext
                 .HasOne(pi => pi.Product)
                 .WithMany(p => p.ProductImages)
                 .HasForeignKey(pi => pi.ProductId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            // BlogImage-Blog relationship
-            modelBuilder.Entity<BlogImage>()
-                .HasOne(bi => bi.Blog)
-                .WithMany(b => b.BlogImages)
-                .HasForeignKey(bi => bi.BlogId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             // ProductHistory relationships

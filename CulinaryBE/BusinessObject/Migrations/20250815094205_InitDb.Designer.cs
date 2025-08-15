@@ -13,8 +13,8 @@ using Pgvector;
 namespace BusinessObject.Migrations
 {
     [DbContext(typeof(CulinaryContext))]
-    [Migration("20250815083126_SeedInitialData")]
-    partial class SeedInitialData
+    [Migration("20250815094205_InitDb")]
+    partial class InitDb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -42,6 +42,12 @@ namespace BusinessObject.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
+
+                    b.Property<string>("ImageTitle")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)")
+                        .HasColumnName("image_title");
 
                     b.Property<Guid>("ManagerId")
                         .HasColumnType("uuid")
@@ -163,39 +169,6 @@ namespace BusinessObject.Migrations
                         .HasDatabaseName("idx_parent_comment_id");
 
                     b.ToTable("blog_comments");
-                });
-
-            modelBuilder.Entity("BusinessObject.Models.Entity.BlogImage", b =>
-                {
-                    b.Property<Guid>("ImageId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("image_id");
-
-                    b.Property<Guid>("BlogId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("blog_id");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_at");
-
-                    b.Property<string>("ImageUrl")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)")
-                        .HasColumnName("image_url");
-
-                    b.Property<bool>("IsPrimary")
-                        .HasColumnType("boolean")
-                        .HasColumnName("is_primary");
-
-                    b.HasKey("ImageId");
-
-                    b.HasIndex("BlogId")
-                        .HasDatabaseName("idx_blog_id");
-
-                    b.ToTable("blog_images");
                 });
 
             modelBuilder.Entity("BusinessObject.Models.Entity.BlogSave", b =>
@@ -1434,17 +1407,6 @@ namespace BusinessObject.Migrations
                     b.Navigation("ParentComment");
                 });
 
-            modelBuilder.Entity("BusinessObject.Models.Entity.BlogImage", b =>
-                {
-                    b.HasOne("BusinessObject.Models.Entity.Blog", "Blog")
-                        .WithMany("BlogImages")
-                        .HasForeignKey("BlogId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Blog");
-                });
-
             modelBuilder.Entity("BusinessObject.Models.Entity.BlogSave", b =>
                 {
                     b.HasOne("BusinessObject.Models.Entity.Blog", "Blog")
@@ -1840,8 +1802,6 @@ namespace BusinessObject.Migrations
                     b.Navigation("BlogCategoryMappings");
 
                     b.Navigation("BlogComments");
-
-                    b.Navigation("BlogImages");
 
                     b.Navigation("BlogSaves");
                 });

@@ -1,30 +1,18 @@
-import styles from "@/assets/css/home.module.css";
-import { Button } from "../ui/button";
-import { logout } from "@/redux/auth/apiRequest";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import type { RootState } from "@/redux/store";
-import { printToast } from "@/utils/constants/toast/printToast";
+import HeaderLogo from "../ui/header/header_logo";
+import HeaderNav from "../ui/header/header_nav";
+import HeaderRightActions from "../ui/header/header_right_actions";
 export default function Header() {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-
-  const user = useSelector((state: RootState) => state.auth.login?.currentUser);
-  const handleLogout = async () => {
-    await logout(dispatch, navigate).then(printToast);
-  };
+  const user =
+    useSelector((state: RootState) => state.auth.login?.currentUser) || null;
 
   return (
-    <header>
-      <div className="">
-        <div className={`${styles.headerLogo} p-4`}>
-          Hello {user?.fullName} 
-          {user && (
-            <Button variant={"secondary"} type="button" onClick={handleLogout}>
-              Logout
-            </Button>
-          )}
-        </div>
+    <header className="w-screen justify-center flex border-b-2 border-b-mau-do-color  absolute top-0">
+      <div className="flex items-center w-full justify-between max-w-[1200px]">
+        <HeaderLogo />
+        <HeaderNav />
+        <HeaderRightActions user={user}/>
       </div>
     </header>
   );

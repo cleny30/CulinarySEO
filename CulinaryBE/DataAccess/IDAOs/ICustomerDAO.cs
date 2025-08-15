@@ -10,7 +10,7 @@ namespace DataAccess.IDAOs
         Task<Customer?> GetRefreshTokenAsync(string refreshToken);
         Task RevokeRefreshTokenAsync(string refreshToken);
         Task<bool> IsEmailExist(string email);
-        Task<bool> IsUsernameExist(string username);
         Task<bool> AddNewCustomer(Customer customer);
+        Task<Customer> GetCustomerByEmail(string email);
     }
 }

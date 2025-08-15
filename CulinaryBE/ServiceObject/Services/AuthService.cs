@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
 using BusinessObject.Models;
 using BusinessObject.Models.Dto;
+using BusinessObject.Models.Entity;
 using BusinessObject.Models.Enum;
 using DataAccess.IDAOs;
+using Google.Apis.Auth;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using ServiceObject.Background.Queue;
@@ -20,8 +23,15 @@ namespace ServiceObject.Services
         private readonly ITokenSaveQueue _tokenSaveQueue;
         private readonly ILogoutQueue _logoutQueue;
         private ILogger<AuthService> _logger;
+        private readonly IConfiguration _configuration;
 
-        public AuthService(IManagerDAO managerDAO, ICustomerDAO customerDAO, IJwtService jwtService, IMapper mapper, ITokenSaveQueue tokenSaveQueue, ILogoutQueue logoutQueue, ILogger<AuthService> logger)
+        public AuthService(IManagerDAO managerDAO, 
+            ICustomerDAO customerDAO, 
+            IJwtService jwtService, IMapper mapper, 
+            ITokenSaveQueue tokenSaveQueue, 
+            ILogoutQueue logoutQueue, 
+            ILogger<AuthService> logger, 
+            IConfiguration configuration)
         {
             _managerDAO = managerDAO;
             _customerDAO = customerDAO;
@@ -30,6 +40,7 @@ namespace ServiceObject.Services
             _tokenSaveQueue = tokenSaveQueue;
             _logoutQueue = logoutQueue;
             _logger = logger;
+            _configuration = configuration;
         }
 
         private async Task<LoginResponse> VerifyAccountAsync(
@@ -102,6 +113,75 @@ namespace ServiceObject.Services
             );
         }
 
+        public async Task<LoginResponse> VerifyGoogle(GoogleLoginRequest request)
+        {
+            try
+            {
+                var clientId = _configuration["Google:ClientId"];
+
+                // 1. Xác thực token Google
+                var payload = await GoogleJsonWebSignature.ValidateAsync(
+                    request.IdToken,
+                    new GoogleJsonWebSignature.ValidationSettings
+                    {
+                        Audience = new[] { clientId }
+                    });
+
+                // 2. Tìm user trong DB
+                var customerEntity = await _customerDAO.GetCustomerByEmail(payload.Email);
+
+                if (customerEntity == null)
+                {
+                    // Tạo mới nếu chưa tồn tại
+                    customerEntity = new Customer
+                    {
+                        Email = payload.Email,
+                        FullName = payload.Name,
+                        CreatedAt = DateTime.UtcNow
+                    };
+
+                    var added = await _customerDAO.AddNewCustomer(customerEntity);
+                    if (!added)
+                    {
+                        throw new InvalidOperationException("Could not create customer account.");
+                    }
+                }
+
+                // 3. Map sang AccountData
+                var accountData = _mapper.Map<AccountData>(customerEntity);
+                accountData.RoleName ??= "Customer";
+
+                // 4. Tạo token
+                var accessToken = await _jwtService.GenerateJwtToken(accountData);
+                var refreshToken = _jwtService.GenerateRefreshToken();
+                var expiryDate = DateTime.UtcNow.AddDays(7);
+
+                // 5. Lưu refresh token vào queue
+                _tokenSaveQueue.EnqueueToken(accountData.UserId, refreshToken, expiryDate, AccountType.Customer);
+
+                _logger.LogInformation("Login successful for email {Email}", accountData.Email);
+
+                return new LoginResponse
+                {
+                    AccessToken = accessToken,
+                    RefreshToken = refreshToken,
+                    ExpiresIn = 15 * 60,
+                    AccountData = accountData
+                };
+            }
+            catch (InvalidJwtException ex)
+            {
+                _logger.LogWarning(ex, "Invalid Google ID token");
+                throw new UnauthorizedAccessException("Invalid Google login token.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error verifying Google login.");
+                throw;
+            }
+        }
+
+
         public async Task<LoginResponse> RefreshTokenManagerAsync(string accessToken, string refreshToken)
         {
             _logger.LogInformation("Refreshing token");
@@ -123,7 +203,6 @@ namespace ServiceObject.Services
                 var accountData = new AccountData
                 {
                     UserId = manager.ManagerId,
-                    Username = manager.Username,
                     Email = manager.Email,
                     RoleName = manager.Role.RoleName,
                     Permissions = manager.Role.RolePermissions
@@ -179,7 +258,6 @@ namespace ServiceObject.Services
                 var accountData = new AccountData
                 {
                     UserId = customer.CustomerId,
-                    Username = "",
                     Email = customer.Email,
                     RoleName = "Customer",
                 };

@@ -1,11 +1,11 @@
 import HeaderCard from "@/components/auth/header-card";
-import LoginForm from "@/components/auth/login-form";
+import SignUpForm from "@/components/auth/signup-form";
 
-export default function LoginPage() {
+export default function RegisterPage() {
   return (
     <div className="w-screen h-screen flex flex-col items-center justify-center bg-mau-sua-bo">
-      <HeaderCard headerTitle="Sign In Account"/>
-      <LoginForm />
+      <HeaderCard headerTitle="Create your Account" />
+      <SignUpForm />
     </div>
   );
 }

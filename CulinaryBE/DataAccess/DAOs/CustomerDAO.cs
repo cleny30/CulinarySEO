@@ -25,7 +25,7 @@ namespace DataAccess.DAOs
             try
             {
                 var customer = await _context.Customers
-                    .Where(m => (m.Email == model.Email || m.Username == model.Username) && m.Status != UserStatus.Suspended)
+                    .Where(m => (m.Email == model.Email) && m.Status != UserStatus.Suspended)
                     .FirstOrDefaultAsync();
 
                 if (customer == null)
@@ -42,7 +42,6 @@ namespace DataAccess.DAOs
                 {
                     UserId = customer.CustomerId,
                     FullName = customer.FullName,
-                    Username = customer.Username,
                     Phone = customer.Phone,
                     ProfilePic = customer.ProfilePic,
                     Email = customer.Email,
@@ -145,18 +144,6 @@ namespace DataAccess.DAOs
             }
         }
 
-        public async Task<bool> IsUsernameExist(string username)
-        {
-            try
-            {
-                return await _context.Customers.AnyAsync(m => m.Username == username);
-            }
-            catch (NpgsqlException ex)
-            {
-                throw new DatabaseException("Failed to check username exist: " + ex.Message);
-            }
-        }
-
         public async Task<bool> AddNewCustomer(Customer customer)
         {
             try
@@ -166,6 +153,21 @@ namespace DataAccess.DAOs
                 await _context.Customers.AddAsync(customer);
                 await _context.SaveChangesAsync();
                 return true;
+            }
+            catch (NpgsqlException ex)
+            {
+                throw new DatabaseException("Failed to add new customer: " + ex.Message);
+            }
+        }
+
+        public async Task<Customer> GetCustomerByEmail(string email)
+        {
+            try
+            {
+                var customer = await _context.Customers
+                    .FirstOrDefaultAsync(m => m.Email == email && m.Status != UserStatus.Suspended);
+
+                return customer;
             }
             catch (NpgsqlException ex)
             {

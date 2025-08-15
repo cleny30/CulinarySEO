@@ -37,7 +37,6 @@ namespace BusinessObject.AppDbContext
         public DbSet<ProductRecommendation> ProductRecommendations { get; set; }
         public DbSet<ProductCategoryMapping> ProductCategoryMappings { get; set; }
         public DbSet<Blog> Blogs { get; set; }
-        public DbSet<BlogImage> BlogImages { get; set; }
         public DbSet<BlogSave> BlogSaves { get; set; }
         public DbSet<BlogComment> BlogComments { get; set; }
         public DbSet<NotificationManager> NotificationManagers { get; set; }
@@ -69,11 +68,6 @@ namespace BusinessObject.AppDbContext
                 .HasIndex(p => p.PermissionName)
                 .IsUnique()
                 .HasDatabaseName("idx_permission_name");
-
-            modelBuilder.Entity<Manager>()
-                .HasIndex(u => u.Username)
-                .IsUnique()
-                .HasDatabaseName("idx_username");
 
             modelBuilder.Entity<Manager>()
                 .HasIndex(u => u.Email)
@@ -272,13 +266,8 @@ namespace BusinessObject.AppDbContext
 
             // Blog indexes
             modelBuilder.Entity<Blog>()
-                .HasIndex(b => b.CustomerId)
-                .HasDatabaseName("idx_customer_id_blog");
-
-            // BlogImage indexes
-            modelBuilder.Entity<BlogImage>()
-                .HasIndex(bi => bi.BlogId)
-                .HasDatabaseName("idx_blog_id");
+                .HasIndex(b => b.ManagerId)
+                .HasDatabaseName("idx_manager_id_blog");
 
             // BlogSave indexes
             modelBuilder.Entity<BlogSave>()
@@ -388,13 +377,6 @@ namespace BusinessObject.AppDbContext
                 .HasOne(pi => pi.Product)
                 .WithMany(p => p.ProductImages)
                 .HasForeignKey(pi => pi.ProductId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            // BlogImage-Blog relationship
-            modelBuilder.Entity<BlogImage>()
-                .HasOne(bi => bi.Blog)
-                .WithMany(b => b.BlogImages)
-                .HasForeignKey(bi => bi.BlogId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             // ProductHistory relationships
@@ -547,11 +529,11 @@ namespace BusinessObject.AppDbContext
                 .HasForeignKey(pr => pr.CustomerId)
                 .OnDelete(DeleteBehavior.SetNull);
 
-            // Blog-Customer relationship
+            // Blog-Manager relationship
             modelBuilder.Entity<Blog>()
-                .HasOne(b => b.Customer)
+                .HasOne(b => b.Manager)
                 .WithMany(c => c.Blogs)
-                .HasForeignKey(b => b.CustomerId)
+                .HasForeignKey(b => b.ManagerId)
                 .OnDelete(DeleteBehavior.SetNull);
 
             // BlogSave relationships

@@ -101,11 +101,14 @@ export default function LoginForm() {
                     </FormControl>
                     <FormLabel className={`text-gray-500`}>
                       {isVisible ? (
-                        <Icon.Eye className="w-5" onClick={handleTogglePass} />
+                        <Icon.Eye
+                          onClick={handleTogglePass}
+                          className="w-5 cursor-pointer"
+                        />
                       ) : (
                         <Icon.EyeClosed
-                          className="w-5"
                           onClick={handleTogglePass}
+                          className="w-5 cursor-pointer"
                         />
                       )}
                     </FormLabel>

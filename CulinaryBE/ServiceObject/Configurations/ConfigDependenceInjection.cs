@@ -15,6 +15,11 @@ namespace ServiceObject.Configurations
             services.AddScoped<IManagerDAO, ManagerDAO>();
             services.AddScoped<ICustomerDAO, CustomerDAO>();
             services.AddScoped<IProductDAO, ProductDAO>();
+            services.AddScoped<ICategoryDAO, CategoryDAO>();
+            services.AddScoped<IPermissionDAO, PermissionDAO>();
+            services.AddScoped<IOrderDAO, OrderDAO>();
+            services.AddScoped<IRecommendationDAO, RecommendationDAO>();
+            services.AddScoped<ICartDAO, CartDAO>();
         }
 
         public static void ConfigureService(this IServiceCollection services)
@@ -25,7 +30,11 @@ namespace ServiceObject.Configurations
             services.AddScoped<ICustomerService, CustomerService>();
             services.AddScoped<IOtpService, OtpService>();
             services.AddScoped<IEmailService, EmailService>();
+            services.AddScoped<ICategoryService, CategoryService>();
+            services.AddScoped<IPermissionService, PermissionService>();
+            services.AddScoped<ICartService, CartService>();
 
+            services.AddScoped<IRecommendationService, RecommendationService>();
         }
 
         public static void ConfigureBackgroundService(this IServiceCollection services)

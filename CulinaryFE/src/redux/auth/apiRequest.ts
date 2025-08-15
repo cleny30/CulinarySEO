@@ -5,6 +5,7 @@ import {
   type RegisterSchemaType,
 } from "@/schemas/auth";
 import {
+  loginGoogleService,
   loginUserService,
   logoutUserService,
   resendOtpService,
@@ -36,6 +37,23 @@ export const login = async (
   const { email, password } = validatedFields.data;
 
   const result = await loginUserService({ email, password });
+
+  if (result.error) {
+    return { error: result.error };
+  }
+
+  dispatch(loginSuccess(result.data as UserSession));
+  navigate("/", { replace: true });
+
+  return { success: "Đăng nhập thành công!" };
+};
+
+export const loginGoogle = async (
+  idToken: string,
+  dispatch: AppDispatch,
+  navigate: NavigateFunction
+) => {
+  const result = await loginGoogleService(idToken);
 
   if (result.error) {
     return { error: result.error };

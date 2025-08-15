@@ -457,6 +457,7 @@ namespace BusinessObject.Migrations
                     manager_id = table.Column<Guid>(type: "uuid", nullable: false),
                     title = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
                     content = table.Column<string>(type: "text", nullable: false),
+                    image_title = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
@@ -697,27 +698,6 @@ namespace BusinessObject.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "blog_images",
-                columns: table => new
-                {
-                    image_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    blog_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    image_url = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
-                    is_primary = table.Column<bool>(type: "boolean", nullable: false),
-                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_blog_images", x => x.image_id);
-                    table.ForeignKey(
-                        name: "FK_blog_images_blogs_blog_id",
-                        column: x => x.blog_id,
-                        principalTable: "blogs",
-                        principalColumn: "blog_id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "blog_saves",
                 columns: table => new
                 {
@@ -894,11 +874,6 @@ namespace BusinessObject.Migrations
                 name: "idx_parent_comment_id",
                 table: "blog_comments",
                 column: "parent_comment_id");
-
-            migrationBuilder.CreateIndex(
-                name: "idx_blog_id",
-                table: "blog_images",
-                column: "blog_id");
 
             migrationBuilder.CreateIndex(
                 name: "idx_blog_id_save",
@@ -1185,9 +1160,6 @@ namespace BusinessObject.Migrations
 
             migrationBuilder.DropTable(
                 name: "blog_comments");
-
-            migrationBuilder.DropTable(
-                name: "blog_images");
 
             migrationBuilder.DropTable(
                 name: "blog_saves");

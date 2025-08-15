@@ -24,6 +24,11 @@ namespace BusinessObject.Models.Entity
         public string Content { get; set; } = string.Empty;
 
         [Required]
+        [MaxLength(255)]
+        [Column("image_title")]
+        public string ImageTitle { get; set; } = string.Empty;
+
+        [Required]
         [Column("created_at")]
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
@@ -34,7 +39,6 @@ namespace BusinessObject.Models.Entity
         [ForeignKey(nameof(ManagerId))]
         public virtual Manager? Manager { get; set; }
         public virtual ICollection<BlogCategoryMapping>? BlogCategoryMappings { get; set; }
-        public virtual ICollection<BlogImage>? BlogImages { get; set; }
         public virtual ICollection<BlogSave>? BlogSaves { get; set; }
         public virtual ICollection<BlogComment>? BlogComments { get; set; }
     }

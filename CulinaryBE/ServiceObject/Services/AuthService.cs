@@ -119,45 +119,44 @@ namespace ServiceObject.Services
             {
                 var clientId = _configuration["Google:ClientId"];
 
+                // 1. Xác thực token Google
                 var payload = await GoogleJsonWebSignature.ValidateAsync(
                     request.IdToken,
                     new GoogleJsonWebSignature.ValidationSettings
                     {
                         Audience = new[] { clientId }
                     });
-                var account = new RegisterCustomerRequest
+
+                // 2. Tìm user trong DB
+                var customerEntity = await _customerDAO.GetCustomerByEmail(payload.Email);
+
+                if (customerEntity == null)
                 {
-                    Email = payload.Email,
-                    FullName = payload.Name,
-                };
-                var accountData = new AccountData();
-
-                //1. Check is account exist in db
-                bool isExist =  await _customerDAO.IsEmailExist(payload.Email);
-
-                if (!isExist)
-                {
-                    //Add new Customer account
-                    var entity = _mapper.Map<Customer>(account);
-                    bool isSucess = await _customerDAO.AddNewCustomer(entity);
-
-                    if (isSucess)
+                    // Tạo mới nếu chưa tồn tại
+                    customerEntity = new Customer
                     {
-                        accountData = new AccountData
-                        {
-                            UserId = entity.CustomerId,
-                            FullName = entity.FullName,
-                            Email = entity.Email,
-                            RoleName = "Customer"
-                        };
+                        Email = payload.Email,
+                        FullName = payload.Name,
+                        CreatedAt = DateTime.UtcNow
+                    };
+
+                    var added = await _customerDAO.AddNewCustomer(customerEntity);
+                    if (!added)
+                    {
+                        throw new InvalidOperationException("Could not create customer account.");
                     }
-                        
                 }
 
+                // 3. Map sang AccountData
+                var accountData = _mapper.Map<AccountData>(customerEntity);
+                accountData.RoleName ??= "Customer";
+
+                // 4. Tạo token
                 var accessToken = await _jwtService.GenerateJwtToken(accountData);
                 var refreshToken = _jwtService.GenerateRefreshToken();
                 var expiryDate = DateTime.UtcNow.AddDays(7);
 
+                // 5. Lưu refresh token vào queue
                 _tokenSaveQueue.EnqueueToken(accountData.UserId, refreshToken, expiryDate, AccountType.Customer);
 
                 _logger.LogInformation("Login successful for email {Email}", accountData.Email);
@@ -170,11 +169,18 @@ namespace ServiceObject.Services
                     AccountData = accountData
                 };
             }
+            catch (InvalidJwtException ex)
+            {
+                _logger.LogWarning(ex, "Invalid Google ID token");
+                throw new UnauthorizedAccessException("Invalid Google login token.");
+            }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "Error verifying Google login.");
                 throw;
             }
         }
+
 
         public async Task<LoginResponse> RefreshTokenManagerAsync(string accessToken, string refreshToken)
         {

@@ -159,5 +159,20 @@ namespace DataAccess.DAOs
                 throw new DatabaseException("Failed to add new customer: " + ex.Message);
             }
         }
+
+        public async Task<Customer> GetCustomerByEmail(string email)
+        {
+            try
+            {
+                var customer = await _context.Customers
+                    .FirstOrDefaultAsync(m => m.Email == email && m.Status != UserStatus.Suspended);
+
+                return customer;
+            }
+            catch (NpgsqlException ex)
+            {
+                throw new DatabaseException("Failed to add new customer: " + ex.Message);
+            }
+        }
     }
 }

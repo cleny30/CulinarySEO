@@ -101,6 +101,13 @@ namespace ServiceObject.Configurations
                {
                    dest.CustomerId = Guid.NewGuid();
                });
+
+            CreateMap<Customer, AccountData>()
+                .ForMember(dest => dest.UserId, opt => opt.MapFrom(c => c.CustomerId))
+                .AfterMap((src, dest) =>
+                {
+                    dest.RoleName = "Customer";
+                });
             #endregion
 
             #region Cart

@@ -16,7 +16,7 @@ const AuthRoute = () => {
   }
 
   if (location.pathname === "/verify-otp" && !userSignupInfo) {
-    return <Navigate to="/register" />;
+    return <Navigate to="/login" />;
   }
 
   return <Outlet />;

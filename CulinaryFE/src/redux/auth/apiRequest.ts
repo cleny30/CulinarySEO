@@ -12,7 +12,7 @@ import {
   verifyOtpService,
 } from "@/services/authService";
 import type { AppDispatch } from "../store";
-import { type NavigateFunction } from "react-router-dom";
+import type { NavigateFunction } from "react-router-dom";
 import {
   loginSuccess,
   logoutSuccess,
@@ -109,8 +109,8 @@ export const verifyOtpAndRegister = async (
     return { error: result.error };
   }
 
-  dispatch(signupSuccess());
   navigate("/login");
+  dispatch(signupSuccess());
 
   return { success: "Xác nhận email thành công, hãy đăng nhập vào nào!" };
 };
@@ -138,8 +138,8 @@ export const logout = async (
     return { error: result.error };
   }
 
-  dispatch(logoutSuccess());
   navigate("/login");
+  dispatch(logoutSuccess());
 
   return { success: "Đăng xuất thành công!" };
 };

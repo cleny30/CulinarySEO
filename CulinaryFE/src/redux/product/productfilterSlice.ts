@@ -1,6 +1,6 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import { type Category } from "@/types/filter";
-//Đại đại
+
 type SortBy =
   | "Featured"
   | "Price: Low to High"
@@ -11,24 +11,25 @@ type SortBy =
 interface ProductFilterState {
   productfilter: {
     categories: Array<{
-      categoryID: string;
-      name: string;
-      count: number;
-      checked: boolean;
+      categoryId: number;
+      categoryName: string;
+      productCount: number;
     }>;
     price: { from: number; to: number };
     availability: boolean;
-    sortBy?: SortBy | null; // Optional sorting option
+    sortBy?: SortBy | null;
   };
+  fetching: boolean;
 }
 
 const initialState: ProductFilterState = {
   productfilter: {
     categories: [],
-    price: { from: 0, to: 1000 }, // Default price range
-    availability: false, // Default availability filter
-    sortBy: null, // Default sorting option
-  }
+    price: { from: 0, to: 1000 },
+    availability: false,
+    sortBy: null,
+  },
+  fetching: false,
 };
 
 const productSlice = createSlice({
@@ -47,15 +48,17 @@ const productSlice = createSlice({
     setSortBy: (state, action: PayloadAction<SortBy | null>) => {
       state.productfilter.sortBy = action.payload;
     },
-    setChangeCategoryCheck: (state, action: PayloadAction<{ categoryID: string; checked: boolean }>) => {
-      const { categoryID, checked } = action.payload;
-      const category = state.productfilter.categories.find(cat => cat.categoryID === categoryID);
-      if (category) {
-        category.checked = checked;
-      }
+    setFetching: (state, action: PayloadAction<boolean>) => {
+      state.fetching = action.payload;
     },
-  }
+  },
 });
 
-export const { setCategories,setPrice,setAvailability,setSortBy,setChangeCategoryCheck } = productSlice.actions;
+export const {
+  setCategories,
+  setPrice,
+  setAvailability,
+  setSortBy,
+  setFetching,
+} = productSlice.actions;
 export default productSlice.reducer;

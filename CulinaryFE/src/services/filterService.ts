@@ -8,7 +8,7 @@ export const getCategories = async (): Promise<ApiResponse<Category[]>> => {
   try {
     const response = await doRequest<BackendApiResponse<Category[]>>(
       "get",
-      "/api/auth/login-customer",
+      "/api/category/get-category-product-count",
     );
 
     return { data: response.data.result };

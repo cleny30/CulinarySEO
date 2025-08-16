@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const filterSchema = z.object({
-  categories: z.array(z.string()), // array of category IDs
+  categories: z.array(z.number()), // array of category IDs
   price: z.object({
     from: z.number().min(0),
     to: z.number().min(0)

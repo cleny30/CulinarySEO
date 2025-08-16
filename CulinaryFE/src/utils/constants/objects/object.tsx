@@ -1,10 +1,10 @@
 export const categories = [
-    { name: "Bagel", count: 8, checked: false },
-    { name: "Baker's rack", count: 22, checked: true },
-    { name: "Beans", count: 12, checked: false },
-    { name: "Bestseller", count: 22, checked: false },
-    { name: "Biscuite", count: 8, checked: false },
-    { name: "Bread", count: 8, checked: false },
-    { name: "Breakfast", count: 16, checked: false },
-    { name: "Cake", count: 6, checked: false },
+    { categoryName: "Bagel", productCount: 8, categoryId: 2 },
+    { categoryName: "Baker's rack", productCount: 22, categoryId: 3},
+    { categoryName: "Beans", productCount: 12,  categoryId: 4},
+    { categoryName: "Bestseller", productCount: 22,  categoryId: 5},
+    { categoryName: "Biscuite", productCount: 8, categoryId: 6 },
+    { categoryName: "Bread", productCount: 8, categoryId: 7 },
+    { categoryName: "Breakfast", productCount: 16,  categoryId: 8},
+    { categoryName: "Cake", productCount: 6, categoryId: 9 },
 ]

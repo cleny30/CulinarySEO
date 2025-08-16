@@ -1,7 +1,6 @@
 export interface Category {
-    categoryID: string;
-    name: string;
-    count: number;
-    checked: boolean;
+    categoryId: number;
+    categoryName: string;
+    productCount: number;
 }
 

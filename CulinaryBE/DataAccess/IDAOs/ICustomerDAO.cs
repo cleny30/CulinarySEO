@@ -12,5 +12,6 @@ namespace DataAccess.IDAOs
         Task<bool> IsEmailExist(string email);
         Task<bool> AddNewCustomer(Customer customer);
         Task<Customer> GetCustomerByEmail(string email);
+        Task<bool> UpdateCustomer(Customer customer);
     }
 }

@@ -177,5 +177,25 @@ namespace DataAccess.DAOs
                 throw new DatabaseException("Failed to add new customer: " + ex.Message);
             }
         }
+
+        public async Task<bool> UpdateCustomer(Customer customer)
+        {
+            try
+            {
+                var cus = await _context.Customers
+                    .FirstOrDefaultAsync(m => m.CustomerId == customer.CustomerId);
+                if (cus == null)
+                {
+                    return false;
+                }
+                _context.Entry(cus).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (NpgsqlException ex)
+            {
+                throw new DatabaseException("Failed to update customer: " + ex.Message);
+            }
+        }
     }
 }

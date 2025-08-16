@@ -2,11 +2,14 @@ import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import { type Category } from "@/types/filter";
 
 type SortBy =
-  | "Featured"
-  | "Price: Low to High"
-  | "Price: High to Low"
-  | "Newest"
-  | "Oldest";
+  | "featured"
+  | "best-sell"
+  | "A-Z"
+  | "Z-A"
+  | "price-low"
+  | "price-high"
+  | "newest"
+  | "oldest";
 
 interface ProductFilterState {
   productfilter: {

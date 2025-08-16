@@ -1,6 +1,7 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import authReducer from "./auth/authSlice";
 import productfilterReducer from "./product/productfilterSlice";
+import productView from "./productview/productviewSlice";
 import {
   persistStore,
   persistReducer,
@@ -16,12 +17,13 @@ import storage from "redux-persist/lib/storage";
 const authPersistConfig = {
   key: "auth",
   storage,
-  blacklist: ["productfilter"], // item will not be persisted
+  blacklist: ["productfilter","productview"], // item will not be persisted
 };
 
 const rootReducer = combineReducers({
   auth: persistReducer(authPersistConfig, authReducer),
   productfilter: productfilterReducer,
+  productview: productView,
 });
 
 export const store = configureStore({

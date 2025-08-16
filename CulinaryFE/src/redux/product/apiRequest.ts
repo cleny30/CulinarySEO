@@ -1,5 +1,5 @@
 import { getCategories } from "@/services/filterService";
-import type { AppDispatch, RootState } from "../store";
+import type { AppDispatch } from "../store";
 import { setCategories, setFetching } from "./productfilterSlice";
 import type { Category } from "@/types/filter";
 

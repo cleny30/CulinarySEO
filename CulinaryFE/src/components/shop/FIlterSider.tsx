@@ -5,7 +5,6 @@ import {
     FormField,
     FormItem,
     FormLabel,
-    FormMessage,
 } from "@/components/ui/form";
 import { useDispatch, useSelector } from 'react-redux'
 import type { RootState } from '@/redux/store'
@@ -19,7 +18,6 @@ import { Input } from "../ui/input";
 import { Slider } from "../ui/slider";
 import FilterCard from "./FilterCard";
 import { Skeleton } from "../ui/skeleton";
-import { categories } from "@/utils/constants/objects/object";
 
 export default function FIlterSider() {
     const dispatch = useDispatch()
@@ -38,23 +36,17 @@ export default function FIlterSider() {
         },
     });
 
-    // Sync form with Redux state when categories change
-
-    const selectedCategories = form.watch("categories");
-    const FilterTag = []
     const filterwatchValues = form.watch()
-    console.log(form.watch(), 'watchValues')
 
     // useEffect(() => {
     //     console.log(watchValues, 'watchValues')
     // }, [watchValues])
 
     useEffect(() => {
-        // Fetch categories or any other initial data if needed
         getcategory()
     }, [])
     return (
-        <div className='w-3/12 px-[15px]'>
+        <section className='w-3/12 px-[15px]'>
             <div className='w-full pb-[30px] border-b-[1px] mb-[30px]'>
                 <h6>Filters</h6>
                 <FilterCard name={filterwatchValues} categories={filterprops.productfilter.categories} />
@@ -62,7 +54,13 @@ export default function FIlterSider() {
             <Form {...form}>
                 <form className='flex flex-col gap-[30px]'>
                     <div className='w-full pb-[30px] border-b-[1px]'>
-                        <h6>Categories</h6>
+                        <div className="w-full flex items-center justify-between">
+                            <h6>Categories</h6>
+                            <button className="text-sm text-gray-500 hover:text-gray-700 " onClick={(e) => {
+                                e.preventDefault();
+                                form.resetField("categories");
+                            }}>Reset</button>
+                        </div>
                         <div className='mt-[30px] w-full'>
                             {filterprops.fetching ?
                                 (
@@ -112,7 +110,8 @@ export default function FIlterSider() {
                         <h6>Price</h6>
                         <div className="flex items-center justify-between">
                             <span className="text-sm text-gray-600 mb-3">The highest price is ???</span>
-                            <button className="text-sm text-gray-500 hover:text-gray-700 mb-4" onClick={() => {
+                            <button className="text-sm text-gray-500 hover:text-gray-700 mb-4" onClick={(e) => {
+                                e.preventDefault();
                                 form.resetField("price");
                             }}>Reset</button>
                         </div>
@@ -149,6 +148,7 @@ export default function FIlterSider() {
                                                         });
                                                         setPrice({ from: Number(e.target.value), to: field.value.to })
                                                     }}
+                                                    min={0}
                                                 />
                                             </FormControl>
                                         </div>
@@ -169,6 +169,7 @@ export default function FIlterSider() {
                                                         })
                                                         setPrice({ from: field.value.from, to: Number(e.target.value) })
                                                     }}
+                                                    min={0}
                                                 />
                                             </FormControl>
                                         </div>
@@ -204,6 +205,6 @@ export default function FIlterSider() {
                 </form>
             </Form>
             <div></div>
-        </div>
+        </section>
     )
 }

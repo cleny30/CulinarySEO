@@ -51,5 +51,21 @@ namespace ServiceObject.Services
                 throw new ValidationException("Failed to process check email: " + ex.Message);
             }
         }
+
+        public async Task<bool> UpdateCustomer(UpdateCustomerDto cusDto)
+        {
+            try
+            {
+                _logger.LogInformation("Processing update a customer");
+                var customer = _mapper.Map<Customer>(cusDto);
+                var result = await _customerDAO.UpdateCustomer(customer);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error udpating a customer: {@model}", cusDto);
+                throw new ValidationException("Failed to update customer: " + ex.Message);
+            }
+        }
     }
 }

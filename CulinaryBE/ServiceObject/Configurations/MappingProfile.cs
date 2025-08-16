@@ -108,6 +108,7 @@ namespace ServiceObject.Configurations
                 {
                     dest.RoleName = "Customer";
                 });
+            CreateMap<Customer, UpdateCustomerDto>();
             #endregion
 
             #region Cart

@@ -12,9 +12,9 @@ namespace ServiceObject.Services
     {
         private readonly ICustomerDAO _customerDAO;
         private readonly IMapper _mapper;
-        private ILogger<AuthService> _logger;
+        private ILogger<CustomerService> _logger;
 
-        public CustomerService(ICustomerDAO customerDAO, IMapper mapper, ILogger<AuthService> logger)
+        public CustomerService(ICustomerDAO customerDAO, IMapper mapper, ILogger<CustomerService> logger)
         {
             _customerDAO = customerDAO;
             _mapper = mapper;

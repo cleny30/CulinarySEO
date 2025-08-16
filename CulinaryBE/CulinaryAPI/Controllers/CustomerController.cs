@@ -17,7 +17,7 @@ namespace CulinaryAPI.Controllers
             _customerService = customerService;
         }
 
-        [HttpPost("update-customer")]
+        [HttpPut("update-customer")]
         [Authorize]
         public async Task<IActionResult> UpdateCustomer([FromBody] UpdateCustomerDto updateCustomerDto)
         {

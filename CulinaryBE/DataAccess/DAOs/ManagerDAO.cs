@@ -22,46 +22,46 @@ namespace DataAccess.DAOs
         public async Task<AccountData> VerifyAccountAsync(LoginAccountModel model)
         {
 
-                try
+            try
+            {
+                // Bước 1: Lấy thông tin user từ DB (bao gồm password hash)
+                var manager = await _context.Managers
+                    .Include(m => m.Role)
+                        .ThenInclude(r => r.RolePermissions)
+                            .ThenInclude(rp => rp.Permission)
+                    .Where(m => (m.Email == model.Email) && m.Status != UserStatus.Suspended)
+                    .FirstOrDefaultAsync();
+
+                // Bước 2: Kiểm tra user có tồn tại không
+                if (manager == null)
                 {
-                    // Bước 1: Lấy thông tin user từ DB (bao gồm password hash)
-                    var manager = await _context.Managers
-                        .Include(m => m.Role)
-                            .ThenInclude(r => r.RolePermissions)
-                                .ThenInclude(rp => rp.Permission)
-                        .Where(m => (m.Email == model.Email) && m.Status != UserStatus.Suspended)
-                        .FirstOrDefaultAsync();
-
-                    // Bước 2: Kiểm tra user có tồn tại không
-                    if (manager == null)
-                    {
-                        throw new NotFoundException("Invalid email or password");
-                    }
-
-                    // Bước 3: Verify password
-                    if (!VerifyPassword(model.Password, manager.Password))
-                    {
-                        throw new NotFoundException("Invalid email or password");
-                    }
-
-                    // Bước 4: Trả về thông tin user nếu password đúng
-                    return new AccountData
-                    {
-                        UserId = manager.ManagerId,
-                        FullName = manager.FullName,
-                        Phone = manager.Phone,
-                        Email = manager.Email,
-                        RoleName = manager.Role.RoleName,
-                        Permissions = manager.Role.RolePermissions
-                            .Select(rp => rp.Permission.PermissionName)
-                            .ToList()
-                    };
+                    throw new NotFoundException("Invalid email or password");
                 }
-                catch (DbUpdateException ex)
+
+                // Bước 3: Verify password
+                if (!VerifyPassword(model.Password, manager.Password))
                 {
-                    throw new DbUpdateException("An error occurred while retrieving the manager account.", ex);
+                    throw new NotFoundException("Invalid email or password");
                 }
-            
+
+                // Bước 4: Trả về thông tin user nếu password đúng
+                return new AccountData
+                {
+                    UserId = manager.ManagerId,
+                    FullName = manager.FullName,
+                    Phone = manager.Phone,
+                    Email = manager.Email,
+                    RoleName = manager.Role.RoleName,
+                    Permissions = manager.Role.RolePermissions
+                        .Select(rp => rp.Permission.PermissionName)
+                        .ToList()
+                };
+            }
+            catch (DbUpdateException ex)
+            {
+                throw new DbUpdateException("An error occurred while retrieving the manager account.", ex);
+            }
+
         }
 
         public async Task<string> SaveRefreshTokenAsync(Guid userId, string refreshToken, DateTime expiryDate)
@@ -136,12 +136,44 @@ namespace DataAccess.DAOs
             return result == PasswordVerificationResult.Success;
         }
 
-        // Method này chỉ dùng khi tạo user mới hoặc đổi password
-        private string GeneratePasswordHash(string password)
+        public async Task<bool> IsEmailExist(string email)
         {
-            var hasher = new PasswordHasher<object>();
-            string passwordHash = hasher.HashPassword(null, password);
-            return passwordHash;
+            try
+            {
+                return await _context.Managers.AnyAsync(m => m.Email == email);
+            }
+            catch (NpgsqlException ex)
+            {
+                throw new DatabaseException("Failed to check if email exists: " + ex.Message);
+            }
+        }
+
+        public async Task<bool> AddManager(Manager model)
+        {
+            try
+            {
+                await _context.Managers.AddAsync(model);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (NpgsqlException ex)
+            {
+                return false;
+                throw new DatabaseException("Failed to add manager: " + ex.Message);      
+            }
+        }
+
+        public Task<bool> IsPhoneExist(string phone)
+        {
+            try
+            {
+                return _context.Managers.AnyAsync(m => m.Phone == phone);
+            }
+            catch (NpgsqlException ex)
+            {
+                throw new DatabaseException("Failed to check if phone exists: " + ex.Message);
+            }
         }
     }
 }
+

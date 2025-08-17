@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/form";
 import { useDispatch, useSelector } from 'react-redux'
 import type { RootState } from '@/redux/store'
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import { getFilter } from "@/redux/product/apiRequest"
 import { filterSchema, type FilterFormValues } from "@/schemas/filter";
 import { useForm } from "react-hook-form";
@@ -18,23 +18,32 @@ import { Input } from "../ui/input";
 import { Slider } from "../ui/slider";
 import FilterCard from "./FilterCard";
 import { Skeleton } from "../ui/skeleton";
+import { getMaxPrice } from "@/utils/constants/product/product";
 
 export default function FIlterSider() {
     const dispatch = useDispatch()
     const filterprops = useSelector((state: RootState) => state.productfilter)
+    const products = useSelector((state: RootState) => state.productview)
     const getcategory = async () => (
         await getFilter(dispatch)
     )
-
+    const maxPrice = useMemo(() => getMaxPrice(products.products ?? null), [products.products]);
     const form = useForm<FilterFormValues>({
         resolver: zodResolver(filterSchema),
         defaultValues: {
             categories: [],
-            price: { from: 0, to: 1000 },
+            price: { from: 0, to: maxPrice.raw },
             availability: false,
             sortBy: null,
         },
     });
+    useEffect(() => {
+        if (maxPrice.raw > 0) {
+            form.setValue("price", { from: 0, to: maxPrice.raw });
+        }
+    }, [maxPrice]);
+
+    
 
     const filterwatchValues = form.watch()
 
@@ -109,10 +118,11 @@ export default function FIlterSider() {
                     <div className='w-full pb-[30px] border-b-[1px] gap-[30px]'>
                         <h6>Price</h6>
                         <div className="flex items-center justify-between">
-                            <span className="text-sm text-gray-600 mb-3">The highest price is ???</span>
+                            <span className="text-sm text-gray-600 mb-3">The highest price is {maxPrice.formatted}</span>
                             <button className="text-sm text-gray-500 hover:text-gray-700 mb-4" onClick={(e) => {
                                 e.preventDefault();
-                                form.resetField("price");
+                                form.setValue("price", { from: 0, to: maxPrice.raw });
+                                dispatch(setPrice({ from: 0, to: maxPrice.raw }));
                             }}>Reset</button>
                         </div>
                         <FormField
@@ -128,7 +138,7 @@ export default function FIlterSider() {
                                                 field.onChange({ from, to });
                                                 dispatch(setPrice({ from, to }));
                                             }}
-                                            max={100}
+                                            max={maxPrice.raw}
                                             step={1}
                                             className="w-full"
                                         />
@@ -141,14 +151,21 @@ export default function FIlterSider() {
                                                 <Input
                                                     type="number"
                                                     value={field.value.from}
+                                                    max={field.value.to}
                                                     onChange={(e) => {
+                                                        let fromValue = Number(e.target.value);
+                                                        // Clamp fromValue to not exceed to
+                                                        if (fromValue > field.value.to) {
+                                                            fromValue = field.value.to;
+                                                        }
                                                         field.onChange({
-                                                            from: Number(e.target.value),
+                                                            from: fromValue,
                                                             to: field.value.to,
                                                         });
-                                                        setPrice({ from: Number(e.target.value), to: field.value.to })
+                                                        setPrice({ from: fromValue, to: field.value.to })
                                                     }}
                                                     min={0}
+
                                                 />
                                             </FormControl>
                                         </div>
@@ -170,6 +187,7 @@ export default function FIlterSider() {
                                                         setPrice({ from: field.value.from, to: Number(e.target.value) })
                                                     }}
                                                     min={0}
+                                                    max={maxPrice.raw}
                                                 />
                                             </FormControl>
                                         </div>

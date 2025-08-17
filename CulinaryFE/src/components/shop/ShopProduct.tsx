@@ -3,21 +3,34 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { Toggle } from '../ui/toggle'
 import { Grid2X2, List } from 'lucide-react'
 import ProductGridView from './ProductGridView'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchProducts } from '@/redux/productview/apiRequest'
 import type { RootState } from '@/redux/store'
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination"
 
 export default function ShopProduct() {
     const dispatch = useDispatch();
     const products = useSelector((state: RootState) => state.productview);
+    const [page, setPage] = useState(1);
+
     const getProduct = async () => (
-        await fetchProducts(dispatch)
+        await fetchProducts(dispatch, page)
     )
 
+    const totalItems = products.products?.totalItems ?? 0;
+    const pageSize = products.products?.pageSize ?? 1;
+    const totalPages = Math.ceil(totalItems / pageSize);
     useEffect(() => {
         getProduct()
-    }, [])
+    }, [page])
     return (
         <section className='px-[15px] w-3/4'>
             <div className='w-full'>
@@ -52,8 +65,40 @@ export default function ShopProduct() {
                 </div>
             </div>
             <div className='w-full'>
-                <ProductGridView products={products.products}/>
+                <ProductGridView products={products.products} />
             </div>
+            {products && totalPages > 1 && (
+                <div className="flex justify-center mt-6">
+                    <Pagination>
+                        <PaginationContent>
+                            <PaginationItem>
+                                <PaginationPrevious
+                                    onClick={() => setPage((p) => Math.max(1, p - 1))}
+                                    aria-disabled={page === 1}
+                                />
+                            </PaginationItem>
+
+                            {Array.from({ length: totalPages }).map((_, i) => (
+                                <PaginationItem key={i}>
+                                    <PaginationLink
+                                        onClick={() => setPage(i + 1)}
+                                        isActive={page === i + 1}
+                                    >
+                                        {i + 1}
+                                    </PaginationLink>
+                                </PaginationItem>
+                            ))}
+
+                            <PaginationItem>
+                                <PaginationNext
+                                    onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                                    aria-disabled={page === totalPages}
+                                />
+                            </PaginationItem>
+                        </PaginationContent>
+                    </Pagination>
+                </div>
+            )}
         </section>
     )
 }

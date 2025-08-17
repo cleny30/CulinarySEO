@@ -7,11 +7,12 @@ import type { AppDispatch } from "../store";
 
 export const fetchProducts = async (
     dispatch: AppDispatch,
+    pageNumber: number | 1
 
 ) => {
     dispatch(setProductFetching(true));
 
-    const response = await getProducts();
+    const response = await getProducts(pageNumber);
     if (response.error) {
         dispatch(setProductFetching(false));
         return { error: response.error };

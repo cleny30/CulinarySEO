@@ -26,17 +26,11 @@ namespace CulinaryAPI.Controllers
             {
                 return BadRequest("Your ìnormation is invalid.");
             }
-            try
-            {
-                ApiResponse response = new ApiResponse();
-                response.IsSuccess = await _managerService.AddManager(addManagerDto);
-                response.Message = response.IsSuccess ? "Manager added successfully!" : "Email existed in our system!";
-                return response.IsSuccess ? Ok(response) : BadRequest(response);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, "Internal server error: " + ex.Message);
-            }
+            ApiResponse response = new ApiResponse();
+            response.IsSuccess = await _managerService.AddManager(addManagerDto);
+            response.Message = response.IsSuccess ? "Manager added successfully!" : "Email existed in our system!";
+            return response.IsSuccess ? Ok(response) : BadRequest(response);
+
         }
 
         [HttpPut("update-manager")]
@@ -47,66 +41,40 @@ namespace CulinaryAPI.Controllers
             {
                 return BadRequest("Your ìnormation is invalid.");
             }
-            try
-            {
-                ApiResponse response = new ApiResponse();
-                response.IsSuccess = await _managerService.UpdateManager(updateManagerDto);
-                response.Message = response.IsSuccess ? "Manager updated successfully!" : "Email existed in our system!";
-                return response.IsSuccess ? Ok(response) : BadRequest(response);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, "Internal server error: " + ex.Message);
-            }
+
+            ApiResponse response = new ApiResponse();
+            response.IsSuccess = await _managerService.UpdateManager(updateManagerDto);
+            response.Message = response.IsSuccess ? "Manager updated successfully!" : "Email existed in our system!";
+            return response.IsSuccess ? Ok(response) : BadRequest(response);
         }
 
         [HttpDelete("delete-manager")]
         [HasPermission(PermissionAuth.ManageStaffAccount)]
         public async Task<IActionResult> DeleteManager([FromQuery] Guid managerId)
         {
-            try
-            {
-                ApiResponse response = new ApiResponse();
-                response.IsSuccess = await _managerService.DeleteManager(managerId);
-                response.Message = response.IsSuccess ? "Manager deleted successfully!" : "Cannot found ID in our system!";
-                return response.IsSuccess ? Ok(response) : BadRequest(response);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, "Internal server error: " + ex.Message);
-            }
+
+            ApiResponse response = new ApiResponse();
+            response.IsSuccess = await _managerService.DeleteManager(managerId);
+            response.Message = response.IsSuccess ? "Manager deleted successfully!" : "Cannot found ID in our system!";
+            return response.IsSuccess ? Ok(response) : BadRequest(response);
         }
 
         [HttpGet("id")]
         [HasPermission(PermissionAuth.ManageStaffAccount)]
         public async Task<IActionResult> GetManagerByID([FromQuery] Guid managerId)
         {
-            try
-            {
-                ApiResponse response = new ApiResponse();
-                response.Result = await _managerService.GetManagerById(managerId);
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, "Internal server error: " + ex.Message);
-            }
+            ApiResponse response = new ApiResponse();
+            response.Result = await _managerService.GetManagerById(managerId);
+            return Ok(response);
         }
 
         [HttpGet]
         [HasPermission(PermissionAuth.ManageStaffAccount)]
-        public async Task<IActionResult> GetManagerByID()
+        public async Task<IActionResult> GetManagers()
         {
-            try
-            {
-                ApiResponse response = new ApiResponse();
-                response.Result = await _managerService.GetManagers();
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, "Internal server error: " + ex.Message);
-            }
+            ApiResponse response = new ApiResponse();
+            response.Result = await _managerService.GetManagers();
+            return Ok(response);
         }
     }
 }

@@ -148,17 +148,15 @@ namespace DataAccess.DAOs
             }
         }
 
-        public async Task<bool> AddManager(Manager model)
+        public async Task AddManager(Manager model)
         {
             try
             {
                 await _context.Managers.AddAsync(model);
                 await _context.SaveChangesAsync();
-                return true;
             }
             catch (NpgsqlException ex)
             {
-                return false;
                 throw new DatabaseException("Failed to add manager: " + ex.Message);      
             }
         }

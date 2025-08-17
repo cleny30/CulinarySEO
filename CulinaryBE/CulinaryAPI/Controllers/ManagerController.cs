@@ -1,7 +1,7 @@
 ﻿using BusinessObject.Models;
 using BusinessObject.Models.Dto;
 using BusinessObject.Models.Enum;
-using Microsoft.AspNetCore.Authorization;
+using CulinaryAPI.Middleware.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using ServiceObject.IServices;
 
@@ -19,40 +19,19 @@ namespace CulinaryAPI.Controllers
         }
 
         [HttpPost("add-manager")]
-        [Authorize]
+        [HasPermission(PermissionAuth.ManageStaffAccount)]
         public async Task<IActionResult> AddManager([FromBody] AddManagerDto addManagerDto)
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest("Invalid manager data.");
+                return BadRequest("Your ìnormation is invalid.");
             }
             try
             {
                 ApiResponse response = new ApiResponse();
-                var result = await _managerService.AddManager(addManagerDto);
-                switch (result)
-                {
-                    case AddNewManagerStatus.Success:
-                        response.IsSuccess = true;
-                        response.Message = "Manager added successfully.";
-                        return Ok(response);
-                    case AddNewManagerStatus.EmailAlreadyExists:
-                        response.IsSuccess = false;
-                        response.Message = "Email already exists.";
-                        return BadRequest(response);
-                    case AddNewManagerStatus.PhoneAlreadyExists:
-                        response.IsSuccess = false;
-                        response.Message = "Phone number already exists.";
-                        return BadRequest(response);
-                    case AddNewManagerStatus.DatabaseError:
-                        response.IsSuccess = false;
-                        response.Message = "An error occurred while adding the manager.";
-                        return StatusCode(500, response);
-                    default:
-                        response.IsSuccess = false;
-                        response.Message = "Unknown error occurred.";
-                        return StatusCode(500, response);
-                }
+                response.IsSuccess = await _managerService.AddManager(addManagerDto);
+                response.Message = response.IsSuccess ? "Manager added successfully!" : "Email existed in our system!";
+                return response.IsSuccess ? Ok(response) : BadRequest(response);
             }
             catch (Exception ex)
             {

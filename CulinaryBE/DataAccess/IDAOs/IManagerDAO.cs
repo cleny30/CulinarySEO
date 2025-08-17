@@ -9,8 +9,7 @@ namespace DataAccess.IDAOs
         Task<string> SaveRefreshTokenAsync(Guid userId, string refreshToken, DateTime expiryDate);
         Task<Manager?> GetRefreshTokenAsync(string refreshToken);
         Task RevokeRefreshTokenAsync(string refreshToken);
-        Task<bool> AddManager(Manager model);
+        Task AddManager(Manager model);
         Task<bool> IsEmailExist(string email);
-        Task<bool> IsPhoneExist(string phone);
     }
 }

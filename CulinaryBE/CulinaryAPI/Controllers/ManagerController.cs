@@ -20,7 +20,7 @@ namespace CulinaryAPI.Controllers
 
         [HttpPost("add-manager")]
         [HasPermission(PermissionAuth.ManageStaffAccount)]
-        public async Task<IActionResult> AddManager([FromBody] AddManagerDto addManagerDto)
+        public async Task<IActionResult> AddManager([FromBody] ManagerDto addManagerDto)
         {
             if (!ModelState.IsValid)
             {
@@ -32,6 +32,76 @@ namespace CulinaryAPI.Controllers
                 response.IsSuccess = await _managerService.AddManager(addManagerDto);
                 response.Message = response.IsSuccess ? "Manager added successfully!" : "Email existed in our system!";
                 return response.IsSuccess ? Ok(response) : BadRequest(response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal server error: " + ex.Message);
+            }
+        }
+
+        [HttpPut("update-manager")]
+        [HasPermission(PermissionAuth.ManageStaffAccount)]
+        public async Task<IActionResult> UpdateManager([FromBody] ManagerDto updateManagerDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Your ìnormation is invalid.");
+            }
+            try
+            {
+                ApiResponse response = new ApiResponse();
+                response.IsSuccess = await _managerService.UpdateManager(updateManagerDto);
+                response.Message = response.IsSuccess ? "Manager updated successfully!" : "Email existed in our system!";
+                return response.IsSuccess ? Ok(response) : BadRequest(response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal server error: " + ex.Message);
+            }
+        }
+
+        [HttpDelete("delete-manager")]
+        [HasPermission(PermissionAuth.ManageStaffAccount)]
+        public async Task<IActionResult> DeleteManager([FromQuery] Guid managerId)
+        {
+            try
+            {
+                ApiResponse response = new ApiResponse();
+                response.IsSuccess = await _managerService.DeleteManager(managerId);
+                response.Message = response.IsSuccess ? "Manager deleted successfully!" : "Cannot found ID in our system!";
+                return response.IsSuccess ? Ok(response) : BadRequest(response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal server error: " + ex.Message);
+            }
+        }
+
+        [HttpGet("id")]
+        [HasPermission(PermissionAuth.ManageStaffAccount)]
+        public async Task<IActionResult> GetManagerByID([FromQuery] Guid managerId)
+        {
+            try
+            {
+                ApiResponse response = new ApiResponse();
+                response.Result = await _managerService.GetManagerById(managerId);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal server error: " + ex.Message);
+            }
+        }
+
+        [HttpGet]
+        [HasPermission(PermissionAuth.ManageStaffAccount)]
+        public async Task<IActionResult> GetManagerByID()
+        {
+            try
+            {
+                ApiResponse response = new ApiResponse();
+                response.Result = await _managerService.GetManagers();
+                return Ok(response);
             }
             catch (Exception ex)
             {

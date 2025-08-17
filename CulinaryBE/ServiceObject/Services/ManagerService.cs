@@ -23,7 +23,7 @@ namespace ServiceObject.Services
             _logger = logger;
         }
 
-        public async Task<bool> AddManager(AddManagerDto addManagerDto)
+        public async Task<bool> AddManager(ManagerDto addManagerDto)
         {
             try
             {
@@ -41,6 +41,66 @@ namespace ServiceObject.Services
             {
                 _logger.LogError(ex, "Error adding new manager: {@Model}", addManagerDto);
                 throw new ValidationException("Failed to add new manager: " + ex.Message);
+            }
+        }
+
+        public async Task<bool> DeleteManager(Guid managerId)
+        {
+            try
+            {
+                return await _managerDAO.DeleteManager(managerId);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error deleting manager with ID: {ManagerId}", managerId);
+                throw new ValidationException("Failed to delete manager: " + ex.Message);
+            }
+        }
+
+        public async Task<ManagerDto?> GetManagerById(Guid managerId)
+        {
+            try
+            {
+                var result = await _managerDAO.GetManagerById(managerId);
+                return _mapper.Map<ManagerDto>(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving manager with ID: {ManagerId}", managerId);
+                throw new ValidationException("Failed to retrieve manager: " + ex.Message);
+            }
+        }
+
+        public async Task<IEnumerable<ManagerDto>> GetManagers()
+        {
+            try
+            {
+                var managers = await _managerDAO.GetManagers();
+                return _mapper.Map<IEnumerable<ManagerDto>>(managers);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving managers");
+                throw new ValidationException("Failed to retrieve managers: " + ex.Message);
+            }
+        }
+
+        public async Task<bool> UpdateManager(ManagerDto updateManagerDto)
+        {
+            try
+            {
+                if (await IsEmailExists(updateManagerDto.Email))
+                {
+                    _logger.LogWarning("Email already exists: {Email}", updateManagerDto.Email);
+                    return false;
+                }
+                var manager = _mapper.Map<Manager>(updateManagerDto);
+                return await _managerDAO.UpdateManager(manager);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error updating manager: {@Model}", updateManagerDto);
+                throw new ValidationException("Failed to update manager: " + ex.Message);
             }
         }
 

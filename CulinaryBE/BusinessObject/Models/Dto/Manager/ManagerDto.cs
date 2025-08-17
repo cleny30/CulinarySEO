@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BusinessObject.Models.Dto
 {
-    public class AddManagerDto
+    public class ManagerDto
     {
         public Guid ManagerId { get; set; }
 
@@ -22,5 +22,8 @@ namespace BusinessObject.Models.Dto
         [Required]
         [MaxLength(20)]
         public string Phone { get; set; } = string.Empty;
+
+        [Required]
+        public UserStatus Status { get; set; }
     }
 }

@@ -157,19 +157,70 @@ namespace DataAccess.DAOs
             }
             catch (NpgsqlException ex)
             {
-                throw new DatabaseException("Failed to add manager: " + ex.Message);      
+                throw new DatabaseException("Failed to add manager: " + ex.Message);
             }
         }
 
-        public Task<bool> IsPhoneExist(string phone)
+        public async Task<bool> UpdateManager(Manager model)
         {
             try
             {
-                return _context.Managers.AnyAsync(m => m.Phone == phone);
+                Manager? manager = await GetManagerById(model.ManagerId);
+                if (manager == null)
+                {
+                    return false;
+                }
+                _context.Entry(manager).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+                return true;
             }
             catch (NpgsqlException ex)
             {
-                throw new DatabaseException("Failed to check if phone exists: " + ex.Message);
+                throw new DatabaseException("Failed to update manager: " + ex.Message);
+            }
+        }
+
+        public async Task<bool> DeleteManager(Guid managerId)
+        {
+            try
+            {
+                Manager? manager = await GetManagerById(managerId);
+                if (manager == null)
+                {
+                    return false;
+                }
+                manager.Status = UserStatus.Suspended;
+                _context.Entry(manager).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (NpgsqlException ex)
+            {
+                throw new DatabaseException("Failed to delete manager: " + ex.Message);
+            }
+        }
+
+        public async Task<IEnumerable<Manager>> GetManagers()
+        {
+            try
+            {
+                return await _context.Managers.ToListAsync();
+            }
+            catch (NpgsqlException ex)
+            {
+                throw new DatabaseException("Failed to retrieve managers: " + ex.Message);
+            }
+        }
+
+        public async Task<Manager?> GetManagerById(Guid managerId)
+        {
+            try
+            {
+                return await _context.Managers.FirstOrDefaultAsync(m => m.ManagerId == managerId);
+            }
+            catch (NpgsqlException ex)
+            {
+                throw new DatabaseException("Failed to retrieve manager by ID: " + ex.Message);
             }
         }
     }

@@ -10,6 +10,10 @@ namespace DataAccess.IDAOs
         Task<Manager?> GetRefreshTokenAsync(string refreshToken);
         Task RevokeRefreshTokenAsync(string refreshToken);
         Task AddManager(Manager model);
+        Task<bool> UpdateManager(Manager model);
+        Task<bool> DeleteManager(Guid managerId);
+        Task<IEnumerable<Manager>> GetManagers();
+        Task<Manager?> GetManagerById(Guid managerId);
         Task<bool> IsEmailExist(string email);
     }
 }

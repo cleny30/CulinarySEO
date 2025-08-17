@@ -138,7 +138,8 @@ namespace ServiceObject.Configurations
             #endregion
 
             #region Manager
-            CreateMap<Manager, AddManagerDto>();
+            CreateMap<Manager, ManagerDto>();
+            CreateMap<ManagerDto, Manager>();
             #endregion
         }
     }

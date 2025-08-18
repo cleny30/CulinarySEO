@@ -3,23 +3,24 @@ import { type Category } from "@/types/filter";
 
 type SortBy =
   | "featured"
-  | "best-sell"
-  | "A-Z"
-  | "Z-A"
-  | "price-low"
-  | "price-high"
-  | "newest"
-  | "oldest";
+  | "best-selling"
+  | "a-z"
+  | "z-a"
+  | "price-low-high"
+  | "price-high-low"
+  | "date-new-old"
+  | "date-old-new";
 
 interface ProductFilterState {
   productfilter: {
+    selectedCategories?: number[] | null; 
     categories: Array<{
       categoryId: number;
       categoryName: string;
       productCount: number;
     }>;
-    price: { from: number; to: number };
-    availability: boolean;
+    price?: { from: number; to: number } | null;
+    availability?: boolean | null;
     sortBy?: SortBy | null;
   };
   fetching: boolean;
@@ -27,9 +28,10 @@ interface ProductFilterState {
 
 const initialState: ProductFilterState = {
   productfilter: {
+    selectedCategories: null,
     categories: [],
-    price: { from: 0, to: 1000 },
-    availability: false,
+    price: null,
+    availability: null,
     sortBy: null,
   },
   fetching: false,
@@ -54,6 +56,9 @@ const productSlice = createSlice({
     setFetching: (state, action: PayloadAction<boolean>) => {
       state.fetching = action.payload;
     },
+    setSelectedCategories: (state, action: PayloadAction<number[]>) => {
+      state.productfilter.selectedCategories = action.payload;
+    },
   },
 });
 
@@ -63,5 +68,6 @@ export const {
   setAvailability,
   setSortBy,
   setFetching,
+  setSelectedCategories,
 } = productSlice.actions;
 export default productSlice.reducer;

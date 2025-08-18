@@ -7,12 +7,22 @@ import type { AppDispatch } from "../store";
 
 export const fetchProducts = async (
     dispatch: AppDispatch,
-    pageNumber: number | 1
+    pageNumber: number | 1,
+    CategoryIds: Array<number> | null = null,
+    MinPrice: number | null = null,
+    MaxPrice: number | null = null,
+    IsAvailable: boolean | null = null,
+    SortBy: string | null = null
 
 ) => {
     dispatch(setProductFetching(true));
 
-    const response = await getProducts(pageNumber);
+    const response = await getProducts(pageNumber,
+        CategoryIds,
+        MinPrice,
+        MaxPrice,
+        IsAvailable,
+        SortBy);
     if (response.error) {
         dispatch(setProductFetching(false));
         return { error: response.error };

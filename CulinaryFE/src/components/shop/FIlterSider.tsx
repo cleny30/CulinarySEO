@@ -8,12 +8,12 @@ import {
 } from "@/components/ui/form";
 import { useDispatch, useSelector } from 'react-redux'
 import type { RootState } from '@/redux/store'
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { getFilter } from "@/redux/product/apiRequest"
 import { filterSchema, type FilterFormValues } from "@/schemas/filter";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { setFetching, setPrice, setAvailability } from "@/redux/product/productfilterSlice";
+import { setFetching, setPrice, setAvailability, setSelectedCategories } from "@/redux/product/productfilterSlice";
 import { Input } from "../ui/input";
 import { Slider } from "../ui/slider";
 import FilterCard from "./FilterCard";
@@ -24,26 +24,32 @@ export default function FIlterSider() {
     const dispatch = useDispatch()
     const filterprops = useSelector((state: RootState) => state.productfilter)
     const products = useSelector((state: RootState) => state.productview)
+    // const maxPrice = useMemo(() => getMaxPrice(products.products ?? null), [products.products]);
+    const maxPrice = 500000; // Static max price for the entire catalog
     const getcategory = async () => (
         await getFilter(dispatch)
     )
-    const maxPrice = useMemo(() => getMaxPrice(products.products ?? null), [products.products]);
+
     const form = useForm<FilterFormValues>({
         resolver: zodResolver(filterSchema),
         defaultValues: {
             categories: [],
-            price: { from: 0, to: maxPrice.raw },
+            price: { from: 0, to: maxPrice },
             availability: false,
             sortBy: null,
         },
     });
-    useEffect(() => {
-        if (maxPrice.raw > 0) {
-            form.setValue("price", { from: 0, to: maxPrice.raw });
-        }
-    }, [maxPrice]);
-
+    // const didInit = useRef(false);
     
+    // useEffect(() => {
+    //     if (maxPrice.raw > 0 && !didInit.current) {
+    //         // only set default once when products are loaded the first time
+    //         form.setValue("price", { from: 0, to: maxPrice.raw });
+    //         dispatch(setPrice({ from: 0, to: maxPrice.raw }));
+    //         didInit.current = true;
+    //     }
+    // }, [maxPrice, form, dispatch]);
+
 
     const filterwatchValues = form.watch()
 
@@ -95,11 +101,12 @@ export default function FIlterSider() {
                                                             <Checkbox
                                                                 checked={isChecked}
                                                                 onCheckedChange={(checked) => {
-                                                                    if (checked) {
-                                                                        field.onChange([...value, cat.categoryId]);
-                                                                    } else {
-                                                                        field.onChange(value.filter((id) => id !== cat.categoryId));
-                                                                    }
+                                                                    const newValue = checked
+                                                                        ? [...value, cat.categoryId]
+                                                                        : value.filter((id) => id !== cat.categoryId);
+
+                                                                    field.onChange(newValue);
+                                                                    dispatch(setSelectedCategories(newValue));
                                                                 }}
                                                                 className="data-[state=checked]:bg-orange-500 data-[state=checked]:border-orange-500"
                                                             />
@@ -118,11 +125,11 @@ export default function FIlterSider() {
                     <div className='w-full pb-[30px] border-b-[1px] gap-[30px]'>
                         <h6>Price</h6>
                         <div className="flex items-center justify-between">
-                            <span className="text-sm text-gray-600 mb-3">The highest price is {maxPrice.formatted}</span>
+                            <span className="text-sm text-gray-600 mb-3">The highest price is {maxPrice}</span>
                             <button className="text-sm text-gray-500 hover:text-gray-700 mb-4" onClick={(e) => {
                                 e.preventDefault();
-                                form.setValue("price", { from: 0, to: maxPrice.raw });
-                                dispatch(setPrice({ from: 0, to: maxPrice.raw }));
+                                form.setValue("price", { from: 0, to: maxPrice });
+                                dispatch(setPrice({ from: 0, to: maxPrice }));
                             }}>Reset</button>
                         </div>
                         <FormField
@@ -138,7 +145,7 @@ export default function FIlterSider() {
                                                 field.onChange({ from, to });
                                                 dispatch(setPrice({ from, to }));
                                             }}
-                                            max={maxPrice.raw}
+                                            max={maxPrice}
                                             step={1}
                                             className="w-full"
                                         />
@@ -162,7 +169,7 @@ export default function FIlterSider() {
                                                             from: fromValue,
                                                             to: field.value.to,
                                                         });
-                                                        setPrice({ from: fromValue, to: field.value.to })
+                                                        dispatch(setPrice({ from: fromValue, to: field.value.to }))
                                                     }}
                                                     min={0}
 
@@ -184,10 +191,10 @@ export default function FIlterSider() {
                                                             from: field.value.from,
                                                             to: Number(e.target.value),
                                                         })
-                                                        setPrice({ from: field.value.from, to: Number(e.target.value) })
+                                                        dispatch(setPrice({ from: field.value.from, to: Number(e.target.value) }))
                                                     }}
                                                     min={0}
-                                                    max={maxPrice.raw}
+                                                    max={maxPrice}
                                                 />
                                             </FormControl>
                                         </div>

@@ -8,7 +8,7 @@ import { Star } from 'lucide-react';
 
 export default function ProductGridView({ products }: { products: ProductResult | null }) {
     const fetchingproducts = useSelector((state: RootState) => state.productview.fetching);
-    console.log(products)
+
     return (
         <div className="grid gap-6 grid-cols-4 mt-[15px]">
             {products?.items.map((product) => (

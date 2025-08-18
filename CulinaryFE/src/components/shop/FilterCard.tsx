@@ -14,7 +14,7 @@ interface FilterCardProps {
 }
 export default function FilterCard({ name, categories }: FilterCardProps) {
   const products = useSelector((state: RootState) => state.productview)
-  const maxPrice = useMemo(() => getMaxPrice(products.products ?? null), [products.products]);
+  // const maxPrice = useMemo(() => getMaxPrice(products.products ?? null), [products.products]);
   const getFilteredCategories = () => {
     if (!categories || !name.categories) return [];
     return categories.filter(cat => name.categories.includes(cat.categoryId));
@@ -31,7 +31,7 @@ export default function FilterCard({ name, categories }: FilterCardProps) {
         </Badge>
       ))}
       {/* Price badge */}
-      {name.price && (name.price.from !== 0 || name.price.to !== maxPrice.raw) && (
+      {name.price && (name.price.from !== 0 || name.price.to !== 500000) && (
         <Badge variant="outline" className='bg-[#222222] text-white cursor-pointer flex items-center gap-1'>
           Price: {name.price.from} - {name.price.to}
           <X className='cursor-pointer' />

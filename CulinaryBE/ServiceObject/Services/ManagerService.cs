@@ -90,7 +90,7 @@ namespace ServiceObject.Services
         {
             try
             {
-                if (await IsEmailExists(updateManagerDto.Email) && !await IsEmailOfAccount(updateManagerDto.Email, updateManagerDto.ManagerId))
+                if (await IsEmailOfAccount(updateManagerDto.Email, updateManagerDto.ManagerId))
                 {
                     _logger.LogWarning("Email already exists: {Email}", updateManagerDto.Email);
                     return false;
@@ -102,7 +102,10 @@ namespace ServiceObject.Services
                     return false;
                 }                               
                 _mapper.Map(updateManagerDto, existingManager);
-                existingManager.Password = GeneratePasswordHash(updateManagerDto.Password);
+                if( !string.IsNullOrEmpty(updateManagerDto.Password))
+                {
+                    existingManager.Password = GeneratePasswordHash(updateManagerDto.Password);
+                }                
                 return await _managerDAO.UpdateManager(existingManager);
             }
             catch (Exception ex)

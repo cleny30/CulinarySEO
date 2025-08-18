@@ -223,7 +223,7 @@ namespace DataAccess.DAOs
         {
             try
             {
-                return await _context.Managers.AnyAsync(m => m.ManagerId == guid && m.Email == email);
+                return await _context.Managers.AnyAsync(m => m.ManagerId != guid && m.Email == email);
             }
             catch (NpgsqlException ex)
             {

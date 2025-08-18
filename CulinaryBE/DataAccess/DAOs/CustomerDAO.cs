@@ -148,11 +148,10 @@ namespace DataAccess.DAOs
         {
             try
             {
-                if (String.IsNullOrEmpty(customer.Password))
+                if (!string.IsNullOrEmpty(customer.Password))
                 {
-                    return false;
+                    customer.Password = GeneratePasswordHash(customer.Password!);
                 }
-                customer.Password = GeneratePasswordHash(customer.Password);
                 await _context.Customers.AddAsync(customer);
                 await _context.SaveChangesAsync();
                 return true;

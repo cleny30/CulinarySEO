@@ -3,6 +3,7 @@ using BusinessObject.Models;
 using BusinessObject.Models.Dto;
 using BusinessObject.Models.Entity;
 using DataAccess.IDAOs;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using ServiceObject.IServices;
 
@@ -26,6 +27,10 @@ namespace ServiceObject.Services
             try
             {
                 _logger.LogInformation("Processing add new customer");
+                if (await IsEmailExist(model.Email))
+                {
+                    return false;
+                }
                 var customer = _mapper.Map<Customer>(model);
                 var result = await _customerDAO.AddNewCustomer(customer);
                 return result;
@@ -57,8 +62,14 @@ namespace ServiceObject.Services
             try
             {
                 _logger.LogInformation("Processing update a customer");
-                var customer = _mapper.Map<Customer>(cusDto);
-                var result = await _customerDAO.UpdateCustomer(customer);
+                Customer? customerExist = await _customerDAO.GetCustomerByID(cusDto.CustomerId);
+                if (customerExist == null)
+                {
+                    _logger.LogWarning("Customer with ID {CustomerId} does not exist", cusDto.CustomerId);
+                    throw new ValidationException("Customer does not exist");
+                }
+                _mapper.Map(cusDto, customerExist);
+                var result = await _customerDAO.UpdateCustomer(customerExist);
                 return result;
             }
             catch (Exception ex)

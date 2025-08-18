@@ -14,9 +14,9 @@ namespace DataAccess.DAOs
     {
         private readonly CulinaryContext _context;
 
-        public ManagerDAO(CulinaryContext contextl)
+        public ManagerDAO(CulinaryContext context)
         {
-            _context = contextl;
+            _context = context;
         }
 
         public async Task<AccountData> VerifyAccountAsync(LoginAccountModel model)
@@ -165,12 +165,7 @@ namespace DataAccess.DAOs
         {
             try
             {
-                Manager? manager = await GetManagerById(model.ManagerId);
-                if (manager == null)
-                {
-                    return false;
-                }
-                _context.Entry(manager).State = EntityState.Modified;
+                _context.Entry(model).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
                 return true;
             }
@@ -221,6 +216,18 @@ namespace DataAccess.DAOs
             catch (NpgsqlException ex)
             {
                 throw new DatabaseException("Failed to retrieve manager by ID: " + ex.Message);
+            }
+        }
+
+        public async Task<bool> IsEmailOfAccount(string email, Guid guid)
+        {
+            try
+            {
+                return await _context.Managers.AnyAsync(m => m.ManagerId == guid && m.Email == email);
+            }
+            catch (NpgsqlException ex)
+            {
+                throw new DatabaseException("Failed to check email of account with ID: " + ex.Message);
             }
         }
     }

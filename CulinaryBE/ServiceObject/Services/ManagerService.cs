@@ -2,21 +2,22 @@
 using BusinessObject.Models;
 using BusinessObject.Models.Dto;
 using BusinessObject.Models.Entity;
-using DataAccess.DAOs;
+using DataAccess.IDAOs;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Npgsql;
 using ServiceObject.IServices;
+using System.Globalization;
 
 namespace ServiceObject.Services
 {
     public class ManagerService : IManagerService
     {
-        private readonly ManagerDAO _managerDAO;
+        private readonly IManagerDAO _managerDAO;
         private readonly IMapper _mapper;
         private ILogger<ManagerService> _logger;
 
-        public ManagerService(ManagerDAO managerDAO, IMapper mapper, ILogger<ManagerService> logger)
+        public ManagerService(IManagerDAO managerDAO, IMapper mapper, ILogger<ManagerService> logger)
         {
             _managerDAO = managerDAO;
             _mapper = mapper;
@@ -89,13 +90,20 @@ namespace ServiceObject.Services
         {
             try
             {
-                if (await IsEmailExists(updateManagerDto.Email))
+                if (await IsEmailExists(updateManagerDto.Email) && !await IsEmailOfAccount(updateManagerDto.Email, updateManagerDto.ManagerId))
                 {
                     _logger.LogWarning("Email already exists: {Email}", updateManagerDto.Email);
                     return false;
                 }
-                var manager = _mapper.Map<Manager>(updateManagerDto);
-                return await _managerDAO.UpdateManager(manager);
+                var existingManager = await _managerDAO.GetManagerById(updateManagerDto.ManagerId);
+                if (existingManager == null)
+                {
+                    _logger.LogWarning("Manager with ID {ManagerId} does not exist", updateManagerDto.ManagerId);
+                    return false;
+                }                               
+                _mapper.Map(updateManagerDto, existingManager);
+                existingManager.Password = GeneratePasswordHash(updateManagerDto.Password);
+                return await _managerDAO.UpdateManager(existingManager);
             }
             catch (Exception ex)
             {
@@ -116,6 +124,18 @@ namespace ServiceObject.Services
             try
             {
                 return await _managerDAO.IsEmailExist(email);
+            }
+            catch (NpgsqlException ex)
+            {
+                throw new DatabaseException("Failed to check if email exists: " + ex.Message);
+            }
+        }
+
+        private async Task<bool> IsEmailOfAccount(string email, Guid guid)
+        {
+            try
+            {
+                return await _managerDAO.IsEmailOfAccount(email, guid);
             }
             catch (NpgsqlException ex)
             {

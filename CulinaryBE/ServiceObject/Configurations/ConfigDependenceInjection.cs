@@ -24,6 +24,7 @@ namespace ServiceObject.Configurations
 
         public static void ConfigureService(this IServiceCollection services)
         {
+            services.AddScoped<IManagerService, ManagerService>();
             services.AddScoped<IJwtService, JwtService>();
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IProductService, ProductService>();

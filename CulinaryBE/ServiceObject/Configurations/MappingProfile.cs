@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BusinessObject.Models.Dto;
+using BusinessObject.Models.Dto.Blog;
 using BusinessObject.Models.Dto.Product;
 using BusinessObject.Models.Entity;
 
@@ -140,6 +141,20 @@ namespace ServiceObject.Configurations
             #region Manager
             CreateMap<Manager, ManagerDto>();
             CreateMap<ManagerDto, Manager>();
+            #endregion
+
+            #region Blog
+            CreateMap<Blog, GetBlogDto>()
+                .ForMember(dest => dest.ManagerName, opt => opt.MapFrom(src => src.Manager.FullName))
+                .ForMember(dest => dest.BlogImageUrl, opt => opt.MapFrom(src => src.BlogImages
+                    .FirstOrDefault(bi => bi.IsPrimary)!.ImageUrl))
+                .ForMember(dest => dest.Categories, opt => opt.MapFrom(src =>
+                    src.BlogCategoryMappings.Select(bcm => new BlogCategories
+                    {
+                        CategoryId = bcm.BlogCategory.CategoryId,
+                        CategoryName = bcm.BlogCategory.CategoryName,
+                        CategoryImage = bcm.BlogCategory.CategoryImage
+                    }).ToList()));
             #endregion
         }
     }

@@ -5,13 +5,18 @@ using CulinaryAPI.Middleware.Authentication;
 using CulinaryAPI.Middleware.ExceptionHelper;
 using CulinaryAPI.Middleware.JwtCookie;
 using CulinaryAPI.SignalRHub;
+using Elastic.Clients.Elasticsearch;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using ServiceObject.Configurations;
+using Elastic.Transport;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
+
+//Coanfig Supabase
 builder.Services.AddDbContext<CulinaryContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("SupabaseConnection"), npgsqlOptions =>
     {
@@ -20,6 +25,19 @@ builder.Services.AddDbContext<CulinaryContext>(options =>
         npgsqlOptions.UseVector();
         npgsqlOptions.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
     }));
+
+//Config Elasticsearch
+builder.Services.AddSingleton(sp =>
+{
+    var config = builder.Configuration.GetSection("Elasticsearch");
+    var cloudId = config["CloudId"];
+    var apiKey = config["ApiKey"];
+
+    var settings = new ElasticsearchClientSettings(cloudId, new ApiKey(apiKey))
+                        .DefaultIndex("products");
+
+    return new ElasticsearchClient(settings);
+});
 
 //Config Email setting
 builder.Services.Configure<EmailSetting>(

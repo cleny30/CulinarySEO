@@ -7,5 +7,6 @@ namespace ServiceObject.IServices
         Task<bool> IsEmailExist(string email);
         Task<bool> AddNewCustomer(RegisterCustomerRequest model);
         Task<bool> UpdateCustomer(UpdateCustomerDto model);
+        Task<bool> ChangePassword(LoginAccountModel model);
     }
 }

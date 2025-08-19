@@ -38,6 +38,27 @@ namespace ServiceObject.Services
             }
         }
 
+        public async Task<bool> ChangePassword(LoginAccountModel model)
+        {
+            _logger.LogInformation("Processing change password for customer with email: {Email}", model.Email);
+            try
+            {
+                var hasher = new PasswordHasher<object>();
+                Customer? customer = await _customerDAO.GetCustomerByEmail(model.Email);
+                if (hasher.VerifyHashedPassword(null, customer.Password, model.OldPassword) != PasswordVerificationResult.Success)
+                {
+                    return false;
+                }
+                customer.Password = model.Password;
+                return await _customerDAO.UpdateCustomer(customer);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error changing password for customer: {@Model}", model);
+                throw new ValidationException("Failed to change password: " + ex.Message);
+            }
+        }
+
         public async Task<bool> IsEmailExist(string email)
         {
             _logger.LogInformation("Checking if email exists in database: {Email}", email);
@@ -51,6 +72,13 @@ namespace ServiceObject.Services
                 _logger.LogError(ex, "Error processing check for email: {Email}", email);
                 throw new ValidationException("Failed to process check email: " + ex.Message);
             }
+        }
+
+        private string GeneratePasswordHash(string password)
+        {
+            var hasher = new PasswordHasher<object>();
+            string passwordHash = hasher.HashPassword(null, password);
+            return passwordHash;
         }
 
         public async Task<bool> UpdateCustomer(UpdateCustomerDto cusDto)

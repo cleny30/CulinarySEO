@@ -6,7 +6,6 @@ using BusinessObject.Models.Enum;
 using DataAccess.IDAOs;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using Npgsql;
 
 namespace DataAccess.DAOs
@@ -205,6 +204,25 @@ namespace DataAccess.DAOs
             catch (NpgsqlException ex)
             {
                 throw new DatabaseException("Failed to check customer by ID: " + ex.Message);
+            }
+        }
+
+        public async Task<bool> ChangePassword(Customer model, string oldPassword, string NewPassword)
+        {
+            try
+            {
+                if (!VerifyPassword(oldPassword, model.Password))
+                {
+                    return false;
+                }
+                model.Password = GeneratePasswordHash(NewPassword);
+                _context.Entry(model).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (NpgsqlException ex)
+            {
+                throw new DatabaseException("Failed to change password: " + ex.Message);
             }
         }
     }

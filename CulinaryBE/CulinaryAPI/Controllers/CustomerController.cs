@@ -1,7 +1,5 @@
 ﻿using BusinessObject.Models;
 using BusinessObject.Models.Dto;
-using BusinessObject.Models.Enum;
-using CulinaryAPI.Middleware.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ServiceObject.IServices;
@@ -40,16 +38,6 @@ namespace CulinaryAPI.Controllers
             if (!ModelState.IsValid)
             {
                 return BadRequest("Information's fields is incorect!");
-            }
-            // Có thể kiểm tra bên FE không?
-            if (string.IsNullOrEmpty(model.Email) || string.IsNullOrEmpty(model.Password) || string.IsNullOrEmpty(model.RePassword) || string.IsNullOrEmpty(model.OldPassword))
-            {
-                return BadRequest("All fields must be fill in");
-            }
-            // Có thể kiểm tra bên FE không?
-            if (model.Password != model.RePassword)
-            {
-                return BadRequest("New password and re-password must be the same!");
             }
             var apiResponse = new ApiResponse();
             apiResponse.IsSuccess = await _customerService.ChangePassword(model);

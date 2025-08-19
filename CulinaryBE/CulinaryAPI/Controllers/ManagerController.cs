@@ -48,7 +48,7 @@ namespace CulinaryAPI.Controllers
             return response.IsSuccess ? Ok(response) : BadRequest(response);
         }
 
-        [HttpPut("delete-manager/{managerId}")]
+        [HttpDelete("delete-manager/{managerId}")]
         [HasPermission(PermissionAuth.ManageStaffAccount)]
         public async Task<IActionResult> DeleteManager(Guid managerId)
         {
@@ -69,7 +69,7 @@ namespace CulinaryAPI.Controllers
         }
 
         [HttpGet]
-        //[HasPermission(PermissionAuth.ManageStaffAccount)]
+        [HasPermission(PermissionAuth.ManageStaffAccount)]
         public async Task<IActionResult> GetManagers()
         {
             ApiResponse response = new ApiResponse();

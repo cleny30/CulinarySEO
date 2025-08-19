@@ -3,7 +3,6 @@ using BusinessObject.Models;
 using BusinessObject.Models.Dto;
 using BusinessObject.Models.Entity;
 using DataAccess.IDAOs;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using ServiceObject.IServices;
 
@@ -43,14 +42,8 @@ namespace ServiceObject.Services
             _logger.LogInformation("Processing change password for customer with email: {Email}", model.Email);
             try
             {
-                var hasher = new PasswordHasher<object>();
                 Customer? customer = await _customerDAO.GetCustomerByEmail(model.Email);
-                if (hasher.VerifyHashedPassword(null, customer.Password, model.OldPassword) != PasswordVerificationResult.Success)
-                {
-                    return false;
-                }
-                customer.Password = model.Password;
-                return await _customerDAO.UpdateCustomer(customer);
+                return await _customerDAO.ChangePassword(customer, model.OldPassword, model.Password);
             }
             catch (Exception ex)
             {
@@ -72,13 +65,6 @@ namespace ServiceObject.Services
                 _logger.LogError(ex, "Error processing check for email: {Email}", email);
                 throw new ValidationException("Failed to process check email: " + ex.Message);
             }
-        }
-
-        private string GeneratePasswordHash(string password)
-        {
-            var hasher = new PasswordHasher<object>();
-            string passwordHash = hasher.HashPassword(null, password);
-            return passwordHash;
         }
 
         public async Task<bool> UpdateCustomer(UpdateCustomerDto cusDto)

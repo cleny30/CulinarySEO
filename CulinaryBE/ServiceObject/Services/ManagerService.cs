@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Npgsql;
 using ServiceObject.IServices;
-using System.Globalization;
 
 namespace ServiceObject.Services
 {

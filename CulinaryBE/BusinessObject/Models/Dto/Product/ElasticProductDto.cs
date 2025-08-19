@@ -1,6 +1,6 @@
 ﻿namespace BusinessObject.Models.Dto
 {
-    public class ProductDto
+    public class ElasticProductDto
     {
         public Guid ProductId { get; set; }
         public string ProductName { get; set; } = string.Empty;
@@ -12,20 +12,7 @@
         public int ReviewCount { get; set; }
         public decimal AverageRating { get; set; }
         public List<string> ProductImages { get; set; } = new List<string>();
-    }
-    public record ProductSyncEvent
-    {
-        public Guid? ProductId { get; init; }
-        public string Action { get; init; } = string.Empty;
-        public DateTime Timestamp { get; init; } = DateTime.UtcNow;
-
-        public ProductSyncEvent() { }
-
-        public ProductSyncEvent(Guid? productId, string action, DateTime timestamp)
-        {
-            ProductId = productId;
-            Action = action;
-            Timestamp = timestamp;
-        }
+        public List<int> CategoryIds { get; set; } = new List<int>();
+        public DateTime CreatedAt { get; set; }
     }
 }

@@ -13,7 +13,7 @@ type SortBy =
 
 interface ProductFilterState {
   productfilter: {
-    selectedCategories?: number[] | null; 
+    selectedCategories?: number[] | null;
     categories: Array<{
       categoryId: number;
       categoryName: string;
@@ -47,7 +47,7 @@ const productSlice = createSlice({
     setPrice: (state, action: PayloadAction<{ from: number; to: number }>) => {
       state.productfilter.price = action.payload;
     },
-    setAvailability: (state, action: PayloadAction<boolean>) => {
+    setAvailability: (state, action: PayloadAction<boolean | null>) => {
       state.productfilter.availability = action.payload;
     },
     setSortBy: (state, action: PayloadAction<SortBy | null>) => {

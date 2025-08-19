@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/form";
 import { useDispatch, useSelector } from 'react-redux'
 import type { RootState } from '@/redux/store'
-import { useEffect, useMemo, useRef } from 'react'
+import { useEffect } from 'react'
 import { getFilter } from "@/redux/product/apiRequest"
 import { filterSchema, type FilterFormValues } from "@/schemas/filter";
 import { useForm } from "react-hook-form";
@@ -18,7 +18,6 @@ import { Input } from "../ui/input";
 import { Slider } from "../ui/slider";
 import FilterCard from "./FilterCard";
 import { Skeleton } from "../ui/skeleton";
-import { getMaxPrice } from "@/utils/constants/product/product";
 
 export default function FIlterSider() {
     const dispatch = useDispatch()
@@ -35,12 +34,12 @@ export default function FIlterSider() {
         defaultValues: {
             categories: [],
             price: { from: 0, to: maxPrice },
-            availability: false,
+            availability: null,
             sortBy: null,
         },
     });
     // const didInit = useRef(false);
-    
+
     // useEffect(() => {
     //     if (maxPrice.raw > 0 && !didInit.current) {
     //         // only set default once when products are loaded the first time
@@ -213,15 +212,38 @@ export default function FIlterSider() {
                                     <div className="flex items-center ">
                                         <FormControl>
                                             <Checkbox
-                                                checked={field.value}
+                                                checked={field.value === true}
                                                 onCheckedChange={(checked) => {
-                                                    field.onChange(!!checked)
-                                                    dispatch(setAvailability(!!checked));
+                                                    if (checked) {
+                                                        field.onChange(true);
+                                                        dispatch(setAvailability(true));
+                                                    } else {
+                                                        field.onChange(null);
+                                                        dispatch(setAvailability(null));
+                                                    }
                                                 }}
                                                 className="data-[state=checked]:bg-orange-500 data-[state=checked]:border-orange-500"
                                             />
                                         </FormControl>
                                         <FormLabel className="text-sm font-normal ml-2">In Stock</FormLabel>
+                                    </div>
+                                    <div className="flex items-center">
+                                        <FormControl>
+                                            <Checkbox
+                                                checked={field.value === false}
+                                                onCheckedChange={(checked) => {
+                                                    if (checked) {
+                                                        field.onChange(false);
+                                                        dispatch(setAvailability(false));
+                                                    } else {
+                                                        field.onChange(null);
+                                                        dispatch(setAvailability(null));
+                                                    }
+                                                }}
+                                                className="data-[state=checked]:bg-orange-500 data-[state=checked]:border-orange-500"
+                                            />
+                                        </FormControl>
+                                        <FormLabel className="text-sm font-normal ml-2">Out of Stock</FormLabel>
                                     </div>
                                 </FormItem>
                             )}

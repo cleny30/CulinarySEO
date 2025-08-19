@@ -8,7 +8,7 @@ export const filterSchema = z.object({
   }).refine(data => data.to >= data.from, {
     message: "Max price must be greater than min price"
   }),
-  availability: z.boolean(),
+  availability: z.boolean().nullable(), // nullable boolean for availability
   sortBy: z.string().nullable() // or use z.nativeEnum(SortBy) if enum
 });
 

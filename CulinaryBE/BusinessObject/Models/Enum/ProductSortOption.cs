@@ -2,6 +2,7 @@
 {
     public enum ProductSortOption
     {
+        Feature,
         PriceLowHigh,
         PriceHighLow,
         NameAZ,

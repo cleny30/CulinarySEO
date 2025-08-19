@@ -9,7 +9,7 @@ using ServiceObject.IServices;
 
 namespace ServiceObject.Services
 {
-    public class ElasticService: IElasticService
+    public class ElasticService : IElasticService
     {
         private readonly ElasticsearchClient _elasticClient;
         private readonly ILogger<ElasticService> _logger;
@@ -86,7 +86,6 @@ namespace ServiceObject.Services
                     });
                 }
 
-
                 // Price filter
                 if (request.MinPrice.HasValue || request.MaxPrice.HasValue)
                 {
@@ -114,6 +113,14 @@ namespace ServiceObject.Services
 
                 switch (request.SortBy)
                 {
+                    case ProductSortOption.Feature:
+                        mustQueries.Add(new TermQuery
+                        {
+                            Field = "categoryIds",
+                            Value = 1
+                        });
+
+                        break;
                     case ProductSortOption.PriceLowHigh:
                         sortOptions.Add(new SortOptions
                         {

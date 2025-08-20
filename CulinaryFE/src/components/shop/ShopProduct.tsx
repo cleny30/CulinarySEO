@@ -17,6 +17,8 @@ import {
 } from "@/components/ui/pagination"
 import { useDebounce } from '@/utils/hooks/useDebounce'
 import { getMaxPrice } from '@/utils/constants/product/product'
+import ProductListView from './ProductListView'
+import { setSortBy } from '@/redux/product/productfilterSlice'
 
 export default function ShopProduct() {
     const dispatch = useDispatch();
@@ -24,17 +26,7 @@ export default function ShopProduct() {
     const filter = useSelector((state: RootState) => state.productfilter);
     const [page, setPage] = useState(1);
 
-    console.log(filter.productfilter.price)
-    // const getProduct = async () => (
-    //     await fetchProducts(dispatch,
-    //         page,
-    //         filter.productfilter.selectedCategories ?? null,
-    //         filter.productfilter?.price?.from ?? null,
-    //         filter.productfilter?.price?.to ?? null,
-    //         filter.productfilter.availability ?? null,
-    //         filter.productfilter.sortBy ?? null
-    //     )
-    // )
+
     // Use a static max price for the entire catalog (not per page)
     const maxPrice = 500000;
     // Build API params from Redux filter state
@@ -99,36 +91,29 @@ export default function ShopProduct() {
         );
     }, [dispatch, page, debouncedParams]);
 
-    console.log("Products:", products.products);
     return (
         <section className='px-[15px] w-3/4'>
             <div className='w-full'>
-                <img src="/promotion_banner.webp" alt="" />
+                <img src="/promotion_banner.webp" alt="promotion-banner" />
             </div>
             <div className='w-full flex items-center justify-between border-b-1 py-[15px]'>
-                <div className='flex items-center gap-2'>
-                    <Toggle >
-                        <Grid2X2 />
-                    </Toggle>
-                    <Toggle>
-                        <List />
-                    </Toggle>
-                </div>
-                <div className='flex items-center gap-2'>
+                <div className='w-full flex items-center gap-2 justify-end'>
                     <strong className='text-sm'>Sort by:</strong>
-                    <Select defaultValue="featured" >
+                    <Select
+                        defaultValue={'0'}
+                        onValueChange={(val) => dispatch(setSortBy(val))} >
                         <SelectTrigger className="w-min-[200px] w-fit">
                             <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="featured">Featured</SelectItem>
-                            <SelectItem value="best-selling">Best selling</SelectItem>
-                            <SelectItem value="a-z">Alphabetically, A-Z</SelectItem>
-                            <SelectItem value="z-a">Alphabetically, Z-A</SelectItem>
-                            <SelectItem value="price-low-high">Price, low to high</SelectItem>
-                            <SelectItem value="price-high-low">Price, high to low</SelectItem>
-                            <SelectItem value="date-new-old">Date, new to old</SelectItem>
-                            <SelectItem value="date-old-new">Date, old to new</SelectItem>
+                            <SelectItem value="0">Featured</SelectItem>
+                            <SelectItem value="5">Best selling</SelectItem>
+                            <SelectItem value="3">Alphabetically, A-Z</SelectItem>
+                            <SelectItem value="4">Alphabetically, Z-A</SelectItem>
+                            <SelectItem value="1">Price, low to high</SelectItem>
+                            <SelectItem value="2">Price, high to low</SelectItem>
+                            <SelectItem value="6">Date, new to old</SelectItem>
+                            <SelectItem value="7">Date, old to new</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>

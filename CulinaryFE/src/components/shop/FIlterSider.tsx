@@ -124,7 +124,7 @@ export default function FIlterSider() {
                     <div className='w-full pb-[30px] border-b-[1px] gap-[30px]'>
                         <h6>Price</h6>
                         <div className="flex items-center justify-between">
-                            <span className="text-sm text-gray-600 mb-3">The highest price is {maxPrice}</span>
+                            <span className="text-sm text-gray-600 mb-3">The highest price is {maxPrice + '₫'}</span>
                             <button className="text-sm text-gray-500 hover:text-gray-700 mb-4" onClick={(e) => {
                                 e.preventDefault();
                                 form.setValue("price", { from: 0, to: maxPrice });

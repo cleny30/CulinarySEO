@@ -1,15 +1,8 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import { type Category } from "@/types/filter";
 
-type SortBy =
-  | "featured"
-  | "best-selling"
-  | "a-z"
-  | "z-a"
-  | "price-low-high"
-  | "price-high-low"
-  | "date-new-old"
-  | "date-old-new";
+
+// match <SelectItem value="x">
 
 interface ProductFilterState {
   productfilter: {
@@ -21,7 +14,7 @@ interface ProductFilterState {
     }>;
     price?: { from: number; to: number } | null;
     availability?: boolean | null;
-    sortBy?: SortBy | null;
+    sortBy?: string | null;
   };
   fetching: boolean;
 }
@@ -50,7 +43,7 @@ const productSlice = createSlice({
     setAvailability: (state, action: PayloadAction<boolean | null>) => {
       state.productfilter.availability = action.payload;
     },
-    setSortBy: (state, action: PayloadAction<SortBy | null>) => {
+    setSortBy: (state, action: PayloadAction<string | null>) => {
       state.productfilter.sortBy = action.payload;
     },
     setFetching: (state, action: PayloadAction<boolean>) => {

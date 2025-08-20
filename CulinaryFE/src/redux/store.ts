@@ -17,7 +17,7 @@ import storage from "redux-persist/lib/storage";
 const authPersistConfig = {
   key: "auth",
   storage,
-  blacklist: ["productfilter","productview"], // item will not be persisted
+  blacklist: ["signup"], // item will not be persisted
 };
 
 const rootReducer = combineReducers({

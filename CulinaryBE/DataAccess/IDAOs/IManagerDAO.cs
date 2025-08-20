@@ -15,5 +15,6 @@ namespace DataAccess.IDAOs
         Task<IEnumerable<Manager>> GetManagers();
         Task<Manager?> GetManagerById(Guid managerId);
         Task<bool> IsEmailExist(string email);
+        Task<bool> IsEmailOfAccount(string email, Guid guid);
     }
 }

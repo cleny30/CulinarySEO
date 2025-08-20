@@ -23,7 +23,8 @@ namespace BusinessObject.Models.Dto
         [MaxLength(20)]
         public string Phone { get; set; } = string.Empty;
 
-        [Required]
+        public int RoleId { get; set; } = 2;
+
         public UserStatus Status { get; set; }
     }
 }

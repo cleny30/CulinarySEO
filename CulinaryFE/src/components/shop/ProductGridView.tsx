@@ -44,11 +44,9 @@ export default function ProductGridView({ products }: { products: ProductResult 
                                     {product.discount && product.finalPrice ? (
                                         <div className='text-sm flex items-center gap-2'>
                                             <span className='text-mau-gia-san-pham font-bold'>
-                                                <span className='text-xs '>₫</span>
                                                 {formatCurrency(product.finalPrice)}
                                             </span>
                                             <span className='line-through text-gray-400'>
-                                                <span className='text-xs'>₫</span>
                                                 {formatCurrency(product.price)}
                                             </span>
                                         </div>
@@ -56,7 +54,6 @@ export default function ProductGridView({ products }: { products: ProductResult 
                                         (
                                             <div className='text-sm'>
                                                 <span className='text-mau-gia-san-pham font-bold'>
-                                                    <span className='text-xs'>₫</span>
                                                     {formatCurrency(product.price)}
                                                 </span>
                                             </div>

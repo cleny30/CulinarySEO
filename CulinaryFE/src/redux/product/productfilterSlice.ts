@@ -49,7 +49,7 @@ const productSlice = createSlice({
     setFetching: (state, action: PayloadAction<boolean>) => {
       state.fetching = action.payload;
     },
-    setSelectedCategories: (state, action: PayloadAction<number[]>) => {
+    setSelectedCategories: (state, action: PayloadAction<number[] | null>) => {
       state.productfilter.selectedCategories = action.payload;
     },
   },

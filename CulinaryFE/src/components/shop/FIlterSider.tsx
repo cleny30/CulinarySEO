@@ -13,7 +13,7 @@ import { getFilter } from "@/redux/product/apiRequest"
 import { filterSchema, type FilterFormValues } from "@/schemas/filter";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { setFetching, setPrice, setAvailability, setSelectedCategories } from "@/redux/product/productfilterSlice";
+import { setFetching, setPrice, setAvailability, setSelectedCategories, setCategories } from "@/redux/product/productfilterSlice";
 import { Input } from "../ui/input";
 import { Slider } from "../ui/slider";
 import FilterCard from "./FilterCard";
@@ -72,7 +72,8 @@ export default function FIlterSider() {
                             <h6>Categories</h6>
                             <button className="text-sm text-gray-500 hover:text-gray-700 " onClick={(e) => {
                                 e.preventDefault();
-                                form.resetField("categories");
+                                form.setValue("categories", []);
+                                dispatch(setSelectedCategories(null));
                             }}>Reset</button>
                         </div>
                         <div className='mt-[30px] w-full'>

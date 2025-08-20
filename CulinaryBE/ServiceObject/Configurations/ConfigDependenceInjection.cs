@@ -20,6 +20,7 @@ namespace ServiceObject.Configurations
             services.AddScoped<IOrderDAO, OrderDAO>();
             services.AddScoped<IRecommendationDAO, RecommendationDAO>();
             services.AddScoped<ICartDAO, CartDAO>();
+            services.AddScoped<IStockDAO, StockDAO>();
         }
 
         public static void ConfigureService(this IServiceCollection services)

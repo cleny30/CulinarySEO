@@ -16,16 +16,14 @@ namespace CulinaryAPI.Core
                     Description = "API with JWT Authentication"
                 });
 
-                // Thêm định nghĩa bảo mật cho JWT
-                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                options.AddSecurityDefinition("cookieAuth", new OpenApiSecurityScheme
                 {
-                    Name = "Authorization",
-                    Type = SecuritySchemeType.Http,
-                    Scheme = "Bearer",
-                    BearerFormat = "JWT",
-                    In = ParameterLocation.Header,
-                    Description = "Enter 'Bearer' followed by a space and the JWT token."
+                    Type = SecuritySchemeType.ApiKey,
+                    In = ParameterLocation.Cookie,
+                    Name = "AccessToken", 
+                    Description = "JWT token stored in HttpOnly cookie"
                 });
+
 
                 // Thêm yêu cầu bảo mật cho các endpoint
                 options.AddSecurityRequirement(new OpenApiSecurityRequirement
@@ -36,7 +34,7 @@ namespace CulinaryAPI.Core
                             Reference = new OpenApiReference
                             {
                                 Type = ReferenceType.SecurityScheme,
-                                Id = "Bearer"
+                                Id = "cookieAuth"
                             }
                         },
                         Array.Empty<string>()

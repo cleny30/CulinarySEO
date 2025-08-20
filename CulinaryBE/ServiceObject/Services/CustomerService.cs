@@ -37,6 +37,21 @@ namespace ServiceObject.Services
             }
         }
 
+        public async Task<bool> ChangePassword(LoginAccountModel model)
+        {
+            _logger.LogInformation("Processing change password for customer with email: {Email}", model.Email);
+            try
+            {
+                Customer? customer = await _customerDAO.GetCustomerByEmail(model.Email);
+                return await _customerDAO.ChangePassword(customer, model.OldPassword, model.Password);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error changing password for customer: {@Model}", model);
+                throw new ValidationException("Failed to change password: " + ex.Message);
+            }
+        }
+
         public async Task<bool> IsEmailExist(string email)
         {
             _logger.LogInformation("Checking if email exists in database: {Email}", email);
@@ -57,8 +72,14 @@ namespace ServiceObject.Services
             try
             {
                 _logger.LogInformation("Processing update a customer");
-                var customer = _mapper.Map<Customer>(cusDto);
-                var result = await _customerDAO.UpdateCustomer(customer);
+                Customer? customerExist = await _customerDAO.GetCustomerByID(cusDto.CustomerId);
+                if (customerExist == null)
+                {
+                    _logger.LogWarning("Customer with ID {CustomerId} does not exist", cusDto.CustomerId);
+                    throw new ValidationException("Customer does not exist");
+                }
+                _mapper.Map(cusDto, customerExist);
+                var result = await _customerDAO.UpdateCustomer(customerExist);
                 return result;
             }
             catch (Exception ex)

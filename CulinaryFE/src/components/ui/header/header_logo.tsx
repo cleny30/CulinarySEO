@@ -3,7 +3,7 @@ import { Logo } from "@/assets/svg/logo";
 export default function HeaderLogo() {
   return (
     <div className={``}>
-      <Logo />
+      <Logo color="#222222"/>
     </div>
   );
 }

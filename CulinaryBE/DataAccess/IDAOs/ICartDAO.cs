@@ -11,5 +11,6 @@ namespace DataAccess.IDAOs
         Task AddCartItemAsync(CartItem cartItem);
         Task UpdateCartItemAsync(CartItem cartItem);
         Task RemoveCartItemAsync(CartItem cartItem);
+        Task DeleteCartAsync(Guid cartId);
     }
 }

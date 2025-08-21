@@ -148,6 +148,20 @@ namespace DataAccess.DAOs
             }
         }
 
+        public async Task DeleteCartAsync(Guid cartId)
+        {
+            var cart = await _context.Carts
+                .Include(c => c.CartItems)
+                .FirstOrDefaultAsync(c => c.CartId == cartId);
+
+            if (cart != null)
+            {
+                _context.CartItems.RemoveRange(cart.CartItems);
+                _context.Carts.Remove(cart);
+                await _context.SaveChangesAsync();
+            }
+        }
+
     }
 }
 

@@ -16,8 +16,12 @@ namespace BusinessObject.Models.Entity
         public string ProductName { get; set; } = string.Empty;
 
         [Required]
-        [Column("description")]
-        public string Description { get; set; } = string.Empty;
+        [Column("short_description")]
+        public string ShortDescription { get; set; } = string.Empty;
+
+        [Required]
+        [Column("long_description")]
+        public string LongDescription { get; set; } = string.Empty;
 
         [Required]
         [Column("price", TypeName = "decimal(10,2)")]

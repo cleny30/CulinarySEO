@@ -30,5 +30,19 @@ namespace CulinaryAPI.Controllers
             apiResponse.Message = apiResponse.IsSuccess ? "Your information was updated successfully!" : "Failed to update your information!";
             return Ok(apiResponse);
         }
+
+        [HttpPut("change-password")]
+        [Authorize]
+        public async Task<IActionResult> ChangePassword([FromBody] LoginAccountModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Information's fields is incorect!");
+            }
+            var apiResponse = new ApiResponse();
+            apiResponse.IsSuccess = await _customerService.ChangePassword(model);
+            apiResponse.Message = apiResponse.IsSuccess ? "Your password was changed successfully!" : "Old password is incorect!";
+            return Ok(apiResponse);
+        }
     }
 }

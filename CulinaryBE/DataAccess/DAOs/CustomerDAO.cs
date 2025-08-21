@@ -6,6 +6,7 @@ using BusinessObject.Models.Enum;
 using DataAccess.IDAOs;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Npgsql;
 
 namespace DataAccess.DAOs
@@ -13,15 +14,16 @@ namespace DataAccess.DAOs
     public class CustomerDAO : ICustomerDAO
     {
         private readonly CulinaryContext _context;
+        private readonly ILogger<CustomerDAO> _logger;
 
-        public CustomerDAO(CulinaryContext contextl)
+        public CustomerDAO(CulinaryContext contextl, ILogger<CustomerDAO> logger)
         {
             _context = contextl;
+            _logger = logger;
         }
 
         public async Task<AccountData> VerifyAccountAsync(LoginAccountModel model)
         {
-
             try
             {
                 var customer = await _context.Customers
@@ -57,7 +59,6 @@ namespace DataAccess.DAOs
 
         public async Task<string> SaveRefreshTokenAsync(Guid userId, string refreshToken, DateTime expiryDate)
         {
-
             try
             {
                 var customer = await _context.Customers
@@ -145,6 +146,7 @@ namespace DataAccess.DAOs
 
         public async Task<bool> AddNewCustomer(Customer customer)
         {
+            _logger.LogInformation("Adding new customer with email: {Email}", customer.Email);
             try
             {
                 if (!string.IsNullOrEmpty(customer.Password))
@@ -163,6 +165,7 @@ namespace DataAccess.DAOs
 
         public async Task<Customer> GetCustomerByEmail(string email)
         {
+            _logger.LogInformation("Retrieving customer by email: {Email}", email);
             try
             {
                 var customer = await _context.Customers
@@ -178,6 +181,7 @@ namespace DataAccess.DAOs
 
         public async Task<bool> UpdateCustomer(Customer customer)
         {
+            _logger.LogInformation("Updating customer with ID: {CustomerId}", customer.CustomerId);
             try
             {
                 if (String.IsNullOrEmpty(customer.Password))
@@ -197,6 +201,7 @@ namespace DataAccess.DAOs
 
         public Task<Customer?> GetCustomerByID(Guid customerId)
         {
+            _logger.LogInformation("Retrieving customer by ID: {CustomerId}", customerId);
             try
             {
                 return _context.Customers.FirstOrDefaultAsync(m => m.CustomerId == customerId);
@@ -209,6 +214,7 @@ namespace DataAccess.DAOs
 
         public async Task<bool> ChangePassword(Customer model, string oldPassword, string NewPassword)
         {
+            _logger.LogInformation("Changing password for customer with ID: {CustomerId}", model.CustomerId);
             try
             {
                 if (!VerifyPassword(oldPassword, model.Password))

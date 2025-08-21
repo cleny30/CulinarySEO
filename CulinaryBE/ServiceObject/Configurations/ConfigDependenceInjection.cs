@@ -21,6 +21,7 @@ namespace ServiceObject.Configurations
             services.AddScoped<IRecommendationDAO, RecommendationDAO>();
             services.AddScoped<ICartDAO, CartDAO>();
             services.AddScoped<IStockDAO, StockDAO>();
+            services.AddScoped<IRoleDAO, RoleDAO>();
         }
 
         public static void ConfigureService(this IServiceCollection services)
@@ -37,6 +38,7 @@ namespace ServiceObject.Configurations
             services.AddScoped<ICartService, CartService>();
             services.AddScoped<IRecommendationService, RecommendationService>();
             services.AddScoped<IElasticService, ElasticService>();
+            services.AddScoped<IRoleService, RoleService>();
         }
 
         public static void ConfigureBackgroundService(this IServiceCollection services)

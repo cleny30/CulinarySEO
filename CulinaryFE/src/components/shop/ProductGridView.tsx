@@ -16,7 +16,7 @@ export default function ProductGridView({ products }: { products: ProductResult 
             {
                 fetchingproducts
                     ? (
-                        <div className='flex space-y-3 space-x-3'>
+                        <div className='flex space-x-3 w-full'>
                             <Skeleton className="h-[289px] w-[231px] rounded-xl" />
                             <Skeleton className="h-[289px] w-[231px] rounded-xl" />
                             <Skeleton className="h-[289px] w-[231px] rounded-xl" />

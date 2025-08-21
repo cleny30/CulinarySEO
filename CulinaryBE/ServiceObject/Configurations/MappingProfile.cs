@@ -162,7 +162,12 @@ namespace ServiceObject.Configurations
                     .FirstOrDefault(pi => pi.IsPrimary)!.ImageUrl
             ));
 
-
+            CreateMap<AddToCartRequest, CartItem>().
+                AfterMap((src, dest) =>
+                {
+                    dest.CartItemId = Guid.NewGuid();
+                    dest.AddedAt = DateTime.UtcNow;
+                });
             #endregion
 
             #region Manager

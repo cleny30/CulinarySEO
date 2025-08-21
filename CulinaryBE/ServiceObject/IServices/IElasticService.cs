@@ -7,6 +7,6 @@ namespace ServiceObject.IServices
         Task ReindexAllAsync();
         Task DeleteProductAsync(Guid productId);
         Task IndexProductAsync(Guid productId);
-        Task<PagedResult<ProductDto>> GetFilteredProducts(ProductFilterRequest request);
+        Task<PagedResult<ProductFilterResponse>> GetFilteredProducts(ProductFilterRequest request);
     }
 }

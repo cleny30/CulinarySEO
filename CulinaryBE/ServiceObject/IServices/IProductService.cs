@@ -6,7 +6,7 @@ namespace ServiceObject.IServices
     {
         Task<List<GetProductDto>> GetAllProducts();
         Task<GetProductDetailDto> GetProductDetailById(Guid productId);
-        Task<PagedResult<ProductDto>> GetFilteredProductsAsync(ProductFilterRequest request);
+        Task<PagedResult<ProductFilterResponse>> GetFilteredProductsAsync(ProductFilterRequest request);
 
     }
 }

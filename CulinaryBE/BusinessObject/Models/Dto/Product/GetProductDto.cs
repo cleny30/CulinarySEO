@@ -4,7 +4,8 @@ namespace BusinessObject.Models.Dto
     {
         public Guid ProductId { get; set; }
         public string ProductName { get; set; } = string.Empty;
-        public string Description { get; set; } = string.Empty;
+        public string ShortDescription { get; set; } = string.Empty;
+        public string LongDescription { get; set; } = string.Empty;
         public int TotalQuantity { get; set; }
         public decimal Price { get; set; }
         public decimal? Discount { get; set; }

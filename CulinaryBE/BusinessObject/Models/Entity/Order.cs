@@ -36,6 +36,14 @@ namespace BusinessObject.Models.Entity
         public Guid? ShipperId { get; set; }
 
         [Required]
+        [Column("payment_method")]
+        public PaymentMethodEnum PaymentMethod { get; set; }
+
+        [Required]
+        [Column("payment_status")]
+        public bool PaymentStatus { get; set; } = false;
+
+        [Required]
         [Column("created_at")]
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 

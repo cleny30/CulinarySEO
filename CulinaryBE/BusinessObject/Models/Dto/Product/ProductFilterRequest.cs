@@ -1,9 +1,12 @@
 ﻿using BusinessObject.Models.Enum;
+using System.ComponentModel.DataAnnotations;
 
 namespace BusinessObject.Models.Dto
 {
     public class ProductFilterRequest
     {
+        [Required]
+        public Guid WarehouseId { get; set; }
         public List<int>? CategoryIds { get; set; }
         public decimal? MinPrice { get; set; }
         public decimal? MaxPrice { get; set; }

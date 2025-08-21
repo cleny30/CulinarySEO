@@ -166,8 +166,15 @@ namespace ServiceObject.Configurations
             #endregion
 
             #region Manager
-            CreateMap<Manager, ManagerDto>();
-            CreateMap<ManagerDto, Manager>();
+            CreateMap<Manager, ManagerDto>().ReverseMap();
+            #endregion
+
+            #region Role
+            CreateMap<Role, RoleDto>().ReverseMap();
+            #endregion
+
+            #region Permission
+            CreateMap<Permission, PermissionDto>().ReverseMap();
             #endregion
         }
     }

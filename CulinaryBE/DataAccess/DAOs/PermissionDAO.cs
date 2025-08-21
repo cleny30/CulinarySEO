@@ -1,8 +1,10 @@
 ﻿using BusinessObject.AppDbContext;
+using BusinessObject.Models.Entity;
 using BusinessObject.Models.Enum;
 using DataAccess.IDAOs;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Npgsql;
 
 namespace DataAccess.DAOs
 {
@@ -15,6 +17,21 @@ namespace DataAccess.DAOs
         {
             _context = context;
             _logger = logger;
+        }
+
+        public async Task<IEnumerable<Permission>> GetPermissions()
+        {
+            try
+            {
+                return await _context.Permissions
+                    .AsNoTracking()
+                    .ToListAsync();
+            }
+            catch (NpgsqlException ex)
+            {
+                _logger.LogError(ex, "Error while retrieving permissions");
+                throw new Exception("Database error occurred while retrieving permissions.", ex);
+            }
         }
 
         public async Task<HashSet<KeyValuePair<string, bool>>> GetPermissionsByCustomerIdAsync(Guid userId)

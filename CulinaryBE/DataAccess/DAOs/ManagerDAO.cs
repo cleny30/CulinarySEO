@@ -6,6 +6,7 @@ using BusinessObject.Models.Enum;
 using DataAccess.IDAOs;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Npgsql;
 
 namespace DataAccess.DAOs
@@ -13,10 +14,12 @@ namespace DataAccess.DAOs
     public class ManagerDAO : IManagerDAO
     {
         private readonly CulinaryContext _context;
+        private readonly ILogger<ManagerDAO> _logger;
 
-        public ManagerDAO(CulinaryContext context)
+        public ManagerDAO(CulinaryContext context, ILogger<ManagerDAO> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         public async Task<AccountData> VerifyAccountAsync(LoginAccountModel model)
@@ -150,6 +153,7 @@ namespace DataAccess.DAOs
 
         public async Task AddManager(Manager model)
         {
+            _logger.LogInformation("Adding new manager with email: {Email}", model.Email);
             try
             {
                 await _context.Managers.AddAsync(model);
@@ -163,6 +167,7 @@ namespace DataAccess.DAOs
 
         public async Task<bool> UpdateManager(Manager model)
         {
+            _logger.LogInformation("Updating manager with ID: {ManagerId}", model.ManagerId);
             try
             {
                 _context.Entry(model).State = EntityState.Modified;
@@ -177,6 +182,7 @@ namespace DataAccess.DAOs
 
         public async Task<bool> DeleteManager(Guid managerId)
         {
+            _logger.LogInformation("Deleting manager with ID: {ManagerId}", managerId);
             try
             {
                 Manager? manager = await GetManagerById(managerId);
@@ -197,6 +203,7 @@ namespace DataAccess.DAOs
 
         public async Task<IEnumerable<Manager>> GetManagers()
         {
+            _logger.LogInformation("Retrieving all managers from the database");
             try
             {
                 return await _context.Managers.ToListAsync();
@@ -209,6 +216,7 @@ namespace DataAccess.DAOs
 
         public async Task<Manager?> GetManagerById(Guid managerId)
         {
+            _logger.LogInformation("Retrieving manager with ID: {ManagerId}", managerId);
             try
             {
                 return await _context.Managers.FirstOrDefaultAsync(m => m.ManagerId == managerId);

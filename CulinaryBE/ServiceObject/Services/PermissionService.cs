@@ -1,4 +1,6 @@
-﻿using DataAccess.IDAOs;
+﻿using AutoMapper;
+using BusinessObject.Models.Dto;
+using DataAccess.IDAOs;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using ServiceObject.IServices;
@@ -10,12 +12,14 @@ namespace ServiceObject.Services
         private readonly IPermissionDAO _permissionDAO;
         private readonly IMemoryCache _cache;
         private readonly ILogger<PermissionService> _logger;
+        private readonly IMapper _mapper;
 
-        public PermissionService(IPermissionDAO permissionDAO, IMemoryCache cache, ILogger<PermissionService> logger)
+        public PermissionService(IPermissionDAO permissionDAO, IMemoryCache cache, ILogger<PermissionService> logger, IMapper mapper)
         {
             _permissionDAO = permissionDAO;
             _cache = cache;
             _logger = logger;
+            _mapper = mapper;
         }
 
         public async Task<HashSet<KeyValuePair<string, bool>>> GetUserPermissionsAsync(Guid userId)
@@ -58,6 +62,19 @@ namespace ServiceObject.Services
         {
             _cache.Remove($"permissions:{userId}");
             _logger.LogInformation("Remove permissions for UserId: {UserId}", userId);
+        }
+
+        public async Task<IEnumerable<PermissionDto>> GetAllPermissions()
+        {
+            try
+            {
+                return _mapper.Map<IEnumerable<PermissionDto>>(await _permissionDAO.GetPermissions());
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while retrieving all permissions.");
+                throw new InvalidOperationException("An error occurred while retrieving all permissions.", ex);
+            }
         }
     }
 }

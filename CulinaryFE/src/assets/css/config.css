@@ -4,6 +4,7 @@
   --mau-be: 248, 239, 216;
   --mau-do-color: 185, 46, 45;
   --mau-den: 0, 41, 34;
+  --mau-gia-san-pham: 238, 77, 45
 }
 
 /* ======================== CUSTOM TAILWIND COLOR =============================== */
@@ -14,6 +15,7 @@
   --color-mau-nau-vien: rgba(var(--mau-nau-vien), 1);
   --color-mau-do-color: rgba(var(--mau-do-color), 1);
   --color-mau-den: rgba(var(--mau-den), 1);
+  --color-mau-gia-san-pham: rgba(var(--mau-gia-san-pham), 1);
   --font-Lucky: "LuckiestGuy", sans-serif;
   --font-Mont: "Montserrat", sans-serif;
 }

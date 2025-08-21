@@ -20,10 +20,12 @@ namespace ServiceObject.Configurations
             services.AddScoped<IOrderDAO, OrderDAO>();
             services.AddScoped<IRecommendationDAO, RecommendationDAO>();
             services.AddScoped<ICartDAO, CartDAO>();
+            services.AddScoped<IStockDAO, StockDAO>();
         }
 
         public static void ConfigureService(this IServiceCollection services)
         {
+            services.AddScoped<IManagerService, ManagerService>();
             services.AddScoped<IJwtService, JwtService>();
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IProductService, ProductService>();
@@ -33,8 +35,8 @@ namespace ServiceObject.Configurations
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IPermissionService, PermissionService>();
             services.AddScoped<ICartService, CartService>();
-
             services.AddScoped<IRecommendationService, RecommendationService>();
+            services.AddScoped<IElasticService, ElasticService>();
         }
 
         public static void ConfigureBackgroundService(this IServiceCollection services)
@@ -42,10 +44,12 @@ namespace ServiceObject.Configurations
             services.AddSingleton<ITokenSaveQueue, TokenSaveQueue>();
             services.AddSingleton<ILogoutQueue, LogoutQueue>();
             services.AddSingleton<IEmailQueue, EmailQueue>();
+            services.AddSingleton<IProductSyncQueue, ProductSyncQueue>();
 
             services.AddHostedService<TokenSaveBackgroundService>();
             services.AddHostedService<LogoutBackgroundService>();
             services.AddHostedService<EmailBackgroundService>();
+            services.AddHostedService<ProductSyncBackgroundService>();
         }
     }
 }

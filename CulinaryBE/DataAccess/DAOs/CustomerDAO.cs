@@ -124,7 +124,6 @@ namespace DataAccess.DAOs
             return result == PasswordVerificationResult.Success;
         }
 
-        // Method này chỉ dùng khi tạo user mới hoặc đổi password
         private string GeneratePasswordHash(string password)
         {
             var hasher = new PasswordHasher<object>();
@@ -152,7 +151,6 @@ namespace DataAccess.DAOs
                 {
                     customer.Password = GeneratePasswordHash(customer.Password!);
                 }
-
                 await _context.Customers.AddAsync(customer);
                 await _context.SaveChangesAsync();
                 return true;
@@ -182,19 +180,49 @@ namespace DataAccess.DAOs
         {
             try
             {
-                var cus = await _context.Customers
-                    .FirstOrDefaultAsync(m => m.CustomerId == customer.CustomerId);
-                if (cus == null)
+                if (String.IsNullOrEmpty(customer.Password))
                 {
                     return false;
                 }
-                _context.Entry(cus).State = EntityState.Modified;
+                customer.Password = GeneratePasswordHash(customer.Password);
+                _context.Entry(customer).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
                 return true;
             }
             catch (NpgsqlException ex)
             {
                 throw new DatabaseException("Failed to update customer: " + ex.Message);
+            }
+        }
+
+        public Task<Customer?> GetCustomerByID(Guid customerId)
+        {
+            try
+            {
+                return _context.Customers.FirstOrDefaultAsync(m => m.CustomerId == customerId);
+            }
+            catch (NpgsqlException ex)
+            {
+                throw new DatabaseException("Failed to check customer by ID: " + ex.Message);
+            }
+        }
+
+        public async Task<bool> ChangePassword(Customer model, string oldPassword, string NewPassword)
+        {
+            try
+            {
+                if (!VerifyPassword(oldPassword, model.Password))
+                {
+                    return false;
+                }
+                model.Password = GeneratePasswordHash(NewPassword);
+                _context.Entry(model).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (NpgsqlException ex)
+            {
+                throw new DatabaseException("Failed to change password: " + ex.Message);
             }
         }
     }

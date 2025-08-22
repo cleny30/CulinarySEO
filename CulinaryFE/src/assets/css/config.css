@@ -3,6 +3,7 @@
   --mau-sua-bo: 255, 250, 238;
   --mau-be: 248, 239, 216;
   --mau-do-color: 185, 46, 45;
+  --mau-den: 0, 41, 34;
   --mau-gia-san-pham: 238, 77, 45
 }
 
@@ -13,23 +14,18 @@
   --color-mau-be: rgba(var(--mau-be), 1);
   --color-mau-nau-vien: rgba(var(--mau-nau-vien), 1);
   --color-mau-do-color: rgba(var(--mau-do-color), 1);
+  --color-mau-den: rgba(var(--mau-den), 1);
   --color-mau-gia-san-pham: rgba(var(--mau-gia-san-pham), 1);
-  --font-Lucky: "BDStreetSignSans", sans-serif; 
-  --font-Mont: "Montserrat", sans-serif; 
+  --font-Lucky: "LuckiestGuy", sans-serif;
+  --font-Mont: "Montserrat", sans-serif;
 }
 
 /* ======================== INIT FONT FACE ====================== */
 @font-face {
-  font-family: "BDStreetSignSans"; /* Choose a name for your font family */
-  src: local("BDStreetSignSans"),
-    url("../fonts/BDStreetSignSans-SlightlyRaised.otf") format("otf");
+  font-family: "LuckiestGuy"; /* Choose a name for your font family */
+  src: local("LuckiestGuy"),
+    url("../fonts/DVN-LuckiestGuy-Regular.ttf") format("truetype");
   font-weight: normal;
-}
-@font-face {
-  font-family: "BDStreetSignSans"; /* Choose a name for your font family */
-  src: local("BDStreetSignSans"),
-    url("../fonts/BDStreetSignSans-SlightlyRaisedExtremeInktrap.otf") format("otf");
-  font-weight: 600;
 }
 @font-face {
   font-family: "Montserrat"; /* Choose a name for your font family */

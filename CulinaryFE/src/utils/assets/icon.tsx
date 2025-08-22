@@ -9,6 +9,7 @@ import {
   Smartphone,
   CornerLeftUp,
   CornerDownRight,
+  ShoppingCart,
 } from "lucide-react";
 import { GoogleIcon } from "@/assets/svg/google";
 import type { SVGProps, ImgHTMLAttributes } from "react";
@@ -24,7 +25,8 @@ export const Icon = {
   Smartphone: (props: LucideProps) => <Smartphone {...props} />,
   CornerLeftUp: (props: LucideProps) => <CornerLeftUp {...props} />,
   CornerDownRight: (props: LucideProps) => <CornerDownRight {...props} />,
+  ShoppingCart: (props: LucideProps) => <ShoppingCart {...props} />,
   Authen: (props: ImgHTMLAttributes<HTMLImageElement>) => (
-    <img src={"/authen.svg"} {...props} />
+    <img src={"/svg/authen.svg"} {...props} />
   ),
 };

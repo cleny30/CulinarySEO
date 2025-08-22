@@ -27,5 +27,18 @@ namespace CulinaryAPI.Controllers
                 Result = result
             });
         }
+
+        [HttpGet("get-category")]
+        public async Task<IActionResult> GetCategories()
+        {
+            var result = await _categoryService.GetCategories();
+
+            return Ok(new ApiResponse
+            {
+                IsSuccess = true,
+                Message = "Success get categories and product count",
+                Result = result
+            });
+        }
     }
 }

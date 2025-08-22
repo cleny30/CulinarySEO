@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BusinessObject.Models.Dto;
 using BusinessObject.Models.Enum;
+using DataAccess.DAOs;
 using DataAccess.IDAOs;
 using Elastic.Clients.Elasticsearch;
 using Elastic.Clients.Elasticsearch.QueryDsl;
@@ -27,34 +28,35 @@ namespace ServiceObject.Services
         // Index (insert/update) 1 product
         public async Task IndexProductAsync(Guid productId)
         {
-            var product = await _productDAO.GetProductDetailById(productId);
-            if (product == null) return;
+            //var product = await _productDAO.GetProductDetailById(productId);
+            //if (product == null) return;
 
-            var dto = _mapper.Map<ElasticProductDto>(product);
+            //var dto = _mapper.Map<ElasticProductDto>(product);
 
-            var response = await _elasticClient.IndexAsync(dto, i => i
-                .Index("products")
-                .Id(dto.ProductId)
-                .Refresh(Refresh.True)
-            );
+            //var response = await _elasticClient.IndexAsync(dto, i => i
+            //    .Index("products")
+            //    .Id(dto.ProductId)
+            //    .Refresh(Refresh.True)
+            //);
 
-            if (!response.IsValidResponse)
-            {
-                Console.WriteLine($"[Elastic] Failed to index product {productId}: {response.DebugInformation}");
-            }
+            //if (!response.IsValidResponse)
+            //{
+            //    Console.WriteLine($"[Elastic] Failed to index product {productId}: {response.DebugInformation}");
+            //}
         }
 
         // Xóa product khỏi index
         public async Task DeleteProductAsync(Guid productId)
         {
-            await _elasticClient.DeleteAsync<ProductDto>(productId.ToString(), d => d.Index("products"));
+            await _elasticClient.DeleteAsync<ProductFilterResponse>(productId.ToString(), d => d.Index("products"));
         }
 
         // Full sync toàn bộ product
         public async Task ReindexAllAsync()
         {
-            var products = await _productDAO.GetAllProducts();
+            var products = await _productDAO.GetAllProductsWithStocksAsync();
             var dtos = _mapper.Map<List<ElasticProductDto>>(products);
+
 
             var bulkResponse = await _elasticClient.BulkAsync(b => b
                 .Index("products")
@@ -68,12 +70,12 @@ namespace ServiceObject.Services
         }
 
         #region Filter Product
-        public async Task<PagedResult<ProductDto>> GetFilteredProducts(ProductFilterRequest request)
+        public async Task<PagedResult<ProductFilterResponse>> GetFilteredProducts(ProductFilterRequest request)
         {
             try
             {
                 var mustQueries = new List<Query>();
-
+             
                 // Category filter
                 if (request.CategoryIds?.Any() == true)
                 {
@@ -179,7 +181,7 @@ namespace ServiceObject.Services
                 }
 
                 // Search request
-                var response = await _elasticClient.SearchAsync<ProductDto>(s => s
+                var response = await _elasticClient.SearchAsync<ProductFilterResponse>(s => s
                     .Indices("products")
                     .From((request.Page - 1) * request.PageSize)
                     .Size(request.PageSize)
@@ -203,7 +205,28 @@ namespace ServiceObject.Services
                 }
                 var items = response.Documents.ToList();
 
-                return new PagedResult<ProductDto>
+                foreach (var item in items)
+                {
+                    if (request.WarehouseId != Guid.Empty)
+                    {
+                        var key = request.WarehouseId.ToString();
+
+                        // Dictionary lookup
+                        item.CurrentWarehouseQuantity =
+                            item.Stocks != null && item.Stocks.ContainsKey(key)
+                                ? item.Stocks[key]
+                                : 0;
+                    }
+                    else
+                    {
+                        // Nếu không filter theo warehouse cụ thể thì dùng tổng
+                        item.CurrentWarehouseQuantity = item.TotalQuantity;
+                    }
+                }
+
+
+
+                return new PagedResult<ProductFilterResponse>
                 {
                     Items = items,
                     TotalItems = (int)totalItems,

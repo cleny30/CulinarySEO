@@ -8,5 +8,7 @@ namespace DataAccess.IDAOs
         Task<Product?> GetProductDetailById(Guid productId);
         Task<List<Product>> GetBestSellingProducts(int topN);
         Task<List<Product>> GetProductSummariesById(IEnumerable<Guid> productIds);
+        Task<Product?> GetProductAsync(Guid productId);
+        Task<List<Product>> GetAllProductsWithStocksAsync();
     }
 }

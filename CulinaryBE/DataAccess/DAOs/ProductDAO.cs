@@ -1,17 +1,21 @@
 ﻿using BusinessObject.AppDbContext;
+using BusinessObject.Models;
 using BusinessObject.Models.Entity;
 using DataAccess.IDAOs;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace DataAccess.DAOs
 {
     public class ProductDAO : IProductDAO
     {
         private readonly CulinaryContext _context;
+        private readonly ILogger<ProductDAO> _logger;
 
-        public ProductDAO(CulinaryContext context)
+        public ProductDAO(CulinaryContext context, ILogger<ProductDAO> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         public async Task<List<Product>> GetAllProducts()
@@ -95,6 +99,36 @@ namespace DataAccess.DAOs
             catch (DbUpdateException ex)
             {
                 throw new DbUpdateException("An error occurred while retrieving product summaries.", ex);
+            }
+        }
+        public async Task<Product?> GetProductAsync(Guid productId)
+        {
+            try
+            {
+                return await _context.Products.FindAsync(productId);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "GetProduct failed {ProductId}", productId);
+                throw new DatabaseException("Failed to load product");
+            }
+        }
+        public async Task<List<Product>> GetAllProductsWithStocksAsync()
+        {
+            try
+            {
+                return await _context.Products
+                    .Include(p => p.Stocks) // lấy toàn bộ stocks trong các warehouse
+                        .ThenInclude(s => s.Warehouse) // nếu cần thêm thông tin kho
+                    .Include(p => p.ProductReviews)
+                    .Include(p => p.ProductImages)
+                    .Include(p => p.ProductCategoryMappings)
+                    .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching all products with stocks");
+                throw;
             }
         }
     }

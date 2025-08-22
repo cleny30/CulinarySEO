@@ -25,7 +25,7 @@ export default function Header({
       {headerStyle === "1" && (
         <header className="w-screen flex flex-col absolute top-0">
           {topbar && (
-            <div className={cn(headerContainerStyle, "bg-mau-den p-2")}>
+            <div className={cn(headerContainerStyle, "bg-black/90 p-2")}>
               <TopBar />
             </div>
           )}

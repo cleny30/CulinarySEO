@@ -1,8 +1,10 @@
-import HomePage from "@/pages/Home/page";
-import ShoppingPage from "@/pages/Shopping/page";
+import ProductLayout from "@/components/layout/productLayout";
+import HomePage from "@/pages/home/page";
+import ShoppingPage from "@/pages/shopping/page";
+import type { RouteConfig } from "@/types";
 
 // Public routes are accessible to all users, regardless of authentication status.
-const publicRoutes = [
+const publicRoutes: RouteConfig[] = [
   {
     path: "/",
     name: "Home",
@@ -12,6 +14,7 @@ const publicRoutes = [
     path: "/shop",
     name: "Shop",
     component: ShoppingPage,
+    layout: ProductLayout,
   },
 ];
 export default publicRoutes;

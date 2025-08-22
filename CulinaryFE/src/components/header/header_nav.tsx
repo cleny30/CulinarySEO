@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/navigation-menu";
 import { getCateList, menuNav, type NavItem } from "@/utils/config/navMenu";
 import { cn } from "@/lib/utils";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 
@@ -82,23 +82,26 @@ const NavigationMenuContentCate = ({
 }) => {
   return (
     <NavigationMenuContent asChild className="p-4">
-      <div className="flex flex-col lg:flex-row space-y-2">
-        <ul className="grid grid-flow-col lg:grid-rows-4 md:grid-rows-6 gap-x-1 min-w-max">
+      <div className="flex flex-col lg:flex-row space-2">
+        <ul className="grid grid-flow-col lg:grid-rows-4 md:grid-rows-6 gap-1 min-w-max">
           {menuItems?.map((item) => {
             return (
               <li key={item.label} className="w-50">
                 <NavigationMenuLink asChild>
                   <Link
                     to={item.href}
-                    className="flex flex-row items-center w-full gap-x-2"
+                    className="group flex flex-row items-center w-full gap-x-2 hover:bg-transparent"
+                    style={{ padding: "0.25rem" }}
                   >
                     <LazyLoadImage
-                      effect="blur"
+                      effect="opacity"
                       src={item.image}
                       alt={item.label + "_img"}
-                      className="aspect-square w-14 h-14 rounded-md"
+                      className="aspect-square w-14 h-14 rounded-md bg-gray-100 group-hover:scale-105 duration-200"
                     />
-                    <span className="text-sm">{item.label}</span>
+                    <span className="text-sm transition-colors duration-200 group-hover:text-mau-do-color group-hover:font-semibold">
+                      {item.label}
+                    </span>
                   </Link>
                 </NavigationMenuLink>
               </li>
@@ -108,18 +111,18 @@ const NavigationMenuContentCate = ({
         {featureCats && (
           <div className="flex lg:flex-col items-center gap-2">
             {featureCats.map((featureCat) => (
-              <div
+              <Link
+                to={featureCat.url || "/"}
                 key={featureCat.title}
                 className="relative w-full lg:w-70 z-10 h-40 lg:h-full flex items-center justify-center rounded-xs overflow-hidden"
               >
-                <LazyLoadImage
-                  effect="blur"
+                <img
                   src={featureCat.image}
                   alt={featureCat.title}
                   className="absolute inset-0 w-full h-full -z-1 object-cover brightness-80"
                 />
                 <h3 className="text-white font-semibold">{featureCat.title}</h3>
-              </div>
+              </Link>
             ))}
           </div>
         )}

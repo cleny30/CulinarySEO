@@ -23,22 +23,22 @@ export default function ProductMain() {
                 <div className="w-full h-full flex gap-8 items-start">
                     <div className="w-[calc(40%-30px)] flex flex-col gap-4">
                         <div className="w-full h-full">
-                            <img src={"/foodholder.jpg"} alt="" className="object-fill" />
+                            <img src={"/img/foodholder.jpg"} alt="" className="object-fill" />
                         </div>
                         <div className="w-full">
                             <Carousel>
                                 <CarouselContent>
                                     <CarouselItem className="md:basis-1/2 lg:basis-1/3">
-                                        <img src={"/foodholder.jpg"} alt="" className="object-fill" />
+                                        <img src={"/img/foodholder.jpg"} alt="" className="object-fill" />
                                     </CarouselItem>
                                     <CarouselItem className="md:basis-1/2 lg:basis-1/3">
-                                        <img src={"/foodholder.jpg"} alt="" className="object-fill" />
+                                        <img src={"/img/foodholder.jpg"} alt="" className="object-fill" />
                                     </CarouselItem>
                                     <CarouselItem className="md:basis-1/2 lg:basis-1/3">
-                                        <img src={"/foodholder.jpg"} alt="" className="object-fill" />
+                                        <img src={"/img/foodholder.jpg"} alt="" className="object-fill" />
                                     </CarouselItem>
                                     <CarouselItem className="md:basis-1/2 lg:basis-1/3">
-                                        <img src={"/foodholder.jpg"} alt="" className="object-fill" />
+                                        <img src={"/img/foodholder.jpg"} alt="" className="object-fill" />
                                     </CarouselItem>
                                 </CarouselContent>
                             </Carousel>

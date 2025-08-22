@@ -94,7 +94,7 @@ export default function ShopProduct() {
     return (
         <section className='px-[15px] w-3/4'>
             <div className='w-full'>
-                <img src="/promotion_banner.webp" alt="promotion-banner" />
+                <img src="/img/promotion_banner.webp" alt="promotion-banner" />
             </div>
             <div className='w-full flex items-center justify-between border-b-1 py-[15px]'>
                 <div className='w-full flex items-center gap-2 justify-end'>

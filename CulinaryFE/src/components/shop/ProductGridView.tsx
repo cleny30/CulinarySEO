@@ -34,7 +34,7 @@ export default function ProductGridView({ products }: { products: ProductResult 
                                         </Badge>
                                     )}
                                     <img
-                                        src={"/foodholder.jpg"}
+                                        src={"/img/foodholder.jpg"}
                                         alt={product.productName}
                                         className="w-full h-48 object-cover rounded-lg"
                                     />

@@ -17,7 +17,7 @@ import { Button } from "../ui/button";
 import toast from "@/utils/toast";
 import { useState, useTransition } from "react";
 import styles from "@/assets/css/auth.module.css";
-import { storeInfo } from "@/utils/config/storeInfo";
+import { storeInfo } from "@/storeInfo";
 import { sentOtp } from "@/redux/auth/apiRequest";
 import { useDependencyInjection } from "@/utils/hooks/useDependencyInjection";
 

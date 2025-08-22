@@ -24,5 +24,10 @@ namespace ServiceObject.Services
             var result = await _categoryDAO.GetCategoriesAndProductCount();
             return _mapper.Map<List<CategoryForShop>>(result);
         }
+        public async Task<List<CategoryDto>> GetCategories()
+        {
+            var result = await _categoryDAO.GetCategories();
+            return _mapper.Map<List<CategoryDto>>(result);
+        }
     }
 }

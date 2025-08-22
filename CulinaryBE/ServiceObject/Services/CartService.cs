@@ -2,7 +2,6 @@
 using BusinessObject.Models;
 using BusinessObject.Models.Dto;
 using BusinessObject.Models.Entity;
-using DataAccess.DAOs;
 using DataAccess.IDAOs;
 using Microsoft.Extensions.Logging;
 using ServiceObject.IServices;
@@ -37,7 +36,6 @@ namespace ServiceObject.Services
                 throw new Exception("Fail to retrieve data from cart", ex);
             }
         }
-
         public async Task AddToCartAsync(AddToCartRequest request)
         {
             try
@@ -68,7 +66,6 @@ namespace ServiceObject.Services
                 _logger.LogError(ex, "Error adding product {ProductId} to cart {CartId}", request.ProductId, request.CartId);
             }
         }
-
         public async Task UpdateCartItemAsync(UpdateCartItemRequest request)
         {
             try

@@ -27,6 +27,6 @@ export const Icon = {
   CornerDownRight: (props: LucideProps) => <CornerDownRight {...props} />,
   ShoppingCart: (props: LucideProps) => <ShoppingCart {...props} />,
   Authen: (props: ImgHTMLAttributes<HTMLImageElement>) => (
-    <img src={"/authen.svg"} {...props} />
+    <img src={"/svg/authen.svg"} {...props} />
   ),
 };

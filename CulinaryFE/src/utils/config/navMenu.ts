@@ -27,64 +27,64 @@ export const menuNav: NavItem[] = [
       {
         title: "Món đang sale",
         url: "/menu/sale",
-        image: "/featurePic1.jpg"
+        image: "/img/featurePic1.jpg"
       },
       {
         title: "Món ăn nổi bật",
         url: "/menu/attract",
-        image: "/featurePic2.jpg"
+        image: "/img/featurePic2.jpg"
       },
     ],
     children: [
       {
         label: "Món Khai Vị",
         href: "/menu/appetizers",
-        image: "/banner_1.webp",
+        image: "/img/banner_1.webp",
       },
       {
         label: "Món Chính",
         href: "/menu/main-courses",
-        image: "/banner_1.webp",
+        image: "/img/banner_1.webp",
       },
       {
         label: "Tráng Miệng",
         href: "/menu/desserts",
-        image: "/banner_1.webp",
+        image: "/img/banner_1.webp",
       },
       {
         label: "Đồ Uống",
         href: "/menu/drinks",
-        image: "/banner_1.webp",
+        image: "/img/banner_1.webp",
       },
       {
         label: "Đồ Uống",
         href: "/menu/drinks",
-        image: "/banner_1.webp",
+        image: "/img/banner_1.webp",
       },
       {
         label: "Đồ Uống",
         href: "/menu/drinks",
-        image: "/banner_1.webp",
+        image: "/img/banner_1.webp",
       },
       {
         label: "Đồ Uống",
         href: "/menu/drinks",
-        image: "/banner_1.webp",
+        image: "/img/banner_1.webp",
       },
       {
         label: "Đồ Uống",
         href: "/menu/drinks",
-        image: "/banner_1.webp",
+        image: "/img/banner_1.webp",
       },
       {
         label: "Đồ Uống",
         href: "/menu/drinks",
-        image: "/banner_1.webp",
+        image: "/img/banner_1.webp",
       },
       {
         label: "Đồ Uống",
         href: "/menu/drinks",
-        image: "/banner_1.webp",
+        image: "/img/banner_1.webp",
       },
     ],
   },

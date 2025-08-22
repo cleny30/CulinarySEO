@@ -1,5 +1,5 @@
 import type { UserSession } from "@/types/userSession";
-import { Button } from "../button";
+import { Button } from "../ui/button";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { logout } from "@/redux/auth/apiRequest";

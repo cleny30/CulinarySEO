@@ -1,74 +1,96 @@
 import { useSelector } from "react-redux";
 import type { RootState } from "@/redux/store";
-import HeaderLogo from "../ui/header/header_logo";
-import HeaderNav from "../ui/header/header_nav";
-import HeaderRightActions from "../ui/header/header_right_actions";
-export default function Header() {
+import HeaderLogo from "../header/header_logo";
+import HeaderNav from "../header/header_nav";
+import HeaderRightActions from "../header/header_right_actions";
+import SubHeader from "./subheader";
+import { cn } from "@/lib/utils";
+
+interface HeaderProps {
+  headerStyle?: "1" | "2" | "3";
+  subHeader?: boolean;
+}
+export default function Header({
+  subHeader = true,
+  headerStyle = "1",
+}: HeaderProps) {
   const user =
     useSelector((state: RootState) => state.auth.login?.currentUser) || null;
-
+  const headerContainerStyle =
+    "w-full flex justify-center";
   return (
-    <header className="w-screen justify-center flex border-b-2 border-b-mau-do-color  absolute top-0">
-      <div className="flex items-center w-full justify-between max-w-[1200px]">
-        <HeaderLogo />
-        <HeaderNav />
-        <HeaderRightActions user={user}/>
-      </div>
-    </header>
+    <>
+      {headerStyle === "1" && (
+        <header className="w-screen flex flex-col absolute top-0">
+          <div className={cn(headerContainerStyle, "border-b-2 border-b-mau-do-color")}>
+            <nav className="flex items-center w-full justify-between max-w-[1200px]">
+              <HeaderLogo />
+              <HeaderNav />
+              <HeaderRightActions user={user} />
+            </nav>
+          </div>
+
+          {subHeader && (
+            <div className={cn(headerContainerStyle, "")}>
+              <SubHeader />
+            </div>
+          )}
+        </header>
+      )}
+    </>
   );
 }
 
+// <div className="block lg:hidden">
+//   <div className="flex items-center justify-between">
 
-        // <div className="block lg:hidden">
-        //   <div className="flex items-center justify-between">
+//     <a href={logo.url} className="flex items-center gap-2">
+//       <img
+//         src={logo.src}
+//         className="max-h-8 dark:invert"
+//         alt={logo.alt}
+//       />
+//     </a>
+//     <Sheet>
+//       <SheetTrigger asChild>
+//         <Button variant="outline" size="icon">
+//           <Menu className="size-4" />
+//         </Button>
+//       </SheetTrigger>
+//       <SheetContent className="overflow-y-auto">
+//         <SheetHeader>
+//           <SheetTitle>
+//             <a href={logo.url} className="flex items-center gap-2">
+//               <img
+//                 src={logo.src}
+//                 className="max-h-8 dark:invert"
+//                 alt={logo.alt}
+//               />
+//             </a>
+//           </SheetTitle>
+//         </SheetHeader>
+//         <div className="flex flex-col gap-6 p-4">
+//           <Accordion
+//             type="single"
+//             collapsible
+//             className="flex w-full flex-col gap-4"
+//           >
+//             {menu.map((item) => renderMobileMenuItem(item))}
+//           </Accordion>
 
-        //     <a href={logo.url} className="flex items-center gap-2">
-        //       <img
-        //         src={logo.src}
-        //         className="max-h-8 dark:invert"
-        //         alt={logo.alt}
-        //       />
-        //     </a>
-        //     <Sheet>
-        //       <SheetTrigger asChild>
-        //         <Button variant="outline" size="icon">
-        //           <Menu className="size-4" />
-        //         </Button>
-        //       </SheetTrigger>
-        //       <SheetContent className="overflow-y-auto">
-        //         <SheetHeader>
-        //           <SheetTitle>
-        //             <a href={logo.url} className="flex items-center gap-2">
-        //               <img
-        //                 src={logo.src}
-        //                 className="max-h-8 dark:invert"
-        //                 alt={logo.alt}
-        //               />
-        //             </a>
-        //           </SheetTitle>
-        //         </SheetHeader>
-        //         <div className="flex flex-col gap-6 p-4">
-        //           <Accordion
-        //             type="single"
-        //             collapsible
-        //             className="flex w-full flex-col gap-4"
-        //           >
-        //             {menu.map((item) => renderMobileMenuItem(item))}
-        //           </Accordion>
-
-        //           <div className="flex flex-col gap-3">
-        //             <Button asChild variant="outline">
-        //               <a href={auth.login.url}>{auth.login.title}</a>
-        //             </Button>
-        //             <Button asChild>
-        //               <a href={auth.signup.url}>{auth.signup.title}</a>
-        //             </Button>
-        //           </div>
-        //         </div>
-        //       </SheetContent>
-        //     </Sheet>
-        //   </div>
-        // </div>
+//           <div className="flex flex-col gap-3">
+//             <Button asChild variant="outline">
+//               <a href={auth.login.url}>{auth.login.title}</a>
+//             </Button>
+//             <Button asChild>
+//               <a href={auth.signup.url}>{auth.signup.title}</a>
+//             </Button>
+//           </div>
+//         </div>
+//       </SheetContent>
+//     </Sheet>
+//   </div>
+// </div>
 
 //         const renderMobileMenuItem = (item: MenuItem) => {
 //   if (item.items) {

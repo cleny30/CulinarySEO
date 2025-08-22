@@ -43,6 +43,9 @@ namespace DataAccess.DAOs
                {
                    CategoryId = c.CategoryId,
                    CategoryName = c.CategoryName,
+                   MetaDescription =c.MetaDescription,
+                   Slug = c.Slug,
+                   PageTitle = c.PageTitle,
                    ProductCount = c.ProductCategoryMappings.Any() ? c.ProductCategoryMappings.Count() : 0,
                })
                .ToListAsync();

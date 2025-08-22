@@ -1,4 +1,5 @@
 ﻿using BusinessObject.AppDbContext;
+using BusinessObject.Models.Dto;
 using BusinessObject.Models.Entity;
 using DataAccess.IDAOs;
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +15,23 @@ namespace DataAccess.DAOs
         {
             _context = contextl;
         }
+
+        public async Task<List<Category>> GetCategories()
+        {
+          
+            try
+            {
+                var categories = await _context.Categories
+                 .AsNoTracking()
+                 .ToListAsync();
+                return categories;
+            }
+            catch (NpgsqlException ex)
+            {
+                throw new DbUpdateException("An error occurred while retrieving the list of categories", ex);
+            }
+        }
+
         public async Task<List<Category>> GetCategoriesAndProductCount()
         {
             try

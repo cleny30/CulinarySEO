@@ -32,7 +32,7 @@ namespace ServiceObject.Services
             try
             {
                 var products = await productDAO.GetAllProducts();
-
+                await _elasticService.ReindexAllAsync();
                 return _mapper.Map<List<GetProductDto>>(products); 
 
             }
@@ -62,33 +62,20 @@ namespace ServiceObject.Services
             }
         }
 
-        public async Task<PagedResult<ProductDto>> GetFilteredProductsAsync(ProductFilterRequest request)
+        public async Task<PagedResult<ProductFilterResponse>> GetFilteredProductsAsync(ProductFilterRequest request)
         {
-            string categoryIdsKey = request.CategoryIds != null && request.CategoryIds.Any()
-                ? string.Join(",", request.CategoryIds.OrderBy(id => id))
-                : "";
-
-            string cacheKey = $"filterProduct:{request.Page}:{request.PageSize}:{categoryIdsKey}:{request.MinPrice}:{request.MaxPrice}:{request.IsAvailable}:{request.SortBy}";
-
-            if (_cache.TryGetValue(cacheKey, out PagedResult<ProductDto> cachedResult))
-            {
-                return cachedResult;
-            }
-
             var result = await _elasticService.GetFilteredProducts(request);
 
             var total = result.TotalItems;
             var items = result.Items;
 
-            var pagedResult = new PagedResult<ProductDto>
+            var pagedResult = new PagedResult<ProductFilterResponse>
             {
                 Items = items,
                 TotalItems = total,
                 Page = request.Page,
                 PageSize = request.PageSize
             };
-
-            _cache.Set(cacheKey, pagedResult, TimeSpan.FromSeconds(30));
 
             return pagedResult;
         }

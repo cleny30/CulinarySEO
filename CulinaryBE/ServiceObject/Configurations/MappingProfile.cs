@@ -65,49 +65,18 @@ namespace ServiceObject.Configurations
                             ? src.Price - (src.Price * (src.Discount.Value / 100))
                             : src.Price
                     ));
-            CreateMap<Product, ProductDto>()
-                .ForMember(dest => dest.ReviewCount,
-                opt => opt.MapFrom(src =>
-                    src.ProductReviews.Count()
-                ))
-                .ForMember(dest => dest.AverageRating,
-                    opt => opt.MapFrom(src =>
-                        src.ProductReviews.Any(r => r.Rating.HasValue)
-                            ? (decimal)src.ProductReviews.Where(r => r.Rating.HasValue).Average(r => r.Rating!.Value)
-                            : 0
-                    ))
-                .ForMember(dest => dest.TotalQuantity,
-                    opt => opt.MapFrom(src =>
-                        src.Stocks.Sum(s => s.Quantity)
-                    ))
-                .ForMember(dest => dest.FinalPrice,
-                    opt => opt.MapFrom(src =>
-                        src.Discount.HasValue
-                            ? src.Price - (src.Price * (src.Discount.Value / 100))
-                            : src.Price
-                    ))
-                .ForMember(dest => dest.ProductImages,
-                        opt => opt.MapFrom(src =>
-                            src.ProductImages.Select(img => img.ImageUrl).ToList()
-                        ));
             CreateMap<Category, CategoryForShop>();
 
             CreateMap<Product, ProductSummaryDto>();
 
             CreateMap<Product, ElasticProductDto>()
                 .ForMember(dest => dest.ReviewCount,
-                opt => opt.MapFrom(src =>
-                    src.ProductReviews.Count()
-                ))
+                    opt => opt.MapFrom(src => src.ProductReviews.Count()))
                 .ForMember(dest => dest.AverageRating,
                     opt => opt.MapFrom(src =>
                         src.ProductReviews.Any(r => r.Rating.HasValue)
                             ? (decimal)src.ProductReviews.Where(r => r.Rating.HasValue).Average(r => r.Rating!.Value)
                             : 0
-                    ))
-                .ForMember(dest => dest.TotalQuantity,
-                    opt => opt.MapFrom(src =>
-                        src.Stocks.Sum(s => s.Quantity)
                     ))
                 .ForMember(dest => dest.FinalPrice,
                     opt => opt.MapFrom(src =>
@@ -116,11 +85,18 @@ namespace ServiceObject.Configurations
                             : src.Price
                     ))
                 .ForMember(dest => dest.ProductImages,
-                        opt => opt.MapFrom(src =>
-                            src.ProductImages.Select(img => img.ImageUrl).ToList()
-                        ))
+                    opt => opt.MapFrom(src => src.ProductImages.Select(img => img.ImageUrl).ToList()))
                 .ForMember(dest => dest.CategoryIds,
-                       opt => opt.MapFrom(src => src.ProductCategoryMappings.Select(m => m.CategoryId)));
+                    opt => opt.MapFrom(src => src.ProductCategoryMappings.Select(m => m.CategoryId).ToList()))
+                .ForMember(dest => dest.Stocks,
+                    opt => opt.MapFrom(src => src.Stocks
+                        .ToDictionary(
+                            s => s.WarehouseId.ToString(),
+                            s => s.Quantity
+                        )
+                    ));
+
+
             #endregion
 
             #region Customer
@@ -173,6 +149,19 @@ namespace ServiceObject.Configurations
             #region Manager
             CreateMap<Manager, ManagerDto>();
             CreateMap<ManagerDto, Manager>();
+            #endregion
+
+            #region Order
+            CreateMap<Order, CheckoutResponseDto>()
+                .ForMember(dest => dest.OrderId, opt => opt.MapFrom(src => src.OrderId))
+                .ForMember(dest => dest.ShippingFee, opt => opt.MapFrom(src => src.ShippingFee))
+                .ForMember(dest => dest.TotalPrice, opt => opt.MapFrom(src => src.TotalPrice))
+                .ForMember(dest => dest.PaymentMethod, opt => opt.MapFrom(src => src.PaymentMethod))
+                .ForMember(dest => dest.PaymentStatus, opt => opt.MapFrom(src => src.PaymentStatus));
+            #endregion
+
+            #region Category
+            CreateMap<Category, CategoryDto>();
             #endregion
         }
     }

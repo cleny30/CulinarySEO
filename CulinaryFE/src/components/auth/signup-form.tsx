@@ -17,7 +17,7 @@ import { Button } from "../ui/button";
 import toast from "@/utils/toast";
 import { useState, useTransition } from "react";
 import styles from "@/assets/css/auth.module.css";
-import { store_email, store_phone_number } from "@/utils/config/storeInfo";
+import { storeInfo } from "@/utils/config/storeInfo";
 import { sentOtp } from "@/redux/auth/apiRequest";
 import { useDependencyInjection } from "@/utils/hooks/useDependencyInjection";
 
@@ -91,7 +91,7 @@ export default function SignUpForm() {
                       <Input
                         {...field}
                         type="text"
-                        placeholder={`ex: ${store_phone_number}`}
+                        placeholder={`ex: ${storeInfo.store_phone_number}`}
                         className={`${styles.formInput} border-none shadow-none focus-visible:ring-0`}
                       />
                     </FormControl>
@@ -114,7 +114,7 @@ export default function SignUpForm() {
                       <Input
                         {...field}
                         type="email"
-                        placeholder={store_email}
+                        placeholder={storeInfo.store_email}
                         className={`${styles.formInput} border-none shadow-none focus-visible:ring-0`}
                       />
                     </FormControl>

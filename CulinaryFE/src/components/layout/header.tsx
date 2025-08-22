@@ -5,24 +5,36 @@ import HeaderNav from "../header/header_nav";
 import HeaderRightActions from "../header/header_right_actions";
 import SubHeader from "./subheader";
 import { cn } from "@/lib/utils";
+import TopBar from "./topbar";
 
 interface HeaderProps {
   headerStyle?: "1" | "2" | "3";
   subHeader?: boolean;
+  topbar?: boolean;
 }
 export default function Header({
   subHeader = true,
   headerStyle = "1",
+  topbar = true,
 }: HeaderProps) {
   const user =
     useSelector((state: RootState) => state.auth.login?.currentUser) || null;
-  const headerContainerStyle =
-    "w-full flex justify-center";
+  const headerContainerStyle = "w-full flex justify-center";
   return (
     <>
       {headerStyle === "1" && (
         <header className="w-screen flex flex-col absolute top-0">
-          <div className={cn(headerContainerStyle, "border-b-2 border-b-mau-do-color")}>
+          {topbar && (
+            <div className={cn(headerContainerStyle, "bg-mau-den p-2")}>
+              <TopBar />
+            </div>
+          )}
+          <div
+            className={cn(
+              headerContainerStyle,
+              "border-b-2 border-b-mau-do-color"
+            )}
+          >
             <nav className="flex items-center w-full justify-between max-w-[1200px]">
               <HeaderLogo />
               <HeaderNav />

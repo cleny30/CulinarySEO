@@ -159,6 +159,10 @@ namespace ServiceObject.Configurations
                 .ForMember(dest => dest.PaymentMethod, opt => opt.MapFrom(src => src.PaymentMethod))
                 .ForMember(dest => dest.PaymentStatus, opt => opt.MapFrom(src => src.PaymentStatus));
             #endregion
+
+            #region Category
+            CreateMap<Category, CategoryDto>();
+            #endregion
         }
     }
 }

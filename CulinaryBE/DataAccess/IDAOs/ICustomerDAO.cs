@@ -13,5 +13,7 @@ namespace DataAccess.IDAOs
         Task<bool> AddNewCustomer(Customer customer);
         Task<Customer> GetCustomerByEmail(string email);
         Task<bool> UpdateCustomer(Customer customer);
+        Task<Customer?> GetCustomerByID(Guid customerId);
+        Task<bool> ChangePassword(Customer model, string oldPassword, string NewPassword);
     }
 }

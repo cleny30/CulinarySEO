@@ -3,7 +3,7 @@ import LoginForm from "@/components/auth/login-form";
 
 export default function LoginPage() {
   return (
-    <div className="w-screen h-screen flex flex-col items-center justify-center bg-mau-sua-bo">
+    <div className="w-screen h-screen flex flex-col items-center justify-center">
       <HeaderCard headerTitle="Sign In Account"/>
       <LoginForm />
     </div>

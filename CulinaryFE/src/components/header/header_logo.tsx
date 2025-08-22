@@ -1,10 +1,11 @@
 import { Logo } from "@/assets/svg/logo";
+import { Link } from "react-router-dom";
 
 export default function HeaderLogo() {
   return (
-    <div className={``}>
-      <Logo color="#222222"/>
-    </div>
+    <Link to={"/"} className={``}>
+      <Logo color="#222222" />
+    </Link>
   );
 }
 

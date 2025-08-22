@@ -1,4 +1,6 @@
-﻿namespace BusinessObject.Models.Dto
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace BusinessObject.Models.Dto
 {
     public class ElasticProductDto
     {
@@ -11,6 +13,9 @@
         public int TotalSold { get; set; }
         public int ReviewCount { get; set; }
         public decimal AverageRating { get; set; }
+        public string Slug { get; set; } = string.Empty;
+        public string PageTitle { get; set; } = string.Empty;
+        public string MetaDescription { get; set; } = string.Empty;
         public List<string> ProductImages { get; set; } = new();
         public List<int> CategoryIds { get; set; } = new();
         public DateTime CreatedAt { get; set; }

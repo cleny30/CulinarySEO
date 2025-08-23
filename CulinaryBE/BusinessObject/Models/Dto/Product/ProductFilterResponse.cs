@@ -5,6 +5,9 @@
         public Guid ProductId { get; set; }
         public string ProductName { get; set; } = string.Empty;
         public string ShortDescription { get; set; } = string.Empty;
+        public string Slug { get; set; } = string.Empty;
+        public string PageTitle { get; set; } = string.Empty;
+        public string MetaDescription { get; set; } = string.Empty;
 
         public decimal Price { get; set; }
         public decimal FinalPrice { get; set; }

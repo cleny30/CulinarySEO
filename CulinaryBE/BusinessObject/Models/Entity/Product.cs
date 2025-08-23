@@ -34,6 +34,16 @@ namespace BusinessObject.Models.Entity
         public int? TotalSold { get; set; }
 
         [Required]
+        [Column("slug")]
+        public string Slug { get; set; } = string.Empty;
+        [Required]
+        [Column("page_title")]
+        public string PageTitle { get; set; } = string.Empty;
+        [Required]
+        [Column("meta_description")]
+        public string MetaDescription { get; set; } = string.Empty;
+
+        [Required]
         [Column("created_at")]
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 

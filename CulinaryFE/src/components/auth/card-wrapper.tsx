@@ -17,7 +17,7 @@ export default function CardWrapper({
   backButtonLabel = "",
 }: CardWrapperProps) {
   return (
-    <Card className="w-[600px] gap-y-4 bg-mau-be border-mau-nau-vien shadow-none items-center">
+    <Card className="w-[600px] gap-y-4 shadow-none items-center">
       <CardHeader className="max-w-[500px] w-full">{showSocial && <Social />}</CardHeader>
       <CardContent className="max-w-[500px] w-full">{children}</CardContent>
       <CardFooter className="max-w-[500px] w-full">

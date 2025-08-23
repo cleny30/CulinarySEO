@@ -49,19 +49,20 @@ export default function HeaderLocation() {
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-[200px] justify-between"
+          size={"sm"}
+          className={cn("bg-transparent text-white font-medium border-1 rounded-sm", !value && "text-muted-foreground")}
         >
           {value
             ? tinhThanh.find((tinhThanh) => tinhThanh.value === value)?.label
-            : "Select framework..."}
+            : "Chọn vị trí"}
           <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0">
         <Command>
-          <CommandInput placeholder="Search framework..." />
+          <CommandInput placeholder="Tìm tỉnh thành.." />
           <CommandList>
-            <CommandEmpty>No framework found.</CommandEmpty>
+            <CommandEmpty>Không tìm thấy.</CommandEmpty>
             <CommandGroup>
               {tinhThanh.map((tinhThanh) => (
                 <CommandItem

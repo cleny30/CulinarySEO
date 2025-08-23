@@ -9,10 +9,11 @@ import {
 import { useState } from "react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
+import type { ProductDetail } from "@/types/productdetail";
 
 
 
-export default function ProductMain() {
+export default function ProductMain({ productdetail }: {productdetail: ProductDetail | null}) {
     const [quantity, setQuantity] = useState<number>(1)
 
     const increase = () => setQuantity((prev) => prev + 1)
@@ -99,8 +100,7 @@ export default function ProductMain() {
                         </div>
                         <div className="flex items-center gap-4">
                             <Button
-                                size={"xl"}
-                            >
+                                size={"xl"}>
                                 Add to Cart
                             </Button>
                             <Button

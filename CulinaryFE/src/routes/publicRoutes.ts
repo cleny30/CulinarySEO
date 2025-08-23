@@ -1,7 +1,8 @@
 import ProductLayout from "@/components/layout/productLayout";
-import HomePage from "@/pages/home/page";
+import HomePage from "@/pages/Home/page";
 import ShopDetail from "@/pages/ShopDetail/page";
-import ShoppingPage from "@/pages/shopping/page";
+import ShoppingPage from "@/pages/Shopping/page";
+
 import type { RouteConfig } from "@/types";
 
 // Public routes are accessible to all users, regardless of authentication status.

@@ -78,8 +78,6 @@ namespace ServiceObject.Configurations
                             ? src.Price - (src.Price * (src.Discount.Value / 100))
                             : src.Price
                     ));
-            CreateMap<Category, CategoryForShop>();
-
             CreateMap<Product, ProductSummaryDto>();
 
             CreateMap<Product, ElasticProductDto>()
@@ -175,6 +173,11 @@ namespace ServiceObject.Configurations
 
             #region Category
             CreateMap<Category, CategoryDto>();
+            CreateMap<Category, CategoryForShop>();
+            #endregion
+
+            #region Warehouse
+            CreateMap<Warehouse, GetWarehouse>();
             #endregion
         }
     }

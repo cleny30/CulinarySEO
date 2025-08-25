@@ -74,8 +74,8 @@ namespace DataAccess.DAOs
                     .AsNoTracking()
                     .Include(p => p.ProductCategoryMappings)
                         .ThenInclude(pcm => pcm.Category).Include(p => p.ProductImages)
-                    .Include(p => p.Stocks)
-                    .Include(p => p.ProductReviews.Where(r => r.Rating.HasValue))
+                    .Include(p => p.Stocks).ThenInclude(s => s.Warehouse)
+                    .Include(p => p.ProductReviews)
                         .ThenInclude(pr => pr.Customer)
                     .FirstOrDefaultAsync(p => p.ProductId == productId);
 

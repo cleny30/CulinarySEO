@@ -59,6 +59,19 @@ namespace ServiceObject.Configurations
                         .ToList()))
                 .ForMember(dest => dest.Reviews,
                     opt => opt.MapFrom(src => src.ProductReviews))
+                .ForMember(dest => dest.Stocks,
+                    opt => opt.MapFrom(src => src.Stocks
+                        .ToDictionary(
+                            s => s.WarehouseId.ToString(),
+                            s => s.Quantity
+                        )
+                    ))
+                .ForMember(dest => dest.AverageRating,
+                    opt => opt.MapFrom(src =>
+                        src.ProductReviews.Any(r => r.Rating.HasValue)
+                            ? (decimal)src.ProductReviews.Where(r => r.Rating.HasValue).Average(r => r.Rating!.Value)
+                            : 0
+                    ))
                 .ForMember(dest => dest.FinalPrice,
                     opt => opt.MapFrom(src =>
                         src.Discount.HasValue

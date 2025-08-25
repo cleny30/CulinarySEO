@@ -10,12 +10,13 @@ import { useState } from "react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import type { ProductDetail } from "@/types/productdetail";
+import { formatCurrency } from "@/utils/constants/product/product";
 
 
 
-export default function ProductMain({ productdetail }: {productdetail: ProductDetail | null}) {
+export default function ProductMain({ productdetail }: { productdetail: ProductDetail | null }) {
     const [quantity, setQuantity] = useState<number>(1)
-
+    console.log(productdetail, 'product')
     const increase = () => setQuantity((prev) => prev + 1)
     const decrease = () => setQuantity((prev) => (prev > 1 ? prev - 1 : 1))
     return (
@@ -47,7 +48,7 @@ export default function ProductMain({ productdetail }: {productdetail: ProductDe
                     </div>
                     <div className="flex flex-col gap-4 w-[calc(50%+30px)] h-full items-start justify-start">
                         <div className="pb-4 border-b-1">
-                            <strong className="text-[40px]">Product name</strong>
+                            <strong className="text-[40px]">{productdetail?.productName}</strong>
                         </div>
                         <div className="flex items-center gap-1">
                             {Array.from({ length: 5 }).map((_, i) => (
@@ -60,14 +61,28 @@ export default function ProductMain({ productdetail }: {productdetail: ProductDe
                             <span className="text-sm text-gray-500">({4 ?? 0})</span>
                         </div>
                         <div>
-                            <span>Availability: </span>
-                            <span>12 in stock</span>
+                            {productdetail?.discount && productdetail?.finalPrice ? (
+                                <div className='text-sm flex items-center gap-2'>
+                                    <span className='text-mau-gia-san-pham font-bold'>
+                                        {formatCurrency(productdetail.finalPrice)}
+                                    </span>
+                                    <span className='line-through text-gray-400'>
+                                        {formatCurrency(productdetail.price)}
+                                    </span>
+                                </div>
+                            ) :
+                                (
+                                    <div className='text-sm'>
+                                        <span className='text-mau-gia-san-pham font-bold'>
+                                            {productdetail?.price ? formatCurrency(productdetail.price) : ""}
+                                        </span>
+                                    </div>
+                                )}
                         </div>
                         <div>
-                            Product Price
-                        </div>
-                        <div>
-                            <span className="text-gray-500 text-sm">Product description goes here. It should be detailed and informative.</span>
+                            <span className="text-gray-500 text-sm">
+                                {productdetail?.shortDescription}
+                            </span>
                         </div>
                         <div className="flex items-center gap-4">
                             <span>Quantity: </span>

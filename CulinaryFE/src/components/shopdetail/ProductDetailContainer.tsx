@@ -10,8 +10,8 @@ import { selectProductDetail } from '@/redux/productdetail/apiService'
 export default function ProductDetailContainer() {
     const productDetail = useSelector((state: RootState) => (state.productdetail))
     const dispatch = useDispatch()
+    const { productId } = useParams<{ productId: string }>()
     useEffect(() => {
-        const { productId } = useParams<{ productId: string }>()
         if (productId) {
             selectProductDetail(dispatch, productId)
         }
@@ -19,7 +19,7 @@ export default function ProductDetailContainer() {
     return (
         <>
             <ProductMain productdetail={productDetail.product} />
-            <ProductDetail />
+            <ProductDetail productdetail={productDetail.product} />
             <RelatedProduct />
         </>
     )

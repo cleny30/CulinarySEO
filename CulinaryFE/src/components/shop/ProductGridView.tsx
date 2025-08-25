@@ -6,10 +6,12 @@ import type { ProductResult } from '@/types/product';
 import { Star } from 'lucide-react';
 import { Skeleton } from '../ui/skeleton';
 import { formatCurrency, getProductPrice } from '@/utils/constants/product/product';
+import { useNavigate } from 'react-router-dom';
 
 
 export default function ProductGridView({ products }: { products: ProductResult | null }) {
     const fetchingproducts = useSelector((state: RootState) => state.productview.fetching);
+    const navigate = useNavigate()
 
     return (
         <div className="grid gap-6 grid-cols-4 mt-[15px]">
@@ -26,7 +28,7 @@ export default function ProductGridView({ products }: { products: ProductResult 
                     :
                     (
                         products?.items.map((product) => (
-                            <Card key={product.productId} className="p-2 hover:shadow-lg transition-shadow">
+                            <Card key={product.productId} className="p-2 hover:shadow-lg transition-shadow" onClick={() => navigate(`/shop/${product.productId}`)}>
                                 <div className="relative">
                                     {product.discount && (
                                         <Badge className="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 text-xs font-bold">

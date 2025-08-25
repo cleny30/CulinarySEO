@@ -14,6 +14,10 @@ export interface ProductDetail {
   price: number;
   discount: number;
   finalPrice: number;
+  averageRating:number;
+  slug:string;
+  pageTitle: string;
+  metaDescription: string;
   categoryName: string[];
   productImages: string[];
   reviews: Review[];

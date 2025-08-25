@@ -1,5 +1,7 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import type { ProductDetail } from "@/types/productdetail"
+import { formatDate } from "@/utils/constants/date/date"
+import { Star } from "lucide-react"
 
 export default function ProductDetail({ productdetail }: { productdetail: ProductDetail | null }) {
     return (
@@ -20,9 +22,41 @@ export default function ProductDetail({ productdetail }: { productdetail: Produc
                         />
                     </TabsContent>
                     <TabsContent value='reviews'>
-                        <div className='text-gray-600 text-sm'>
-                            No reviews yet.
-                        </div>
+                        {
+                            productdetail?.reviews ?
+                                (
+                                    productdetail?.reviews.map((review) => (
+                                        review.rating && (
+                                            <div key={review.reviewId} className="flex flex-col gap-2 border-b-1 mb-2 pb-2">
+                                                <strong>{review.customerName}</strong>
+                                                <div className="flex">
+                                                    {Array.from({ length: 5 }).map((_, i) => (
+                                                        <Star
+                                                            key={i}
+                                                            size={18}
+                                                            className={i < (review.rating ?? 0) ? "fill-yellow-400 text-yellow-400" : "text-gray-300"}
+                                                        />
+                                                    ))}
+                                                </div>
+                                                <span className="text-gray-400 text-xs">
+                                                    {formatDate(review.createdAt)}
+                                                </span>
+                                                <span className="text-[16px]">
+                                                    {review.comment}
+                                                </span>
+                                            </div>
+                                        )
+                                    ))
+
+                                )
+                                :
+                                (
+                                    <div className='text-gray-600 text-sm'>
+                                        No reviews yet.
+                                    </div>
+                                )
+                        }
+
                     </TabsContent>
                 </Tabs>
             </div>

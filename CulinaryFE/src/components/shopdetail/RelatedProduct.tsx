@@ -1,4 +1,4 @@
-import React from 'react'
+import type { ProductDetail } from '@/types/productdetail'
 
 export default function RelatedProduct() {
   return (

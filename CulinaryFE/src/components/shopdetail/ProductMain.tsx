@@ -6,7 +6,7 @@ import {
     CarouselNext,
     CarouselPrevious,
 } from "../ui/carousel";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import type { ProductDetail } from "@/types/productdetail";
@@ -19,6 +19,9 @@ export default function ProductMain({ productdetail }: { productdetail: ProductD
     console.log(productdetail, 'product')
     const increase = () => setQuantity((prev) => prev + 1)
     const decrease = () => setQuantity((prev) => (prev > 1 ? prev - 1 : 1))
+    const reviewCount= useMemo(()=>{
+        return productdetail?.reviews.filter(obj => obj.rating).length
+    },[productdetail])
     return (
         <section className="pt-20">
             <div className="max-w-[1400px] w-full h-full mx-auto px-[15px]">
@@ -50,15 +53,19 @@ export default function ProductMain({ productdetail }: { productdetail: ProductD
                         <div className="pb-4 border-b-1">
                             <strong className="text-[40px]">{productdetail?.productName}</strong>
                         </div>
+                        <div>
+                            <span>Availability: </span>
+                            <span></span>
+                        </div>
                         <div className="flex items-center gap-1">
                             {Array.from({ length: 5 }).map((_, i) => (
                                 <Star
                                     key={i}
                                     size={18}
-                                    className={i < (4 ?? 0) ? "fill-yellow-400 text-yellow-400" : "text-gray-300"}
+                                    className={i < (productdetail?.averageRating ?? 0) ? "fill-yellow-400 text-yellow-400" : "text-gray-300"}
                                 />
                             ))}
-                            <span className="text-sm text-gray-500">({4 ?? 0})</span>
+                            <span className="text-sm text-gray-500">({reviewCount ?? 0})</span>
                         </div>
                         <div>
                             {productdetail?.discount && productdetail?.finalPrice ? (

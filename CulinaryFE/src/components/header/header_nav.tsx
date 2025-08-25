@@ -38,7 +38,7 @@ export default function HeaderNav() {
     fetchCategories();
   }, []);
   return (
-    <NavigationMenu className="border-x-2 border-mau-do-color">
+    <NavigationMenu className="border-x-2 border-mau-do-color px-4">
       <NavigationMenuList>
         {dynamicMenuNav.map((item: NavItem) => {
           return (
@@ -62,7 +62,7 @@ export default function HeaderNav() {
                   asChild
                   className={cn("px-5", menuItemStyle)}
                 >
-                  <Link to={item.href}>{item.label}</Link>
+                  <Link to={item.href || "/"}>{item.label}</Link>
                 </NavigationMenuLink>
               )}
             </NavigationMenuItem>

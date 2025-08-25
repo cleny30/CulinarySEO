@@ -3,7 +3,7 @@ import { doRequest } from "./doRequest";
 
 export interface NavItem {
   label: string;
-  href: string;
+  href?: string;
   slug: string;
   isCategory?: boolean;
   featureCat?: Array<{
@@ -127,3 +127,73 @@ export const menuNav: NavItem[] = [
     slug: "lien-he",
   },
 ];
+
+
+export const footerMenu: NavItem[] =[
+  {
+    label: "Dịch vụ",
+    slug: "dich-vu",
+    children:[
+      {
+        label:"Về chúng tôi",
+        href:"/pages/about-us"
+      },
+      {
+        label:"Liên hệ",
+        href:"/pages/contact-us"
+      },
+      {
+        label:"Tin tức",
+        href:"/blogs/all"
+      },
+      {
+        label:"Sitemap",
+        href:"/sitemap.xml"
+      },
+    ]
+  },
+  {
+    label: "Chính sách",
+    slug: "chinh-sach",
+    children:[
+      {
+        label:"Chính sách thanh toán",
+        href:"/pages/payment-policy"
+      },
+      {
+        label:"Chính sách bảo mật",
+        href:"/pages/privacy-policy"
+      },
+      {
+        label:"Chính sách đổi trả",
+        href:"/pages/refund-policy"
+      },
+      {
+        label:"Chính sách giao hàng",
+        href:"/pages/shipping-policy"
+      },
+      {
+        label:"Điều khoản & điều kiện",
+        href:"/pages/terms-and-conditions"
+      },
+    ]
+  },
+  {
+    label: "Tài khoản",
+    slug: "tai-khoan",
+    children:[
+      {
+        label:"Tài khoản của tôi",
+        href:"/account/profile"
+      },
+      {
+        label:"Giỏ hàng",
+        href:"/account/cart"
+      },
+      {
+        label:"Lịch sử mua hàng",
+        href:"/account/order-history"
+      },
+    ]
+  }
+]

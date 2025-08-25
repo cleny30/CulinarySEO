@@ -21,7 +21,7 @@ export default function HeaderRightActions({ user }: HeaderRightActionsProps) {
       <HeaderCart user={user} />
       <div className="w-[1px] h-[30px] bg-mau-do-color border-0 mr-3"></div>
       {user ? (
-        <Button variant={"secondary"} type="button" onClick={handleLogout}>
+        <Button variant={"outline"} type="button" onClick={handleLogout}>
           Logout
         </Button>
       ) : (

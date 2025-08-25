@@ -25,7 +25,7 @@ export default function Header({
       {headerStyle === "1" && (
         <header className="w-full flex flex-col absolute top-0">
           {topbar && (
-            <div className={cn(headerContainerStyle, "bg-black/90 p-2")}>
+            <div className={cn(headerContainerStyle, "bg-black/90 p-1")}>
               <TopBar />
             </div>
           )}
@@ -35,7 +35,7 @@ export default function Header({
               "border-b-2 border-b-mau-do-color"
             )}
           >
-            <nav className="flex items-center w-full justify-between max-w-[1200px]">
+            <nav className="flex items-center w-full justify-between container">
               <HeaderLogo />
               <HeaderNav />
               <HeaderRightActions user={user} />

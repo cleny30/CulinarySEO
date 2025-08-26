@@ -48,10 +48,10 @@ namespace ServiceObject.Configurations
                 opt => opt.MapFrom(src => src.Customer.FullName));
 
             CreateMap<Product, GetProductDetailDto>()
-                .ForMember(dest => dest.CategoryName,
+                .ForMember(dest => dest.CategoryId,
                         opt => opt.MapFrom(src => src.ProductCategoryMappings
                         .Select(p => p.Category)
-                        .Select(pi => pi.CategoryName)
+                        .Select(pi => pi.CategoryId)
                         .ToList()))
                 .ForMember(dest => dest.ProductImages,
                     opt => opt.MapFrom(src => src.ProductImages

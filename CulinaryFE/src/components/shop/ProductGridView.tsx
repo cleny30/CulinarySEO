@@ -12,18 +12,19 @@ import { useNavigate } from 'react-router-dom';
 export default function ProductGridView({ products }: { products: ProductResult | null }) {
     const fetchingproducts = useSelector((state: RootState) => state.productview.fetching);
     const navigate = useNavigate()
-
+    
     return (
-        <div className="grid gap-6 grid-cols-4 mt-[15px]">
+        <div className="grid gap-6 grid-cols-4 mt-[15px] w-full">
             {
                 fetchingproducts
-                    ? (
-                        <div className='flex space-x-3 w-full'>
+                    ?
+                    (
+                        <>
                             <Skeleton className="h-[289px] w-[231px] rounded-xl" />
                             <Skeleton className="h-[289px] w-[231px] rounded-xl" />
                             <Skeleton className="h-[289px] w-[231px] rounded-xl" />
                             <Skeleton className="h-[289px] w-[231px] rounded-xl" />
-                        </div>
+                        </>
                     )
                     :
                     (

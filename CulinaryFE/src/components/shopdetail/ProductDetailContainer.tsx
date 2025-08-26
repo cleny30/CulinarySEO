@@ -17,10 +17,10 @@ export default function ProductDetailContainer() {
         }
     }, [])
     return (
-        <>
+        <div className='py-20'>
             <ProductMain productdetail={productDetail.product} />
             <ProductDetail productdetail={productDetail.product} />
-            <RelatedProduct />
-        </>
+            <RelatedProduct productdetail={productDetail.product} />
+        </div>
     )
 }

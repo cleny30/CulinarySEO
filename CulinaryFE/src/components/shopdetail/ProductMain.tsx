@@ -16,7 +16,7 @@ import { formatCurrency } from "@/utils/constants/product/product";
 
 export default function ProductMain({ productdetail }: { productdetail: ProductDetail | null }) {
     const [quantity, setQuantity] = useState<number>(1)
-    console.log(productdetail, 'product')
+    
     const increase = () => setQuantity((prev) => prev + 1)
     const decrease = () => setQuantity((prev) => (prev > 1 ? prev - 1 : 1))
     const reviewCount= useMemo(()=>{

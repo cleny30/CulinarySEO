@@ -4,13 +4,14 @@ import { formatDate } from "@/utils/constants/date/date"
 import { Star } from "lucide-react"
 
 export default function ProductDetail({ productdetail }: { productdetail: ProductDetail | null }) {
+    console.log(productdetail, 'product')
     return (
         <section className='pt-20'>
             <div className='max-w-[1400px] w-full h-full mx-auto px-[15px]'>
                 <Tabs defaultValue="description" className='w-full'>
                     <TabsList className='w-full justify-between'>
-                        <TabsTrigger value='description' className="px-4 py-5 bg-mau-be data-[state=active]:border-b-3 data-[state=active]:border-mau-nau-vien data-[state=active]:bg-mau-be text-[16px] font-bold">Description</TabsTrigger>
-                        <TabsTrigger value='reviews' className="px-4 py-5 bg-mau-be data-[state=active]:border-b-3 data-[state=active]:border-mau-nau-vien data-[state=active]:bg-mau-be text-[16px] font-bold">Reviews</TabsTrigger>
+                        <TabsTrigger value='description' className="px-4 py-5 bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 data-[state=active]:border-b-3 data-[state=active]:border-primary/90 data-[state=active]:bg-primary/90 text-[16px] font-bold rounded-br-none rounded-tr-none">Description</TabsTrigger>
+                        <TabsTrigger value='reviews' className="px-4 py-5 bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 data-[state=active]:border-b-3 data-[state=active]:border-primary/90 data-[state=active]:bg-primary/90 text-[16px] font-bold rounded-bl-none rounded-tl-none">Reviews</TabsTrigger>
                     </TabsList>
                     <TabsContent value='description'>
                         <div
@@ -23,7 +24,7 @@ export default function ProductDetail({ productdetail }: { productdetail: Produc
                     </TabsContent>
                     <TabsContent value='reviews'>
                         {
-                            productdetail?.reviews ?
+                            productdetail?.reviews && productdetail.reviews.length > 0 ?
                                 (
                                     productdetail?.reviews.map((review) => (
                                         review.rating && (

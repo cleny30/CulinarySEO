@@ -108,7 +108,7 @@ export default function FIlterSider() {
                                                                     field.onChange(newValue);
                                                                     dispatch(setSelectedCategories(newValue));
                                                                 }}
-                                                                className="data-[state=checked]:bg-orange-500 data-[state=checked]:border-orange-500"
+                                                                className="data-[state=checked]:bg-primary data-[state=checked]:border-primary"
                                                             />
                                                             <span className="text-sm">{cat.categoryName}</span>
                                                         </div>
@@ -223,7 +223,7 @@ export default function FIlterSider() {
                                                         dispatch(setAvailability(null));
                                                     }
                                                 }}
-                                                className="data-[state=checked]:bg-orange-500 data-[state=checked]:border-orange-500"
+                                                className="data-[state=checked]:bg-primary data-[state=checked]:border-primary"
                                             />
                                         </FormControl>
                                         <FormLabel className="text-sm font-normal ml-2">In Stock</FormLabel>
@@ -241,7 +241,7 @@ export default function FIlterSider() {
                                                         dispatch(setAvailability(null));
                                                     }
                                                 }}
-                                                className="data-[state=checked]:bg-orange-500 data-[state=checked]:border-orange-500"
+                                                className="data-[state=checked]:bg-primary data-[state=checked]:border-primary"
                                             />
                                         </FormControl>
                                         <FormLabel className="text-sm font-normal ml-2">Out of Stock</FormLabel>

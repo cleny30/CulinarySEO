@@ -48,10 +48,10 @@ namespace ServiceObject.Configurations
                 opt => opt.MapFrom(src => src.Customer.FullName));
 
             CreateMap<Product, GetProductDetailDto>()
-                .ForMember(dest => dest.CategoryName,
+                .ForMember(dest => dest.CategoryId,
                         opt => opt.MapFrom(src => src.ProductCategoryMappings
                         .Select(p => p.Category)
-                        .Select(pi => pi.CategoryName)
+                        .Select(pi => pi.CategoryId)
                         .ToList()))
                 .ForMember(dest => dest.ProductImages,
                     opt => opt.MapFrom(src => src.ProductImages
@@ -59,14 +59,25 @@ namespace ServiceObject.Configurations
                         .ToList()))
                 .ForMember(dest => dest.Reviews,
                     opt => opt.MapFrom(src => src.ProductReviews))
+                .ForMember(dest => dest.Stocks,
+                    opt => opt.MapFrom(src => src.Stocks
+                        .ToDictionary(
+                            s => s.WarehouseId.ToString(),
+                            s => s.Quantity
+                        )
+                    ))
+                .ForMember(dest => dest.AverageRating,
+                    opt => opt.MapFrom(src =>
+                        src.ProductReviews.Any(r => r.Rating.HasValue)
+                            ? (decimal)src.ProductReviews.Where(r => r.Rating.HasValue).Average(r => r.Rating!.Value)
+                            : 0
+                    ))
                 .ForMember(dest => dest.FinalPrice,
                     opt => opt.MapFrom(src =>
                         src.Discount.HasValue
                             ? src.Price - (src.Price * (src.Discount.Value / 100))
                             : src.Price
                     ));
-            CreateMap<Category, CategoryForShop>();
-
             CreateMap<Product, ProductSummaryDto>();
 
             CreateMap<Product, ElasticProductDto>()
@@ -162,6 +173,11 @@ namespace ServiceObject.Configurations
 
             #region Category
             CreateMap<Category, CategoryDto>();
+            CreateMap<Category, CategoryForShop>();
+            #endregion
+
+            #region Warehouse
+            CreateMap<Warehouse, GetWarehouse>();
             #endregion
         }
     }

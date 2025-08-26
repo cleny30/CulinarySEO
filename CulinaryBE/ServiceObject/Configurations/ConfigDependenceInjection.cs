@@ -40,6 +40,7 @@ namespace ServiceObject.Configurations
             services.AddScoped<IRecommendationService, RecommendationService>();
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IElasticService, ElasticService>();
+            services.AddScoped<IWarehouseService, WarehouseService>();
         }
 
         public static void ConfigureBackgroundService(this IServiceCollection services)

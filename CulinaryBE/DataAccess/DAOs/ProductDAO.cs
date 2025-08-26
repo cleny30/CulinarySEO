@@ -1,18 +1,21 @@
 ﻿using BusinessObject.AppDbContext;
-using BusinessObject.Models.Dto;
+using BusinessObject.Models;
 using BusinessObject.Models.Entity;
 using DataAccess.IDAOs;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace DataAccess.DAOs
 {
     public class ProductDAO : IProductDAO
     {
         private readonly CulinaryContext _context;
+        private readonly ILogger<ProductDAO> _logger;
 
-        public ProductDAO(CulinaryContext context)
+        public ProductDAO(CulinaryContext context, ILogger<ProductDAO> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         public async Task<List<Product>> GetAllProducts()
@@ -63,96 +66,6 @@ namespace DataAccess.DAOs
             }
         }
 
-        public async Task<(int TotalItems, List<Product> Items)> GetFilteredProductsAsync(ProductFilterRequest request)
-        {
-            try
-            {
-                IQueryable<Product> query = _context.Products
-                    .Include(p => p.Stocks)
-                    .Include(p => p.ProductImages)
-                    .Include(p => p.ProductReviews)
-                    .Include(p => p.ProductCategoryMappings)
-                    .ThenInclude(pcm => pcm.Category)
-                    .AsQueryable();
-
-                // Filter category
-                if (request.CategoryIds != null && request.CategoryIds.Any())
-                {
-                    query = query.Where(p =>
-                        p.ProductCategoryMappings.Any(pcm => request.CategoryIds.Contains(pcm.CategoryId))
-                    );
-                }
-
-                // Filter price
-                if (request.MinPrice.HasValue)
-                    query = query.Where(p => p.Price >= request.MinPrice.Value);
-
-                if (request.MaxPrice.HasValue)
-                    query = query.Where(p => p.Price <= request.MaxPrice.Value);
-
-                // Filter available
-                if (request.IsAvailable.HasValue)
-                {
-                    query = request.IsAvailable.Value
-                        ? query.Where(p => p.Stocks.Sum(s => s.Quantity) > 0)
-                        : query.Where(p => p.Stocks.Sum(s => s.Quantity) == 0);
-                }
-
-                // Sort
-                query = request.SortBy?.ToLower() switch
-                {
-                    "best-selling" => query.OrderByDescending(p => p.TotalSold),
-                    "a-z" => query.OrderBy(p => p.ProductName),
-                    "z-a" => query.OrderByDescending(p => p.ProductName),
-                    "price-low-high" => query.OrderBy(p => p.Price),
-                    "price-high-low" => query.OrderByDescending(p => p.Price),
-                    "date-new-old" => query.OrderByDescending(p => p.CreatedAt),
-                    "date-old-new" => query.OrderBy(p => p.CreatedAt),
-                    "featured" => query
-                        .Where(p => p.ProductCategoryMappings.Any(pcm => pcm.Category!.CategoryName == "Featured"))
-                        .OrderByDescending(p => p.CreatedAt),
-                    _ => query.OrderBy(p => p.ProductName) // mặc định
-                };
-
-                int totalItems = await query.CountAsync();
-
-                var items = await query
-                    .Skip((request.Page - 1) * request.PageSize)
-                    .Take(request.PageSize)
-                    .Select(p => new Product
-                    {
-                        ProductId = p.ProductId,
-                        ProductName = p.ProductName,
-                        Price = p.Price,
-                        Discount = p.Discount,
-                        ProductReviews = p.ProductReviews,
-                        Stocks = p.Stocks
-                        .Select(s => new Stock
-                        {
-                            Quantity = s.Quantity
-                        }).ToList(),
-
-                        ProductImages = p.ProductImages
-                        .Select(img => new ProductImage
-                        {
-                            ImageUrl = img.ImageUrl
-                        }).ToList()
-                    })
-                    .AsNoTracking()
-                    .ToListAsync(); // Trả nguyên Product entity
-
-                return (totalItems, items);
-            }
-            catch (DbUpdateException ex)
-            {
-                throw new DbUpdateException("An error occurred while retrieving filtered products.", ex);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("An unexpected error occurred while retrieving filtered products.", ex);
-            }
-        }
-
         public async Task<Product?> GetProductDetailById(Guid productId)
         {
             try
@@ -161,8 +74,8 @@ namespace DataAccess.DAOs
                     .AsNoTracking()
                     .Include(p => p.ProductCategoryMappings)
                         .ThenInclude(pcm => pcm.Category).Include(p => p.ProductImages)
-                    .Include(p => p.Stocks)
-                    .Include(p => p.ProductReviews.Where(r => r.Rating.HasValue))
+                    .Include(p => p.Stocks).ThenInclude(s => s.Warehouse)
+                    .Include(p => p.ProductReviews)
                         .ThenInclude(pr => pr.Customer)
                     .FirstOrDefaultAsync(p => p.ProductId == productId);
 
@@ -186,6 +99,36 @@ namespace DataAccess.DAOs
             catch (DbUpdateException ex)
             {
                 throw new DbUpdateException("An error occurred while retrieving product summaries.", ex);
+            }
+        }
+        public async Task<Product?> GetProductAsync(Guid productId)
+        {
+            try
+            {
+                return await _context.Products.FindAsync(productId);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "GetProduct failed {ProductId}", productId);
+                throw new DatabaseException("Failed to load product");
+            }
+        }
+        public async Task<List<Product>> GetAllProductsWithStocksAsync()
+        {
+            try
+            {
+                return await _context.Products
+                    .Include(p => p.Stocks) // lấy toàn bộ stocks trong các warehouse
+                        .ThenInclude(s => s.Warehouse) // nếu cần thêm thông tin kho
+                    .Include(p => p.ProductReviews)
+                    .Include(p => p.ProductImages)
+                    .Include(p => p.ProductCategoryMappings)
+                    .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error fetching all products with stocks");
+                throw;
             }
         }
     }

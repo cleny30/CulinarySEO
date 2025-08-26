@@ -160,7 +160,7 @@
                     font-weight: 500;
                     color: #1f1f1f;
                 "&gt;
-                    OTP Verification Code
+                    Mã Xác Minh OTP
                 &lt;/h1&gt;
                 &lt;p style="
                     margin: 0;
@@ -168,7 +168,7 @@
                     font-weight: 500;
                     letter-spacing: 0.56px;
                 "&gt;
-                    The code below is your OTP to verify your email address and complete your account registration.
+                    Mã dưới đây là mã OTP của bạn để xác minh địa chỉ email và hoàn tất đăng ký tài khoản.
                 &lt;/p&gt;
                 &lt;p style="
                     margin: 0;
@@ -190,7 +190,7 @@
             font-weight: 500;
             color: #8c8c8c;
           "&gt;
-            Need help? Contact us at
+            Cần trợ giúp? Liên hệ với chúng tôi tại
             &lt;a href="mailto:{SupportEmail}" style="color: #499fb6; text-decoration: none;"&gt;{SupportEmail}&lt;/a&gt;
         &lt;/p&gt;
     &lt;/main&gt;

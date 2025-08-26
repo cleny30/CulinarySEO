@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using BusinessObject.Models.Dto;
 using BusinessObject.Models.Dto.Blog;
 using BusinessObject.Models.Dto.Product;
@@ -49,10 +49,10 @@ namespace ServiceObject.Configurations
                 opt => opt.MapFrom(src => src.Customer.FullName));
 
             CreateMap<Product, GetProductDetailDto>()
-                .ForMember(dest => dest.CategoryName,
+                .ForMember(dest => dest.CategoryId,
                         opt => opt.MapFrom(src => src.ProductCategoryMappings
                         .Select(p => p.Category)
-                        .Select(pi => pi.CategoryName)
+                        .Select(pi => pi.CategoryId)
                         .ToList()))
                 .ForMember(dest => dest.ProductImages,
                     opt => opt.MapFrom(src => src.ProductImages
@@ -60,26 +60,35 @@ namespace ServiceObject.Configurations
                         .ToList()))
                 .ForMember(dest => dest.Reviews,
                     opt => opt.MapFrom(src => src.ProductReviews))
-                .ForMember(dest => dest.FinalPrice,
-                    opt => opt.MapFrom(src =>
-                        src.Discount.HasValue
-                            ? src.Price - (src.Price * (src.Discount.Value / 100))
-                            : src.Price
-                    ));
-            CreateMap<Product, ProductDto>()
-                .ForMember(dest => dest.ReviewCount,
-                opt => opt.MapFrom(src =>
-                    src.ProductReviews.Count()
-                ))
+                .ForMember(dest => dest.Stocks,
+                    opt => opt.MapFrom(src => src.Stocks
+                        .ToDictionary(
+                            s => s.WarehouseId.ToString(),
+                            s => s.Quantity
+                        )
+                    ))
                 .ForMember(dest => dest.AverageRating,
                     opt => opt.MapFrom(src =>
                         src.ProductReviews.Any(r => r.Rating.HasValue)
                             ? (decimal)src.ProductReviews.Where(r => r.Rating.HasValue).Average(r => r.Rating!.Value)
                             : 0
                     ))
-                .ForMember(dest => dest.TotalQuantity,
+                .ForMember(dest => dest.FinalPrice,
                     opt => opt.MapFrom(src =>
-                        src.Stocks.Sum(s => s.Quantity)
+                        src.Discount.HasValue
+                            ? src.Price - (src.Price * (src.Discount.Value / 100))
+                            : src.Price
+                    ));
+            CreateMap<Product, ProductSummaryDto>();
+
+            CreateMap<Product, ElasticProductDto>()
+                .ForMember(dest => dest.ReviewCount,
+                    opt => opt.MapFrom(src => src.ProductReviews.Count()))
+                .ForMember(dest => dest.AverageRating,
+                    opt => opt.MapFrom(src =>
+                        src.ProductReviews.Any(r => r.Rating.HasValue)
+                            ? (decimal)src.ProductReviews.Where(r => r.Rating.HasValue).Average(r => r.Rating!.Value)
+                            : 0
                     ))
                 .ForMember(dest => dest.FinalPrice,
                     opt => opt.MapFrom(src =>
@@ -88,12 +97,18 @@ namespace ServiceObject.Configurations
                             : src.Price
                     ))
                 .ForMember(dest => dest.ProductImages,
-                        opt => opt.MapFrom(src =>
-                            src.ProductImages.Select(img => img.ImageUrl).ToList()
-                        ));
-            CreateMap<Category, CategoryForShop>();
+                    opt => opt.MapFrom(src => src.ProductImages.Select(img => img.ImageUrl).ToList()))
+                .ForMember(dest => dest.CategoryIds,
+                    opt => opt.MapFrom(src => src.ProductCategoryMappings.Select(m => m.CategoryId).ToList()))
+                .ForMember(dest => dest.Stocks,
+                    opt => opt.MapFrom(src => src.Stocks
+                        .ToDictionary(
+                            s => s.WarehouseId.ToString(),
+                            s => s.Quantity
+                        )
+                    ));
 
-            CreateMap<Product, ProductSummaryDto>();
+
             #endregion
 
             #region Customer
@@ -109,7 +124,7 @@ namespace ServiceObject.Configurations
                 {
                     dest.RoleName = "Customer";
                 });
-            CreateMap<Customer, UpdateCustomerDto>();
+            CreateMap<UpdateCustomerDto, Customer>();
             #endregion
 
             #region Cart
@@ -135,7 +150,12 @@ namespace ServiceObject.Configurations
                     .FirstOrDefault(pi => pi.IsPrimary)!.ImageUrl
             ));
 
-
+            CreateMap<AddToCartRequest, CartItem>().
+                AfterMap((src, dest) =>
+                {
+                    dest.CartItemId = Guid.NewGuid();
+                    dest.AddedAt = DateTime.UtcNow;
+                });
             #endregion
 
             #region Manager
@@ -152,6 +172,22 @@ namespace ServiceObject.Configurations
                     CategoryName = bcm.BlogCategory.CategoryName,
                     CategoryImage = bcm.BlogCategory.CategoryImage
                 }).ToList()));
+            #region Order
+            CreateMap<Order, CheckoutResponseDto>()
+                .ForMember(dest => dest.OrderId, opt => opt.MapFrom(src => src.OrderId))
+                .ForMember(dest => dest.ShippingFee, opt => opt.MapFrom(src => src.ShippingFee))
+                .ForMember(dest => dest.TotalPrice, opt => opt.MapFrom(src => src.TotalPrice))
+                .ForMember(dest => dest.PaymentMethod, opt => opt.MapFrom(src => src.PaymentMethod))
+                .ForMember(dest => dest.PaymentStatus, opt => opt.MapFrom(src => src.PaymentStatus));
+            #endregion
+
+            #region Category
+            CreateMap<Category, CategoryDto>();
+            CreateMap<Category, CategoryForShop>();
+            #endregion
+
+            #region Warehouse
+            CreateMap<Warehouse, GetWarehouse>();
             #endregion
         }
     }

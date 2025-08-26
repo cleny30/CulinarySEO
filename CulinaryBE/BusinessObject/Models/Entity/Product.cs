@@ -16,8 +16,12 @@ namespace BusinessObject.Models.Entity
         public string ProductName { get; set; } = string.Empty;
 
         [Required]
-        [Column("description")]
-        public string Description { get; set; } = string.Empty;
+        [Column("short_description")]
+        public string ShortDescription { get; set; } = string.Empty;
+
+        [Required]
+        [Column("long_description")]
+        public string LongDescription { get; set; } = string.Empty;
 
         [Required]
         [Column("price", TypeName = "decimal(10,2)")]
@@ -28,6 +32,16 @@ namespace BusinessObject.Models.Entity
 
         [Column("total_sold")]
         public int? TotalSold { get; set; }
+
+        [Required]
+        [Column("slug")]
+        public string Slug { get; set; } = string.Empty;
+        [Required]
+        [Column("page_title")]
+        public string PageTitle { get; set; } = string.Empty;
+        [Required]
+        [Column("meta_description")]
+        public string MetaDescription { get; set; } = string.Empty;
 
         [Required]
         [Column("created_at")]

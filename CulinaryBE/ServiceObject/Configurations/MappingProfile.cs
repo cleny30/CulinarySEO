@@ -146,15 +146,12 @@ namespace ServiceObject.Configurations
             #region Blog
             CreateMap<Blog, GetBlogDto>()
                 .ForMember(dest => dest.ManagerName, opt => opt.MapFrom(src => src.Manager.FullName))
-                .ForMember(dest => dest.BlogImageUrl, opt => opt.MapFrom(src => src.BlogImages
-                    .FirstOrDefault(bi => bi.IsPrimary)!.ImageUrl))
-                .ForMember(dest => dest.Categories, opt => opt.MapFrom(src =>
-                    src.BlogCategoryMappings.Select(bcm => new BlogCategories
-                    {
-                        CategoryId = bcm.BlogCategory.CategoryId,
-                        CategoryName = bcm.BlogCategory.CategoryName,
-                        CategoryImage = bcm.BlogCategory.CategoryImage
-                    }).ToList()));
+                .ForMember(dest => dest.Categories, opt => opt.MapFrom(src => src.BlogCategoryMappings.Select(bcm => new BlogCategories
+                {
+                    CategoryId = bcm.BlogCategory.CategoryId,
+                    CategoryName = bcm.BlogCategory.CategoryName,
+                    CategoryImage = bcm.BlogCategory.CategoryImage
+                }).ToList()));
             #endregion
         }
     }

@@ -8,7 +8,7 @@ namespace BusinessObject.Models.Dto.Blog
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
         public string ManagerName { get; set; }
-        public string BlogImageUrl { get; set; } = string.Empty;
+        public string ImageTitle { get; set; }
         public List<BlogCategories> Categories { get; set; } = new List<BlogCategories>();
     }
 }

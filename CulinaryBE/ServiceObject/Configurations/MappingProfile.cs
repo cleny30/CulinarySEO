@@ -172,6 +172,8 @@ namespace ServiceObject.Configurations
                     CategoryName = bcm.BlogCategory.CategoryName,
                     CategoryImage = bcm.BlogCategory.CategoryImage
                 }).ToList()));
+            #endregion
+
             #region Order
             CreateMap<Order, CheckoutResponseDto>()
                 .ForMember(dest => dest.OrderId, opt => opt.MapFrom(src => src.OrderId))

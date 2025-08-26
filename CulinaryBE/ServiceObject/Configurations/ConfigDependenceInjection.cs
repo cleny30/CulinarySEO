@@ -1,4 +1,4 @@
-﻿using DataAccess.DAOs;
+using DataAccess.DAOs;
 using DataAccess.IDAOs;
 using Microsoft.Extensions.DependencyInjection;
 using ServiceObject.Background.BackgroundServices;
@@ -20,10 +20,10 @@ namespace ServiceObject.Configurations
             services.AddScoped<IOrderDAO, OrderDAO>();
             services.AddScoped<IRecommendationDAO, RecommendationDAO>();
             services.AddScoped<ICartDAO, CartDAO>();
+            services.AddScoped<IBlogDAO, BlogDAO>();
             services.AddScoped<IStockDAO, StockDAO>();
             services.AddScoped<IVoucherDAO, VoucherDAO>();
-            services.AddScoped<IWarehouseDAO, WarehouseDAO>();
-        }
+            services.AddScoped<IWarehouseDAO, WarehouseDAO>();        }
 
         public static void ConfigureService(this IServiceCollection services)
         {
@@ -38,6 +38,7 @@ namespace ServiceObject.Configurations
             services.AddScoped<IPermissionService, PermissionService>();
             services.AddScoped<ICartService, CartService>();
             services.AddScoped<IRecommendationService, RecommendationService>();
+            services.AddScoped<IBlogService, BlogService>();
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IElasticService, ElasticService>();
             services.AddScoped<IWarehouseService, WarehouseService>();

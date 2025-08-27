@@ -3,8 +3,6 @@ using AutoMapper;
 using BusinessObject.Models.Dto.Blog;
 using DataAccess.IDAOs;
 using ServiceObject.IServices;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace ServiceObject.Services
 {
@@ -17,6 +15,12 @@ namespace ServiceObject.Services
         {
             _blogDAO = blogDAO;
             _mapper = mapper;
+        }
+
+        public async Task<GetBlogDetailDto?> GetBlogById(Guid blogId)
+        {
+            var blog = await _blogDAO.GetBlogById(blogId);
+            return _mapper.Map<GetBlogDetailDto>(blog);
         }
 
         public async Task<List<GetBlogDto>> GetBlogs()

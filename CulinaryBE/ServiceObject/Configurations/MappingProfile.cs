@@ -172,6 +172,18 @@ namespace ServiceObject.Configurations
                     CategoryName = bcm.BlogCategory.CategoryName,
                     CategoryImage = bcm.BlogCategory.CategoryImage
                 }).ToList()));
+            CreateMap<BlogComment, GetBlogCommentDto>()
+                .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Customer.FullName))
+                .ForMember(dest => dest.BlogId, opt => opt.MapFrom(src => src.Blog.BlogId));
+            CreateMap<Blog, GetBlogDetailDto>()
+                .ForMember(dest => dest.ManagerName, opt => opt.MapFrom(src => src.Manager.FullName))
+                .ForMember(dest => dest.Categories, opt => opt.MapFrom(src => src.BlogCategoryMappings.Select(bcm => new BlogCategories
+                {
+                    CategoryId = bcm.BlogCategory.CategoryId,
+                    CategoryName = bcm.BlogCategory.CategoryName,
+                    CategoryImage = bcm.BlogCategory.CategoryImage
+                }).ToList()))
+                .ForMember(dest => dest.Comments, opt => opt.MapFrom(src => src.BlogComments));
             #endregion
 
             #region Order

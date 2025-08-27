@@ -15,10 +15,9 @@ export default function ProductDetail({ productdetail }: { productdetail: Produc
                     </TabsList>
                     <TabsContent value='description'>
                         <div
-                            className="[&_h1]:text-2xl [&_h1]:font-bold [&_h1]:text-blue-600 
+                            className="[&_h1]:text-2xl [&_h1]:font-bold [&_h1]:text-black-600 
              [&_ul]:list-disc [&_ul]:pl-6 [&_ul]:text-gray-700 [&_ul]:text-base 
-             [&_li]:mb-1 
-             [&_.highlight]:bg-yellow-200 [&_.highlight]:font-semibold [&_.highlight]:px-2 [&_.highlight]:rounded"
+             [&_li]:mb-1"
                             dangerouslySetInnerHTML={{ __html: productdetail?.longDescription || "" }}
                         />
                     </TabsContent>

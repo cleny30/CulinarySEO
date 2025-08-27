@@ -22,7 +22,7 @@ const productDetailSlice = createSlice({
     setProductDetailFetching: (state, action: PayloadAction<boolean>) => {
       state.loading = action.payload;
     },
-    setProductDetail: (state, action: PayloadAction<ProductDetail>) => {
+    setProductDetail: (state, action: PayloadAction<ProductDetail | null>) => {
       state.product = action.payload;
       state.loading = false;
       state.error = null;

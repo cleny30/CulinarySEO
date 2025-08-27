@@ -7,18 +7,18 @@ export interface Review {
 }
 
 export interface ProductDetail {
-  productId: string;
-  productName: string;
-  shortDescription: string;
-  longDescription: string;
-  price: number;
-  discount: number;
-  finalPrice: number;
-  averageRating:number;
-  slug:string;
-  pageTitle: string;
-  metaDescription: string;
-  categoryName: string[];
-  productImages: string[];
-  reviews: Review[];
+  productId: string | null;
+  productName: string | null;
+  shortDescription: string | null;
+  longDescription: string | null;
+  price: number | null;
+  discount: number | null;
+  finalPrice: number | null;
+  averageRating:number | null;
+  slug:string | null;
+  pageTitle: string | null;
+  metaDescription: string | null;
+  categoryId: number[] | null;
+  productImages: string[] | null;
+  reviews: Review[] | null;
 }

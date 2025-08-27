@@ -27,7 +27,7 @@ export const selectProductDetail = async (
             slug: response.data.slug,
             pageTitle: response.data.pageTitle,
             metaDescription: response.data.metaDescription,
-            categoryName: response.data.categoryName,
+            categoryId: response.data.categoryId,
             productImages: response.data.productImages,
             reviews: response.data.reviews,
         }

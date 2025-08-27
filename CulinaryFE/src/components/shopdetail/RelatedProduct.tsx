@@ -1,27 +1,94 @@
 import { fetchProducts } from '@/redux/productview/apiRequest'
+import type { RootState } from '@/redux/store'
 import type { ProductDetail } from '@/types/productdetail'
 import { useEffect } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { Card, CardContent } from '../ui/card'
+import { Star } from 'lucide-react'
+import { formatCurrency } from '@/utils/constants/product/product'
+import { Skeleton } from '../ui/skeleton'
+import { useNavigate } from 'react-router-dom'
+import { Badge } from '../ui/badge'
 
 export default function RelatedProduct({ productdetail }: { productdetail: ProductDetail | null }) {
     const dispatch = useDispatch()
-    // useEffect(() => {
-    //     fetchProducts(dispatch, productdetail?.categoryName)
-    // }, [])
+    const relatedProduct = useSelector((state: RootState) => (state.productview))
+    const navigate = useNavigate()
+    useEffect(() => {
+        fetchProducts(dispatch, 1, productdetail?.categoryId)
+    }, [])
+
+    console.log(relatedProduct.products, 'related')
     return (
         <section className='pt-20'>
-            <div className='max-w-[1400px] w-full h-full mx-auto px-[15px]'>
-                <h2 className='text-2xl font-bold mb-4 text-center'>Related Products</h2>
-                <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6'>
-                    {Array.from({ length: 4 }).map((_, index) => (
-                        <div key={index} className='border p-4 rounded-lg'>
-                            <img src={`/img/product${index + 1}.jpg`} alt={`Product ${index + 1}`} className='w-full h-40 object-cover mb-4' />
-                            <h3 className='text-lg font-semibold'>Product {index + 1}</h3>
-                            <p className='text-gray-600 mt-2'>$19.99</p>
+            {
+                relatedProduct.fetching
+                    ?
+                    (
+                        <>
+                            <Skeleton className="h-[289px] w-[231px] rounded-xl" />
+                            <Skeleton className="h-[289px] w-[231px] rounded-xl" />
+                            <Skeleton className="h-[289px] w-[231px] rounded-xl" />
+                            <Skeleton className="h-[289px] w-[231px] rounded-xl" />
+                        </>
+                    )
+                    :
+                    (
+                        <div className='max-w-[1400px] w-full h-full mx-auto px-[15px]'>
+                            <h2 className='text-2xl font-bold mb-4 text-center'>Related Products</h2>
+                            <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6'>
+                                {
+                                    relatedProduct?.products?.items.slice(0, 5).map((product) => (
+                                        <Card key={product.productId} className="p-2 hover:shadow-lg transition-shadow" onClick={() => navigate(`/shop/${product.productId}`)}>
+                                            <div className="relative">
+                                                {product.discount && (
+                                                    <Badge className="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 text-xs font-bold">
+                                                        {product.discount}%
+                                                    </Badge>
+                                                )}
+                                                <img
+                                                    src={"/img/foodholder.jpg"}
+                                                    alt={product.productName}
+                                                    className="w-full h-48 object-cover rounded-lg"
+                                                />
+                                            </div>
+                                            <CardContent className='px-0'>
+                                                <h3 className="font-medium text-gray-800 text-sm">{product.productName}</h3>
+                                                {product.discount && product.finalPrice ? (
+                                                    <div className='text-sm flex items-center gap-2'>
+                                                        <span className='text-mau-gia-san-pham font-bold'>
+                                                            {formatCurrency(product.finalPrice)}
+                                                        </span>
+                                                        <span className='line-through text-gray-400'>
+                                                            {formatCurrency(product.price)}
+                                                        </span>
+                                                    </div>
+                                                ) :
+                                                    (
+                                                        <div className='text-sm'>
+                                                            <span className='text-mau-gia-san-pham font-bold'>
+                                                                {formatCurrency(product.price)}
+                                                            </span>
+                                                        </div>
+                                                    )}
+                                                <div className="flex items-center gap-1">
+                                                    {Array.from({ length: 5 }).map((_, i) => (
+                                                        <Star
+                                                            key={i}
+                                                            size={14}
+                                                            className={i < (product.averageRating ?? 0) ? "fill-yellow-400 text-yellow-400" : "text-gray-300"}
+                                                        />
+                                                    ))}
+                                                    <span className="text-xs text-gray-500">({product.reviewCount ?? 0})</span>
+                                                </div>
+                                            </CardContent>
+                                        </Card>
+                                    ))
+                                }
+                            </div>
                         </div>
-                    ))}
-                </div>
-            </div>
+                    )
+            }
         </section>
     )
 }

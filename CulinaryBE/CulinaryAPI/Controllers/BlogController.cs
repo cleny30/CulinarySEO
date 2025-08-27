@@ -27,5 +27,25 @@ namespace CulinaryAPI.Controllers
                 Result = blogs
             });
         }
+        [HttpGet("{blogId:guid}")]
+        public async Task<IActionResult> GetBlogById(Guid blogId)
+        {
+            var blog = await _blogService.GetBlogById(blogId);
+            if (blog == null)
+            {
+                return NotFound(new ApiResponse
+                {
+                    IsSuccess = false,
+                    Message = "Blog not found",
+                    Result = null
+                });
+            }
+            return Ok(new ApiResponse
+            {
+                IsSuccess = true,
+                Message = "Successfully retrieved blog",
+                Result = blog
+            });
+        }
     }
 }

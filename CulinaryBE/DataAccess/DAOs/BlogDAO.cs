@@ -1,4 +1,4 @@
-
+﻿
 using BusinessObject.AppDbContext;
 using BusinessObject.Models.Entity;
 using DataAccess.IDAOs;
@@ -17,10 +17,35 @@ namespace DataAccess.DAOs
 
         public async Task<List<Blog>> GetAllBlogs()
         {
-            return await _context.Blogs.Include(m => m.Manager).AsNoTracking()
+            try
+            {
+                return await _context.Blogs.Include(m => m.Manager).AsNoTracking()
                 .Include(m => m.BlogCategoryMappings)
                     .ThenInclude(bcm => bcm.BlogCategory)
                 .ToListAsync();
+            }
+            catch (DbUpdateException ex)
+            {
+                throw new DbUpdateException("An error occurred while retrieving blogs.", ex);
+            }
+        }
+        public Task<Blog?> GetBlogById(Guid blogId)
+        {
+            try
+            {
+                return _context.Blogs
+                    .AsNoTracking()
+                    .Include(b => b.Manager)
+                    .Include(b => b.BlogCategoryMappings)
+                        .ThenInclude(bcm => bcm.BlogCategory)
+                    .Include(b => b.BlogComments)
+                        .ThenInclude(c => c.Customer)
+                    .FirstOrDefaultAsync(b => b.BlogId == blogId);
+            }
+            catch (DbUpdateException ex)
+            {
+                throw new DbUpdateException("An error occurred while retrieving the blog by ID.", ex);
+            }
         }
     }
 }

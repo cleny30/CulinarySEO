@@ -29,22 +29,56 @@ namespace DataAccess.DAOs
                 throw new DbUpdateException("An error occurred while retrieving blogs.", ex);
             }
         }
-        public Task<Blog?> GetBlogById(Guid blogId)
+        public async Task<Blog?> GetBlogById(Guid blogId)
         {
             try
             {
-                return _context.Blogs
+                return await _context.Blogs
                     .AsNoTracking()
                     .Include(b => b.Manager)
                     .Include(b => b.BlogCategoryMappings)
                         .ThenInclude(bcm => bcm.BlogCategory)
                     .Include(b => b.BlogComments)
                         .ThenInclude(c => c.Customer)
+                    .Include(b => b.BlogComments)
+                        .ThenInclude(c => c.ChildComments)
+                            .ThenInclude(cc => cc.Customer)
                     .FirstOrDefaultAsync(b => b.BlogId == blogId);
             }
             catch (DbUpdateException ex)
             {
                 throw new DbUpdateException("An error occurred while retrieving the blog by ID.", ex);
+            }
+        }
+
+        public async Task AddComment(BlogComment comment)
+        {
+            try
+            {
+                await _context.BlogComments.AddAsync(comment);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException ex)
+            {
+                throw new DbUpdateException("An error occurred while adding the comment.", ex);
+            }
+        }
+
+        public async Task<List<BlogComment>> GetCommentsByBlogId(Guid blogId)
+        {
+            try
+            {
+                return await _context.BlogComments
+                    .Include(c => c.Customer)
+                    .Include(c => c.ChildComments)
+                        .ThenInclude(child => child.Customer)
+                    .Where(c => c.BlogId == blogId && c.ParentCommentId == null)
+                    .AsNoTracking()
+                    .ToListAsync();
+            }
+            catch (DbUpdateException ex)
+            {
+                throw new DbUpdateException("An error occurred while retrieving comments.", ex);
             }
         }
     }

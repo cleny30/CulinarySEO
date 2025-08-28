@@ -1,6 +1,7 @@
 
 using AutoMapper;
 using BusinessObject.Models.Dto.Blog;
+using BusinessObject.Models.Entity;
 using DataAccess.IDAOs;
 using ServiceObject.IServices;
 
@@ -27,6 +28,19 @@ namespace ServiceObject.Services
         {
             var blogs = await _blogDAO.GetAllBlogs();
             return _mapper.Map<List<GetBlogDto>>(blogs);
+        }
+
+        public async Task AddComment(CreateBlogCommentRequestDto request, Guid customerId)
+        {
+            var comment = _mapper.Map<BlogComment>(request);
+            comment.CustomerId = customerId;
+            await _blogDAO.AddComment(comment);
+        }
+
+        public async Task<List<BlogCommentResponseDto>> GetCommentsByBlogId(Guid blogId)
+        {
+            var comments = await _blogDAO.GetCommentsByBlogId(blogId);
+            return _mapper.Map<List<BlogCommentResponseDto>>(comments);
         }
     }
 }

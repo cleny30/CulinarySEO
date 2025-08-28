@@ -47,7 +47,7 @@ export default function Header({
               "border-b-1 border-b-mau-do-color"
             )}
           >
-            <nav className="flex items-center w-full justify-between container">
+            <nav className="flex items-center w-full justify-between container not-lg:py-2">
               <HeaderLogo />
               <HeaderNav />
               <div className="flex items-center">

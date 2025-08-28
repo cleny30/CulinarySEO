@@ -175,7 +175,9 @@ namespace ServiceObject.Configurations
 
             CreateMap<BlogComment, GetBlogCommentDto>()
                 .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Customer.FullName))
-                .ForMember(dest => dest.BlogId, opt => opt.MapFrom(src => src.Blog.BlogId));
+                .ForMember(dest => dest.BlogId, opt => opt.MapFrom(src => src.Blog.BlogId))
+                .ForMember(dest => dest.Replies, opt => opt.MapFrom(src => src.ChildComments));
+
             CreateMap<Blog, GetBlogDetailDto>()
                 .ForMember(dest => dest.ManagerName, opt => opt.MapFrom(src => src.Manager.FullName))
                 .ForMember(dest => dest.Categories, opt => opt.MapFrom(src => src.BlogCategoryMappings.Select(bcm => new BlogCategories
@@ -185,6 +187,10 @@ namespace ServiceObject.Configurations
                     CategoryImage = bcm.BlogCategory.CategoryImage
                 }).ToList()))
                 .ForMember(dest => dest.Comments, opt => opt.MapFrom(src => src.BlogComments));
+
+            CreateMap<CreateBlogCommentRequestDto, BlogComment>();
+            CreateMap<BlogComment, BlogCommentResponseDto>()
+                .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Customer.FullName));
             #endregion
 
             #region Order

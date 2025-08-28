@@ -2,6 +2,7 @@ import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import authReducer from "./auth/authSlice";
 import productfilterReducer from "./product/productfilterSlice";
 import productView from "./productview/productviewSlice";
+import homeReducer from "./home/homeSlice";
 import {
   persistStore,
   persistReducer,
@@ -24,6 +25,7 @@ const rootReducer = combineReducers({
   auth: persistReducer(authPersistConfig, authReducer),
   productfilter: productfilterReducer,
   productview: productView,
+  home: homeReducer
 });
 
 export const store = configureStore({

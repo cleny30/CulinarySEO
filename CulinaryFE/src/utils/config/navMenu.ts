@@ -1,48 +1,5 @@
-import type { BackendApiResponse } from "@/types/api";
-import { doRequest } from "./doRequest";
+import type { NavItem } from "@/types/home";
 
-export interface NavItem {
-  label: string;
-  href?: string;
-  slug: string;
-  isCategory?: boolean;
-  featureCat?: Array<{
-    title?: string;
-    url?: string;
-    image?: string;
-  }>;
-  children?: Array<{
-    label: string;
-    href: string;
-    image?: string;
-  }>;
-}
-interface Category {
-  categoryId: number;
-  categoryName: string;
-  categoryImage: string;
-  description: string;
-}
-
-export const getCateList = async () => {
-  try {
-    const res = await doRequest<BackendApiResponse<Category[]>>(
-      "get",
-      "/api/category/get-category"
-    );
-    const data = res.data.result.map((item) => {
-      return {
-        label: item.categoryName,
-        href: `/Collections/${item.categoryId}`,
-        image: item.categoryImage,
-      };
-    });
-    return data;
-  } catch (error) {
-    console.error("Failed to fetch categories:", error);
-    return null;
-  }
-};
 
 export const menuNav: NavItem[] = [
   {
@@ -67,28 +24,7 @@ export const menuNav: NavItem[] = [
         image: "/img/featurePic2.jpg",
       },
     ],
-    children: [
-      {
-        label: "Món Khai Vị",
-        href: "/menu/appetizers",
-        image: "/img/banner_1.webp",
-      },
-      {
-        label: "Món Chính",
-        href: "/menu/main-courses",
-        image: "/img/banner_1.webp",
-      },
-      {
-        label: "Tráng Miệng",
-        href: "/menu/desserts",
-        image: "/img/banner_1.webp",
-      },
-      {
-        label: "Đồ Uống",
-        href: "/menu/drinks",
-        image: "/img/banner_1.webp",
-      },
-    ],
+    children: [],
   },
   {
     label: "Giới Thiệu",

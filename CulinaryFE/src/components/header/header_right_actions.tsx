@@ -21,14 +21,14 @@ export default function HeaderRightActions({ user }: HeaderRightActionsProps) {
       <HeaderCart user={user} />
       <div className="w-[1px] h-[30px] bg-mau-do-color border-0 mr-3"></div>
       {user ? (
-        <Button variant={"outline"} type="button" onClick={handleLogout}>
+        <Button variant={"outline"} type="button" onClick={handleLogout} className="not-lg:hidden">
           Logout
         </Button>
       ) : (
         <Button
           variant={"default"}
           size={"lg"}
-          className="font-Lucky tracking-wider text-base"
+          className="font-Lucky tracking-wider text-base not-lg:hidden"
           type="button"
           onClick={() => navigate("/login")}
         >

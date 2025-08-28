@@ -1,4 +1,4 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import type { RootState } from "@/redux/store";
 import HeaderLogo from "../header/header_logo";
 import HeaderNav from "../header/header_nav";
@@ -6,6 +6,9 @@ import HeaderRightActions from "../header/header_right_actions";
 import SubHeader from "./subheader";
 import { cn } from "@/lib/utils";
 import TopBar from "./topbar";
+import { useEffect } from "react";
+import { fetchCateMenu } from "@/redux/home/apiRequest";
+import HeaderNavMobile from "../header/header_nav-mobile";
 
 interface HeaderProps {
   headerStyle?: "1" | "2" | "3";
@@ -17,9 +20,18 @@ export default function Header({
   headerStyle = "1",
   topbar = true,
 }: HeaderProps) {
+  const dispatch = useDispatch();
   const user =
     useSelector((state: RootState) => state.auth.login?.currentUser) || null;
   const headerContainerStyle = "w-full flex justify-center";
+
+  useEffect(() => {
+    const getCate = async () => {
+      await fetchCateMenu(dispatch);
+    };
+    getCate();
+  }, [dispatch]);
+
   return (
     <>
       {headerStyle === "1" && (
@@ -32,13 +44,16 @@ export default function Header({
           <div
             className={cn(
               headerContainerStyle,
-              "border-b-2 border-b-mau-do-color"
+              "border-b-1 border-b-mau-do-color"
             )}
           >
             <nav className="flex items-center w-full justify-between container">
               <HeaderLogo />
               <HeaderNav />
-              <HeaderRightActions user={user} />
+              <div className="flex items-center">
+                <HeaderRightActions user={user} />
+                <HeaderNavMobile user={user}/>
+              </div>
             </nav>
           </div>
 

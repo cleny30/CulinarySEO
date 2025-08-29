@@ -12,8 +12,8 @@ export const fetchProducts = async (
     MinPrice: number | null = null,
     MaxPrice: number | null = null,
     IsAvailable: boolean | null = null,
-    SortBy: string | null = null
-
+    SortBy: string | null = null,
+    WarehouseId: string | null = null
 ) => {
     dispatch(setProductFetching(true));
 
@@ -22,7 +22,8 @@ export const fetchProducts = async (
         MinPrice,
         MaxPrice,
         IsAvailable,
-        SortBy);
+        SortBy,
+        WarehouseId);
     if (response.error) {
         dispatch(setProductFetching(false));
         return { error: response.error };

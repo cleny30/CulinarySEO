@@ -15,6 +15,7 @@ interface ProductFilterState {
     price?: { from: number; to: number } | null;
     availability?: boolean | null;
     sortBy?: string | null;
+    WarehouseId? :string | null;
   };
   fetching: boolean;
 }
@@ -26,6 +27,7 @@ const initialState: ProductFilterState = {
     price: null,
     availability: null,
     sortBy: null,
+    WarehouseId: null,
   },
   fetching: false,
 };
@@ -52,6 +54,9 @@ const productSlice = createSlice({
     setSelectedCategories: (state, action: PayloadAction<number[] | null>) => {
       state.productfilter.selectedCategories = action.payload;
     },
+    setWarehouseId: (state, action: PayloadAction<string | null>) => {
+      state.productfilter.WarehouseId = action.payload;
+    }
   },
 });
 
@@ -62,5 +67,6 @@ export const {
   setSortBy,
   setFetching,
   setSelectedCategories,
+  setWarehouseId,
 } = productSlice.actions;
 export default productSlice.reducer;

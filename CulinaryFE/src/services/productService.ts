@@ -10,7 +10,8 @@ export const getProducts = async (
     MinPrice?: number | null,
     MaxPrice?: number | null,
     IsAvailable?: boolean | null,
-    SortBy?: string | null
+    SortBy?: string | null,
+    WarehouseId?: string | null
 ): Promise<ApiResponse<ProductResult>> => {
     try {
         const params = new URLSearchParams();
@@ -33,6 +34,9 @@ export const getProducts = async (
         }
         if (SortBy) {
             params.append("SortBy", SortBy);
+        }
+        if(WarehouseId){
+            params.append("WarehouseId",WarehouseId)
         }
 
         const response = await doRequest<BackendApiResponse<ProductResult>>(

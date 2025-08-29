@@ -52,13 +52,15 @@ export default function ShopProduct() {
 
         const sortBy =
             filter.productfilter?.sortBy ?? null;
-
+        const warehouseId =
+            filter.productfilter?.WarehouseId ?? null
         return {
             CategoryIds: selectedIds,
             MinPrice: minPrice,
             MaxPrice: maxPriceParam,
             IsAvailable: isAvailable,
             SortBy: sortBy,
+            warehouseId: warehouseId,
         };
     }, [filter, maxPrice]);
 
@@ -74,6 +76,7 @@ export default function ShopProduct() {
         debouncedParams.MaxPrice,
         debouncedParams.IsAvailable,
         debouncedParams.SortBy,
+        debouncedParams.warehouseId,
     ]);
 
     const totalItems = products.products?.totalItems ?? 0;
@@ -87,7 +90,8 @@ export default function ShopProduct() {
             debouncedParams.MinPrice,
             debouncedParams.MaxPrice,
             debouncedParams.IsAvailable,
-            debouncedParams.SortBy
+            debouncedParams.SortBy,
+            debouncedParams.warehouseId,
         );
     }, [dispatch, page, debouncedParams]);
 

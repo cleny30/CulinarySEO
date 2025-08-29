@@ -38,29 +38,29 @@ export default function FIlterSider() {
             sortBy: null,
         },
     });
-    // const didInit = useRef(false);
 
-    // useEffect(() => {
-    //     if (maxPrice.raw > 0 && !didInit.current) {
-    //         // only set default once when products are loaded the first time
-    //         form.setValue("price", { from: 0, to: maxPrice.raw });
-    //         dispatch(setPrice({ from: 0, to: maxPrice.raw }));
-    //         didInit.current = true;
-    //     }
-    // }, [maxPrice, form, dispatch]);
-
+    useEffect(() => {
+        form.reset({
+            categories: filterprops.productfilter.selectedCategories ?? [],
+            price: filterprops.productfilter.price ?? { from: 0, to: maxPrice },
+            availability: filterprops.productfilter.availability ?? null,
+            sortBy: filterprops.productfilter.sortBy ?? null,
+        })
+    }, [
+        filterprops.productfilter.selectedCategories,
+        filterprops.productfilter.price,
+        filterprops.productfilter.availability,
+        filterprops.productfilter.sortBy,
+        form,
+    ])
 
     const filterwatchValues = form.watch()
-
-    // useEffect(() => {
-    //     console.log(watchValues, 'watchValues')
-    // }, [watchValues])
 
     useEffect(() => {
         getcategory()
     }, [])
     return (
-        <section className='w-3/12 px-[15px]'>
+        <section className='w-full'>
             <div className='w-full pb-[30px] border-b-[1px] mb-[30px]'>
                 <h6>Filters</h6>
                 <FilterCard name={filterwatchValues} categories={filterprops.productfilter.categories} />

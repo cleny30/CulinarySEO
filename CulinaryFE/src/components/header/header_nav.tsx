@@ -13,11 +13,14 @@ import type { NavItem } from "@/types/home";
 import { useSelector } from "react-redux";
 import type { RootState } from "@/redux/store";
 import { Skeleton } from "../ui/skeleton";
+import { motion, MotionValue } from "framer-motion";
 
 const menuItemStyle =
-  "text-mau-den font-Lucky text-lg bg-transparent h-20 justify-center";
+  "text-mau-den font-Lucky text-lg bg-transparent justify-center";
+const MotionMenuTrigger = motion(NavigationMenuTrigger); 
+const MotionMenuLink = motion(NavigationMenuLink); 
 
-export default function HeaderNav() {
+export default function HeaderNav({ motionHeight }: { motionHeight?: MotionValue<unknown> }) {
   const header = useSelector((state: RootState) => state.home.header);
   return (
     <NavigationMenu className="border-x-1 border-mau-do-color px-4 not-lg:hidden">
@@ -27,9 +30,9 @@ export default function HeaderNav() {
             <NavigationMenuItem key={item.label}>
               {item.children ? (
                 <>
-                  <NavigationMenuTrigger className={cn("pr-3", menuItemStyle)}>
+                  <MotionMenuTrigger className={cn("pr-3", menuItemStyle)} style={{height:motionHeight}}>
                     {item.label}
-                  </NavigationMenuTrigger>
+                  </MotionMenuTrigger>
                   {item.isCategory ? (
                     <NavigationMenuContentCate
                       menuItems={item.children}
@@ -41,12 +44,13 @@ export default function HeaderNav() {
                   )}
                 </>
               ) : (
-                <NavigationMenuLink
+                <MotionMenuLink
                   asChild
                   className={cn("px-5", menuItemStyle)}
+                  style={{height:motionHeight}}
                 >
                   <Link to={item.href || "/"}>{item.label}</Link>
-                </NavigationMenuLink>
+                </MotionMenuLink>
               )}
             </NavigationMenuItem>
           );

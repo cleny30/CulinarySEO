@@ -30,12 +30,12 @@ export default function HeaderNavMobile({
   const header = useSelector((state: RootState) => state.home.header);
   return (
     <Sheet>
-      <SheetTrigger asChild>
+      <SheetTrigger asChild className="lg:hidden">
         <Button variant="ghost" size="icon" className="p-5 hover:bg-white/25">
           <Icon.Menu className="size-7" />
         </Button>
       </SheetTrigger>
-      <SheetContent className="overflow-y-auto" side="top">
+      <SheetContent className="overflow-y-auto lg:hidden" side="top">
         <SheetHeader>
           <SheetTitle>
             {user ? (

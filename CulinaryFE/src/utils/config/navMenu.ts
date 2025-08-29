@@ -52,7 +52,7 @@ export const menuNav: NavItem[] = [
         href: "/menu/desserts",
       },
       {
-        label: "About 3",
+        label: "About 4",
         href: "/menu/desserts",
       },
     ],

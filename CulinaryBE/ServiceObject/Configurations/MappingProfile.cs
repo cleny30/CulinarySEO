@@ -1,5 +1,6 @@
-﻿using AutoMapper;
+using AutoMapper;
 using BusinessObject.Models.Dto;
+using BusinessObject.Models.Dto.Blog;
 using BusinessObject.Models.Dto.Product;
 using BusinessObject.Models.Entity;
 
@@ -160,6 +161,36 @@ namespace ServiceObject.Configurations
             #region Manager
             CreateMap<Manager, ManagerDto>();
             CreateMap<ManagerDto, Manager>();
+            #endregion
+
+            #region Blog
+            CreateMap<Blog, GetBlogDto>()
+                .ForMember(dest => dest.ManagerName, opt => opt.MapFrom(src => src.Manager.FullName))
+                .ForMember(dest => dest.Categories, opt => opt.MapFrom(src => src.BlogCategoryMappings.Select(bcm => new BlogCategories
+                {
+                    CategoryId = bcm.BlogCategory.CategoryId,
+                    CategoryName = bcm.BlogCategory.CategoryName,
+                    CategoryImage = bcm.BlogCategory.CategoryImage
+                }).ToList()));
+
+            CreateMap<BlogComment, GetBlogCommentDto>()
+                .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Customer.FullName))
+                .ForMember(dest => dest.BlogId, opt => opt.MapFrom(src => src.Blog.BlogId))
+                .ForMember(dest => dest.Replies, opt => opt.MapFrom(src => src.ChildComments));
+
+            CreateMap<Blog, GetBlogDetailDto>()
+                .ForMember(dest => dest.ManagerName, opt => opt.MapFrom(src => src.Manager.FullName))
+                .ForMember(dest => dest.Categories, opt => opt.MapFrom(src => src.BlogCategoryMappings.Select(bcm => new BlogCategories
+                {
+                    CategoryId = bcm.BlogCategory.CategoryId,
+                    CategoryName = bcm.BlogCategory.CategoryName,
+                    CategoryImage = bcm.BlogCategory.CategoryImage
+                }).ToList()))
+                .ForMember(dest => dest.Comments, opt => opt.MapFrom(src => src.BlogComments));
+
+            CreateMap<CreateBlogCommentRequestDto, BlogComment>();
+            CreateMap<BlogComment, BlogCommentResponseDto>()
+                .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => src.Customer.FullName));
             #endregion
 
             #region Order

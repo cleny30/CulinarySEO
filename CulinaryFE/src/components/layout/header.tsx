@@ -85,7 +85,7 @@ export default function Header({
     <>
       {headerStyle === "1" && (
         <MotionHeader
-          className="w-full flex flex-col fixed"
+          className="w-full flex flex-col fixed z-50"
           variants={headerVariants}
           initial="visible"
           animate={controls}
@@ -113,7 +113,7 @@ export default function Header({
               "border-b-1 border-b-mau-do-color"
             )}
           >
-            <MotionNav className="flex items-center w-full justify-between container not-lg:py-2">
+            <MotionNav className="flex items-center w-full justify-between layoutContainer not-lg:py-2">
               <HeaderLogo height={imageHeight} />
               <HeaderNav motionHeight={navHeight} />
               <div className="flex items-center">

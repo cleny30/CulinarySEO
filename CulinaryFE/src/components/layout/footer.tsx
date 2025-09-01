@@ -2,6 +2,7 @@ import { Logo } from "@/assets/svg/logo";
 import { storeInfo } from "@/storeInfo";
 import { Icon } from "@/utils/assets/icon";
 import { footerMenu } from "@/utils/config/navMenu";
+import { motion } from "framer-motion";
 import React from "react";
 import { Link } from "react-router-dom";
 import {
@@ -10,14 +11,66 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { useAnimation } from "framer-motion";
 
 const Footer: React.FC = () => {
+  const imgAnimation = useAnimation();
+  const handleMouseMove = (e: React.MouseEvent) => {
+    const { clientX, clientY } = e;
+    const moveX = clientX - window.innerWidth / 2;
+    const moveY = clientY - window.innerHeight / 2;
+    const offsetFactor = 50;
+    imgAnimation.start({
+      x: -moveX / offsetFactor,
+      y: moveY / offsetFactor,
+    });
+  };
+
   return (
-    <footer className="bg-mau-sua-bo">
+    <motion.footer
+      className="bg-mau-sua-bo relative overflow-hidden"
+      onMouseMove={(e) => handleMouseMove(e)}
+    >
+      <motion.div
+        className="absolute right-[10%] top-10"
+        animate={imgAnimation}
+      >
+        <img
+          src="/img/bg_item_tomato.webp"
+          alt="bg_item_tomato_footer"
+          className="size-30 blur-xs"
+        />
+      </motion.div>
+      <motion.div
+        className="absolute -right-10 bottom-30"
+        animate={{
+          transform: ["translateY(10%)", "translateY(-10%)", "translateY(10%)"],
+        }}
+        transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
+      >
+        <img
+          src="/svg/bg_item_bread.svg"
+          alt="bg_item_bread_footer"
+          className="size-40"
+        />
+      </motion.div>
+      <motion.div
+        className="absolute left-[10%] -top-10 opacity-50"
+        animate={{
+          transform: ["translateX(10%)", "translateX(-10%)", "translateX(10%)"],
+        }}
+        transition={{ repeat: Infinity, duration: 2.5, ease: "linear" }}
+      >
+        <img
+          src="/svg/bg_item_bufalo_bread.svg"
+          alt="bg_item_bufalo_bread_footer"
+          className="size-50"
+        />
+      </motion.div>
       <div className="flex flex-col">
         {/* =========================== Shop logo ================ */}
         <div className="border-b-1 border-mau-nau-vien justify-center flex not-md:hidden">
-          <div className="container w-full flex justify-center relative p-14">
+          <div className="layoutContainer w-full flex justify-center relative p-14">
             <Link to={"/"}>
               <Logo color="#222222" className="h-24" />
             </Link>
@@ -25,7 +78,7 @@ const Footer: React.FC = () => {
         </div>
         {/* =========================== Footer content ================ */}
         <div className="flex justify-center">
-          <div className="container flex w-full px-1 gap-x-4 justify-between flex-wrap not-lg:flex-col">
+          <div className="layoutContainer flex w-full px-1 gap-x-4 justify-between flex-wrap not-lg:flex-col">
             {/* ==================== Footer left heading ==================== */}
             <div className="flex items-start w-full md:w-[345px] gap-8">
               <Link to={"/"} className="mt-8 md:hidden">
@@ -40,7 +93,7 @@ const Footer: React.FC = () => {
             </div>
             {/* ================== Footer menu  =======================*/}
             <nav className="px-[1px] bg-gradient-to-b from-mau-nau-vien to-mau-sua-bo not-xl:flex-1 not-lg:hidden">
-              <div className="flex items-start bg-mau-sua-bo px-8 justify-between gap-x-4">
+              <div className="flex items-start bg-mau-sua-bo h-full px-8 justify-between gap-x-4">
                 {footerMenu.map((col) => (
                   <div key={col.label} className="space-y-4 py-8 lg:p-4 xl:p-8">
                     <h1 className="font-Lucky text-2xl uppercase">
@@ -67,7 +120,7 @@ const Footer: React.FC = () => {
               <Accordion
                 type="single"
                 collapsible
-                className="bg-mau-sua-bo w-full"
+                className="w-full"
               >
                 {footerMenu.map((col) => (
                   <AccordionItem
@@ -127,7 +180,7 @@ const Footer: React.FC = () => {
         </div>
         {/* ======================= Footer bottom ================== */}
         <div className="border-t-1 border-mau-nau-vien flex justify-center">
-          <div className="container p-2 flex justify-between items-center gap-8">
+          <div className="layoutContainer p-2 flex justify-between items-center gap-8">
             <p className="text-sm md:text-base">
               Đang đói bụng? hãy đến khu vui chơi giải trí với giá chỉ 50k/trẻ
               em
@@ -156,7 +209,7 @@ const Footer: React.FC = () => {
           </div>
         </div>
       </div>
-    </footer>
+    </motion.footer>
   );
 };
 

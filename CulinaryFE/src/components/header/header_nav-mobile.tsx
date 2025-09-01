@@ -21,6 +21,7 @@ import type { RootState } from "@/redux/store";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import type { UserSession } from "@/types/userSession";
 import { Logo } from "@/assets/svg/logo";
+import { Skeleton } from "../ui/skeleton";
 
 export default function HeaderNavMobile({
   user,
@@ -36,7 +37,7 @@ export default function HeaderNavMobile({
         </Button>
       </SheetTrigger>
       <SheetContent className="overflow-y-auto lg:hidden" side="top">
-        <SheetHeader>
+        <SheetHeader className="pb-0">
           <SheetTitle>
             {user ? (
               <Link
@@ -47,7 +48,9 @@ export default function HeaderNavMobile({
                   <AvatarImage
                     src={user.profilePic || "https://github.com/shadcn.png"}
                   />
-                  <AvatarFallback>{user.fullName}</AvatarFallback>
+                  <AvatarFallback>
+                    <Skeleton className="rounded-full size-full" />
+                  </AvatarFallback>
                 </Avatar>
                 <span>{user.fullName}</span>
               </Link>
@@ -78,7 +81,7 @@ const RenderMobileMenuItem = ({ item }: { item: NavItem }) => {
   if (item.children) {
     return (
       <AccordionItem value={item.label} className="border-none">
-        <AccordionTrigger className="py-4 font-semibold uppercase text-base tracking-wider font-Lucky">
+        <AccordionTrigger className="py-4 font-semibold uppercase text-base tracking-wider font-Lucky cursor-pointer">
           {item.label}
         </AccordionTrigger>
         <AccordionContent>
@@ -95,7 +98,9 @@ const RenderMobileMenuItem = ({ item }: { item: NavItem }) => {
                         src={child.image || "https://github.com/shadcn.png"}
                         className="bg-gray-100"
                       />
-                      <AvatarFallback>{child.label}</AvatarFallback>
+                      <AvatarFallback>
+                        <Skeleton className="rounded-md size-full" />
+                      </AvatarFallback>
                     </Avatar>
                     {child.label}
                   </Link>
@@ -104,7 +109,7 @@ const RenderMobileMenuItem = ({ item }: { item: NavItem }) => {
             </ul>
           ) : (
             <ul className="flex flex-col gap-4 px-4">
-              {item.children?.map((child,index) => (
+              {item.children?.map((child, index) => (
                 <li key={child.label} className="flex items-center gap-x-2">
                   <Link
                     to={child.href || "/"}

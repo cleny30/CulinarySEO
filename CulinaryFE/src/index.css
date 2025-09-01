@@ -18,11 +18,12 @@
   --radius: 0.625rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.2520 0 0);
+  --foregroundd: #50706a;
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.1450 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.1450 0 0);
-  --primary: oklch(0.4758 0.0867 174.3686);
+  --primary: oklch(47.584% 0.08666 174.403);
   --primary-foreground: oklch(1.0000 0 0);
   --secondary: oklch(0.9398 0.0234 82.1203);
   --secondary-foreground: oklch(0.2520 0 0);

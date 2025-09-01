@@ -1,10 +1,12 @@
 import React from "react";
-import HomeSection1 from "./home_session_1";
+import HeroSection from "./home_hero_section";
+import HomeSection2 from "./home_session_2";
 
 export default function HomeContainer() {
   return (
-    <div>
-      <HomeSection1 />
-    </div>
+    <>
+      <HeroSection />
+      <HomeSection2 />
+    </>
   );
 }

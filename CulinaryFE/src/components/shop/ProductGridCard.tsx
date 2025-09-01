@@ -27,7 +27,7 @@ function ProductGridCard({ product }: ProductCardProps) {
                     </Badge>
                 )}
                 <LazyLoadImage
-                    src={"/img/foodholder.jpg"} // replace with product.image if you have real images
+                    src={"/img/foodholder.jpg"} 
                     alt={product.productName}
                     className="w-full h-48 object-cover rounded-lg"
                 />

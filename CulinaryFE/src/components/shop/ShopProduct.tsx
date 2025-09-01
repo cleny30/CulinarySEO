@@ -1,7 +1,5 @@
 import { useEffect, useMemo, useState, memo, lazy } from 'react'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
-const ProductGridView = lazy(() => import('./ProductGridView'))
-// import ProductGridView from './ProductGridView'
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import { fetchProducts } from '@/redux/productview/apiRequest'
 import type { RootState } from '@/redux/store'
@@ -15,8 +13,8 @@ import {
 } from "@/components/ui/pagination"
 import { useDebounce } from '@/utils/hooks/useDebounce'
 import { setSortBy } from '@/redux/product/productfilterSlice'
-import MobileFilterSider from './MobileFilterSider'
-
+const ProductGridView = lazy(() => import('./ProductGridView'))
+const MobileFilterSider = lazy(() => import('./MobileFilterSider'))
 function ShopProduct() {
     const dispatch = useDispatch();
     const products = useSelector((state: RootState) => state.productview, shallowEqual);
@@ -94,7 +92,8 @@ function ShopProduct() {
     return (
         <section className='px-[15px] md:w-3/4 w-full'>
             <div className='w-full'>
-                <img src="/img/promotion_banner.webp" alt="promotion-banner" />
+                <img src={'/img/promotion_banner.webp'} alt="promotion-banner" loading="eager" fetchPriority="high" width={1000}
+                    height={300} />
             </div>
             <div className='w-full flex items-center justify-between border-b-1 py-[15px]'>
                 <div className='md:hidden w-full flex justify-start items-center'>

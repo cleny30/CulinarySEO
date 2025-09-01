@@ -1,8 +1,7 @@
-
-import FIlterContainer from '@/components/shop/FIlterContainer';
-import FIlterSider from '@/components/shop/FIlterSider';
-import ShopProduct from '@/components/shop/ShopProduct';
-import ShopTitle from "@/components/shop/ShopTitle";
+import { lazy } from 'react'
+const FIlterContainer = lazy(() => import('@/components/shop/FIlterContainer'));
+const ShopProduct = lazy(() => import('@/components/shop/ShopProduct'));
+const ShopTitle = lazy(() => import('@/components/shop/ShopTitle'));
 
 export default function ShoppingPage() {
     return (

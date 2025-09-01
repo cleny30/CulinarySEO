@@ -6,9 +6,9 @@ import {
     FormItem,
     FormLabel,
 } from "@/components/ui/form";
-import { useDispatch, useSelector } from 'react-redux'
+import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import type { RootState } from '@/redux/store'
-import { useEffect } from 'react'
+import { memo, useEffect } from 'react'
 import { getFilter } from "@/redux/product/apiRequest"
 import { filterSchema, type FilterFormValues } from "@/schemas/filter";
 import { useForm } from "react-hook-form";
@@ -19,10 +19,9 @@ import { Slider } from "../ui/slider";
 import FilterCard from "./FilterCard";
 import { Skeleton } from "../ui/skeleton";
 
-export default function FIlterSider() {
+function FIlterSider() {
     const dispatch = useDispatch()
-    const filterprops = useSelector((state: RootState) => state.productfilter)
-    const products = useSelector((state: RootState) => state.productview)
+    const filterprops = useSelector((state: RootState) => state.productfilter, shallowEqual)
     // const maxPrice = useMemo(() => getMaxPrice(products.products ?? null), [products.products]);
     const maxPrice = 500000; // Static max price for the entire catalog
     const getcategory = async () => (
@@ -40,12 +39,21 @@ export default function FIlterSider() {
     });
 
     useEffect(() => {
-        form.reset({
+        const newValues = {
             categories: filterprops.productfilter.selectedCategories ?? [],
             price: filterprops.productfilter.price ?? { from: 0, to: maxPrice },
             availability: filterprops.productfilter.availability ?? null,
             sortBy: filterprops.productfilter.sortBy ?? null,
-        })
+        };
+        const currentValues = form.getValues();
+
+        // compare shallowly before calling reset
+        const isSame =
+            JSON.stringify(newValues) === JSON.stringify(currentValues);
+
+        if (!isSame) {
+            form.reset(newValues);
+        }
     }, [
         filterprops.productfilter.selectedCategories,
         filterprops.productfilter.price,
@@ -256,3 +264,4 @@ export default function FIlterSider() {
         </section>
     )
 }
+export default memo(FIlterSider)

@@ -7,7 +7,7 @@ export default function FIlterContainer() {
   return (
     <>
       {/* Desktop Sidebar */}
-      <aside className="hidden md:block w-3/12 px-[15px]">
+      <aside className="hidden lg:block w-3/12 px-[15px]">
         <FIlterSider />
       </aside>
     </>

@@ -5,7 +5,7 @@ import FIlterSider from './FIlterSider'
 
 export default function MobileFilterSider() {
     return (
-        <div className="md:hidden px-[15px] mb-4">
+        <div className="lg:hidden px-[15px]">
             <Sheet>
                 <SheetTrigger asChild>
                     <Button variant="outline" className="w-full flex items-center gap-2">
@@ -13,7 +13,7 @@ export default function MobileFilterSider() {
                         Filters
                     </Button>
                 </SheetTrigger>
-                <SheetContent forceMount side="left" className="w-[80%] px-[15px] overflow-y-auto">
+                <SheetContent forceMount side="left" className="w-[80%] max-sm:w-full px-[15px] overflow-y-auto">
                     <FIlterSider />
                 </SheetContent>
             </Sheet>

@@ -90,13 +90,13 @@ function ShopProduct() {
         );
     }, [page, debouncedParams]);
     return (
-        <section className='px-[15px] md:w-3/4 w-full'>
+        <section className='px-[15px] lg:w-3/4 w-full'>
             <div className='w-full'>
                 <img src={'/img/promotion_banner.webp'} alt="promotion-banner" loading="eager" fetchPriority="high" width={1000}
                     height={300} />
             </div>
             <div className='w-full flex items-center justify-between border-b-1 py-[15px]'>
-                <div className='md:hidden w-full flex justify-start items-center'>
+                <div className='lg:hidden w-full flex justify-start items-center'>
                     <MobileFilterSider />
                 </div>
                 <div className='w-full flex items-center gap-2 justify-end'>

@@ -9,7 +9,7 @@ export default function ProductGridView({ products }: { products: ProductResult 
     const fetchingproducts = useSelector((state: RootState) => state.productview.fetching, shallowEqual);
     
     return (
-        <div className="grid gap-6 grid-cols-4 mt-[15px] w-full">
+        <div className="grid max-sm:gap-3 gap-6 max-sm:grid-cols-1 max-md:grid-cols-2 max-lg:grid-cols-3 grid-cols-4 mt-[15px] w-full">
             {
                 fetchingproducts
                     ?

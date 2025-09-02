@@ -26,7 +26,7 @@ const rootReducer = combineReducers({
   auth: persistReducer(authPersistConfig, authReducer),
   productfilter: productfilterReducer,
   productview: productView,
-  home: homeReducer
+  home: homeReducer,
   productdetail: productDetail
 });
 

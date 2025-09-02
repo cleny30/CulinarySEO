@@ -10,9 +10,14 @@ import {
   CornerLeftUp,
   CornerDownRight,
   ShoppingCart,
+  MapPin,
+  Menu,
 } from "lucide-react";
 import { GoogleIcon } from "@/assets/svg/google";
 import type { SVGProps, ImgHTMLAttributes } from "react";
+import { SocialBg } from "@/assets/svg/socialBg";
+import { FacebookIcon } from "@/assets/svg/facebook";
+import { InstagramIcon } from "@/assets/svg/instagram";
 
 export const Icon = {
   Email: (props: LucideProps) => <Mail {...props} />,
@@ -26,7 +31,12 @@ export const Icon = {
   CornerLeftUp: (props: LucideProps) => <CornerLeftUp {...props} />,
   CornerDownRight: (props: LucideProps) => <CornerDownRight {...props} />,
   ShoppingCart: (props: LucideProps) => <ShoppingCart {...props} />,
+  MapPin: (props: LucideProps) => <MapPin {...props} />,
+  Menu: (props: LucideProps) => <Menu {...props} />,
   Authen: (props: ImgHTMLAttributes<HTMLImageElement>) => (
     <img src={"/svg/authen.svg"} {...props} />
   ),
+  SocialBg: (props: SVGProps<SVGSVGElement>) => <SocialBg {...props} />,
+  Facebook: (props: SVGProps<SVGSVGElement>) => <FacebookIcon {...props} />,
+  Instagram: (props: SVGProps<SVGSVGElement>) => <InstagramIcon {...props} />,
 };

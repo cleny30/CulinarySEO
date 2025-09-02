@@ -1,31 +1,16 @@
 import { Logo } from "@/assets/svg/logo";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import type { SVGMotionProps } from "framer-motion";
 
-export default function HeaderLogo() {
+const MotionLink = motion(Link);
+
+const HeaderLogo = (props: SVGMotionProps<SVGSVGElement>) => {
   return (
-    <Link to={"/"} className={``}>
-      <Logo color="#222222" />
-    </Link>
+    <MotionLink to={"/"} className={`ml-2`}>
+      <Logo color="#222222" className="" {...props} />
+    </MotionLink>
   );
-}
+};
 
-// import { useDispatch } from "react-redux";
-// import styles from "@/assets/css/home.module.css";
-// import { Button } from "../button";
-// import { useNavigate } from "react-router-dom";
-// import { logout } from "@/redux/auth/apiRequest";
-// import { printToast } from "@/utils/constants/toast/printToast";
-
-// const dispatch = useDispatch();
-// const navigate = useNavigate();
-// const handleLogout = async () => {
-//   await logout(dispatch, navigate).then(printToast);
-// };
-{
-  /* Hello {user?.fullName}
-{user && (
-  <Button variant={"secondary"} type="button" onClick={handleLogout}>
-    Logout
-  </Button>
-)} */
-}
+export default HeaderLogo;

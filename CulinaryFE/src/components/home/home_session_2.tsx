@@ -1,27 +1,52 @@
 import { storeInfo } from "@/storeInfo";
-import { LazyLoadImage } from "react-lazy-load-image-component";
 import { motion } from "framer-motion";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Skeleton } from "../ui/skeleton";
 import { Icon } from "@/utils/assets/icon";
 
 function IntroduceContent() {
+  const textVariant = {
+    from: {
+      transform: "rotate(-10deg)",
+      X: 5,
+      y: 5,
+      opacity: 0,
+    },
+    to: {
+      transform: "rotate(0deg)",
+      X: 0,
+      y: 0,
+      opacity: 1,
+    },
+  };
   return (
     <div className="flex flex-col gap-y-3 lg:gap-y-4">
       <motion.h5
-        transition={{ duration: 1, delay: 0.3 }}
+        variants={textVariant}
+        initial={"from"}
+        viewport={{ once: true }}
+        whileInView={"to"}
+        transition={{ duration: 0.7, delay: 0.3 }}
         className="introduce-subtext text-primary font-semibold text-base lg:text-lg mb-2"
       >
         {storeInfo.section_introduce_subtext}
       </motion.h5>
       <motion.h1
-        transition={{ duration: 0.7 }}
-        className="introduce-title text-3xl lg:text-[2.75rem] font-Lucky tracking-wide leading-12"
+        variants={textVariant}
+        initial={"from"}
+        viewport={{ once: true }}
+        whileInView={"to"}
+        transition={{ duration: 0.5 }}
+        className="introduce-title text-3xl lg:text-[2.75rem] font-Lucky tracking-wide leading-10 lg:leading-12 uppercase"
       >
         {storeInfo.section_introduce_title}
       </motion.h1>
       <motion.p
-        transition={{ duration: 0.7 }}
+        variants={textVariant}
+        initial={"from"}
+        viewport={{ once: true }}
+        whileInView={"to"}
+        transition={{ duration: 0.5 }}
         className="introduce-subtitle text-[.938rem] lg:text-base"
       >
         {storeInfo.section_introduce_subtitle}
@@ -33,18 +58,28 @@ function IntroduceContent() {
 function TwoBanner() {
   return (
     <div className="relative flex-1 md:pr-7.5 md:pb-21.5">
-      <LazyLoadImage
+      <motion.img
+        initial={{ x: "-50%", opacity: 0 }}
+        whileInView={{ x: 0, opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.5 }}
         src={storeInfo.section_introduce_img_1}
         alt="section_introduce_img_1"
         className="rounded-lg w-full lg:w-[422px] md:h-[522px] object-cover not-md:aspect-square"
       />
-      <div className="pt-5 pl-5 bg-background absolute right-0 bottom-0 rounded-lg overflow-hidden not-md:hidden">
-        <LazyLoadImage
+      <motion.div
+        initial={{ x: "25%", y: "25%", opacity: 0 }}
+        whileInView={{ x: 0, y: 0, opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.5 }}
+        className="pt-5 pl-5 bg-background absolute right-0 bottom-0 rounded-lg overflow-hidden not-md:hidden"
+      >
+        <img
           src={storeInfo.section_introduce_img_2}
           alt="section_introduce_img_2"
           className="rounded-lg w-[330px] h-[411px]"
         />
-      </div>
+      </motion.div>
     </div>
   );
 }
@@ -68,18 +103,34 @@ function AvatarGroup() {
 }
 
 function RightLayout() {
-  const h1Style = "font-Lucky text-primary text-4xl lg:text-6xl";
-  const h5Style = "font-Lucky text-base";
+  const h1Style = "font-Lucky text-primary text-4xl lg:text-6xl uppercase";
+  const h5Style = "font-Lucky text-base uppercase";
   return (
     <div className="shrink-0 basis-[430px] lg:basis-[477px] flex flex-col items-start gap-y-8 justify-center lg:justify-between py-4">
       <IntroduceContent />
       <div className="flex flex-col gap-y-8 items-start">
-        <div className="flex items-center gap-7">
+        <motion.div
+          initial={{
+            x: 5,
+            y: 5,
+            transform: "rotate(-10deg)",
+            opacity: 0,
+          }}
+          viewport={{ once: true }}
+          whileInView={{
+            transform: "rotate(0deg)",
+            x: 0,
+            y: 0,
+            opacity: 1,
+          }}
+          transition={{ duration: 0.5 }}
+          className="flex items-center gap-7"
+        >
           <AvatarGroup />
           <p className="font-Lucky text-lg">
             Tin tưởng bởi 1k+ <br /> khách hàng
           </p>
-        </div>
+        </motion.div>
         <div className="grid grid-cols-2 gap-4">
           <div className="flex flex-col items-start gap-2">
             <h1 className={h1Style}>40+</h1>
@@ -107,4 +158,3 @@ export default function SectionIntroduce() {
     </section>
   );
 }
-

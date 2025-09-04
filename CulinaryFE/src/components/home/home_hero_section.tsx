@@ -134,6 +134,7 @@ function BannerCarousel() {
                 className={`h-auto w-full lg:${index + 1 == 1 && "rotate-12"}`}
                 initial={{ scale: 0.1 }}
                 whileInView={{ scale: 1 }}
+                viewport={{once: true}}
                 transition={{ duration: 0.5 }}
               />
               <MotionPriceTag variants={variants} index={index} />

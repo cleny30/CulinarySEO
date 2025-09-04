@@ -4,7 +4,11 @@ import { Button } from "../ui/button";
 import { Link } from "react-router-dom";
 import Fade from "embla-carousel-fade";
 import Autoplay from "embla-carousel-autoplay";
-import { motion, useAnimation } from "framer-motion";
+import {
+  motion,
+  useMotionValue,
+  useTransform,
+} from "framer-motion";
 import type { Variants } from "framer-motion";
 import {
   Carousel,
@@ -31,13 +35,13 @@ const MotionPriceTag = ({
 }) => {
   return (
     <motion.div
-      className="absolute z-10 top-4 left-8 size-32 flex flex-col items-center justify-center"
+      className="absolute z-10 top-3 left-10 md:left-5 md:top-0 lg:top-10 lg:left-20 size-24 lg:size-32 flex flex-col items-center justify-center"
       variants={variants}
       initial="hidden"
       whileInView="visible"
     >
-      <p className="text-base text-white font-Lucky">Giá chỉ</p>
-      <p className="text-2xl text-white tracking-wider">
+      <p className="text-sm lg:text-base text-white font-Lucky">Giá chỉ</p>
+      <p className="text-lg lg:text-2xl text-white tracking-wider">
         <span className="font-Lucky">
           {storeInfo[`home_hero_slide_price${index + 1}` as HeroSlidePriceKey]}
         </span>
@@ -64,34 +68,86 @@ export default function HeroSection() {
       },
     },
   };
-  const imgAnimation = useAnimation();
+  const textVariant = {
+    from: {
+      transform: "rotate(-10deg)",
+      X: 5,
+      y: 5,
+      opacity: 0,
+    },
+    to: {
+      transform: "rotate(0deg)",
+      X: 0,
+      y: 0,
+      opacity: 1,
+    },
+  };
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  const onionX = useTransform(mouseX, [-window.innerWidth / 2, window.innerWidth / 2], [10, -10]);
+  const onionY = useTransform(mouseY, [-window.innerHeight / 2, window.innerHeight / 2], [-10, 10]);
+  const leafX = useTransform(mouseX, [-window.innerWidth / 2, window.innerWidth / 2], [50, -50]);
+  const leafY = useTransform(mouseY, [-window.innerHeight / 2, window.innerHeight / 2], [-30, 30]);
+
+
   const handleMouseMove = (e: React.MouseEvent) => {
     const { clientX, clientY } = e;
-    const moveX = clientX - window.innerWidth / 2;
-    const moveY = clientY - window.innerHeight / 2;
-    const offsetFactor = 50;
-    imgAnimation.start({
-      x: moveX / offsetFactor,
-      y: moveY / offsetFactor,
-    });
+    mouseX.set(clientX - window.innerWidth / 2);
+    mouseY.set(clientY - window.innerHeight / 2);
   };
 
   return (
-    <motion.section className="section_home_hero relative overflow-hidden pt-40 z-1 px-4" onMouseMove={(e) => handleMouseMove(e)}>
-      <div className="container mx-auto pt-5 h-[75vh] z-1">
-        <LogoMonoColor className="text-primary/10 h-50 mx-auto z-1 relative" />
-        <div className="flex items-center gap-x-2">
-          <div className="basis-lg flex flex-col gap-y-2.5 shrink-0">
-            <h5 className="sub-text text-primary font-semibold text-lg mb-2">
+    <motion.section
+      className="section_home_hero relative overflow-hidden pt-35 pb-10 z-1 px-4"
+      onMouseMove={(e) => handleMouseMove(e)}
+    >
+      <div className="container mx-auto pt-5 lg:h-[75vh] z-1">
+        <LogoMonoColor
+          className="mx-auto w-[95%] not-lg:hidden -z-1 relative -mb-8"
+          initial={{ y: "50%", opacity: 0 }}
+          animate={{ y: "0%", opacity: 1 }}
+          transition={{
+            y: { duration: 1, ease: "easeInOut" },
+            opacity: { duration: 1, ease: "linear" },
+          }}
+        />
+        <div className="flex items-center gap-2 not-lg:h-full not-lg:flex-col">
+          <div className="lg:basis-lg flex flex-col gap-y-2.5 shrink-0 pb-15">
+            <motion.h5
+              variants={textVariant}
+              initial={"from"}
+              animate={"to"}
+              transition={{ duration: 1, delay:0.3 }}
+              className="sub-text text-primary font-semibold text-lg mb-2"
+            >
               {storeInfo.home_hero_subtext}
-            </h5>
-            <h1 className="hero-title text-5xl font-Lucky tracking-wide leading-15">
+            </motion.h5>
+            <motion.h1
+              variants={textVariant}
+              initial={"from"}
+              animate={"to"}
+              transition={{ duration: 0.7 }}
+              className="hero-title text-5xl font-Lucky tracking-wide leading-15"
+            >
               {storeInfo.home_hero_title}
-            </h1>
-            <p className="hero-subtitle text-base pr-10">
+            </motion.h1>
+            <motion.p
+              variants={textVariant}
+              initial={"from"}
+              animate={"to"}
+              transition={{ duration: 0.7 }}
+              className="hero-subtitle text-base pr-10"
+            >
               {storeInfo.home_hero_subtitle}
-            </p>
-            <div className="hero-cta mt-4">
+            </motion.p>
+            <motion.div
+              variants={textVariant}
+              initial={"from"}
+              animate={"to"}
+              className="hero-cta mt-4"
+              transition={{ duration: 0.7, delay:0.3 }}
+            >
               <Button
                 variant={"outline"}
                 size={"xl"}
@@ -101,9 +157,9 @@ export default function HeroSection() {
                   {storeInfo.home_hero_cta_label}
                 </Link>
               </Button>
-            </div>
+            </motion.div>
           </div>
-          <div>
+          <div className="not-lg:px-10">
             <Carousel
               plugins={[Fade({ active: true }), Autoplay({ delay: 5000 })]}
               opts={{ loop: true, align: "center" }}
@@ -124,7 +180,9 @@ export default function HeroSection() {
                             }` as HeroSlideImageKey
                           ]
                         }
-                        className="h-auto w-full"
+                        className={`h-auto w-full ${
+                          index + 1 == 1 && "rotate-12"
+                        }`}
                         initial={{ scale: 0.1 }}
                         whileInView={{ scale: 1 }}
                         transition={{ duration: 0.5 }}
@@ -149,23 +207,23 @@ export default function HeroSection() {
         className="absolute bottom-0 right-0 h-auto"
       />
       <motion.div
-        className="absolute left-[40%] top-[40%] z-2"
-        animate={imgAnimation}
+        className="absolute left-[38%] top-[40%] z-2 not-lg:hidden"
+        style={{ x: onionX, y: onionY }}
       >
         <img
           src="/img/bg_item_onion.webp"
-          alt="bg_item_tomato_footer"
-          className="size-20 blur-xs"
+          alt="bg_item_onion"
+          className="h-18 blur-xs"
         />
       </motion.div>
       <motion.div
-        className="absolute left-[35%] bottom-[10%] z-2"
-        animate={imgAnimation}
+        className="absolute left-[35%] bottom-[10%] z-2 not-lg:hidden"
+        style={{ x: leafX, y: leafY }}
       >
         <img
           src="/img/bg_item_leaf.webp"
-          alt="bg_item_tomato_footer"
-          className="h-20 blur-xs"
+          alt="bg_item_leaf"
+          className="h-22 blur-xs"
         />
       </motion.div>
     </motion.section>

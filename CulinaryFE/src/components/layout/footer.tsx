@@ -2,7 +2,7 @@ import { Logo } from "@/assets/svg/logo";
 import { storeInfo } from "@/storeInfo";
 import { Icon } from "@/utils/assets/icon";
 import { footerMenu } from "@/utils/config/navMenu";
-import { motion } from "framer-motion";
+import { motion, useMotionValue, useTransform } from "framer-motion";
 import React from "react";
 import { Link } from "react-router-dom";
 import {
@@ -11,19 +11,24 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { useAnimation } from "framer-motion";
 
 const Footer: React.FC = () => {
-  const imgAnimation = useAnimation();
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  const tomatoX = useTransform(
+    mouseX,
+    [-window.innerWidth / 2, window.innerWidth / 2],
+    [10, -10]
+  );
+  const tomatoY = useTransform(
+    mouseY,
+    [-window.innerHeight / 2, window.innerHeight / 2],
+    [-10, 10]
+  );
   const handleMouseMove = (e: React.MouseEvent) => {
     const { clientX, clientY } = e;
-    const moveX = clientX - window.innerWidth / 2;
-    const moveY = clientY - window.innerHeight / 2;
-    const offsetFactor = 50;
-    imgAnimation.start({
-      x: -moveX / offsetFactor,
-      y: moveY / offsetFactor,
-    });
+    mouseX.set(clientX - window.innerWidth / 2);
+    mouseY.set(clientY - window.innerHeight / 2);
   };
 
   return (
@@ -33,7 +38,7 @@ const Footer: React.FC = () => {
     >
       <motion.div
         className="absolute right-[10%] top-10"
-        animate={imgAnimation}
+        style={{ x: tomatoX, y: tomatoY }}
       >
         <img
           src="/img/bg_item_tomato.webp"
@@ -117,11 +122,7 @@ const Footer: React.FC = () => {
             </nav>
             {/* ================== Footer menu  =======================*/}
             <nav className="flex-1 lg:hidden">
-              <Accordion
-                type="single"
-                collapsible
-                className="w-full"
-              >
+              <Accordion type="single" collapsible className="w-full">
                 {footerMenu.map((col) => (
                   <AccordionItem
                     value={`item-${col.label}`}

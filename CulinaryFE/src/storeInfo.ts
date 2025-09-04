@@ -26,4 +26,12 @@ export const storeInfo = {
   home_hero_slide_price1: "30,000",
   home_hero_slide_price2: "26,500",
   home_hero_slide_price3: "31,340",
+
+  section_introduce_show: true,
+  section_introduce_img_1: "/img/section_introduce_img1.webp",
+  section_introduce_img_2: "/img/section_introduce_img2.webp",
+  section_introduce_subtext: "Mang đến sự tươi mới",
+  section_introduce_title: "Thoã mãn cơn đói, giải toả cơn khát của bạn",
+  section_introduce_subtitle: "Lorem ipsum dolor sit amet consectetur. Varius nunc sagittis amet duis id tristique odio phasellus. Arcu ultricies nisi bibendum tellus amet. Vel nisl gravida hac euismod odio sed sem. Molestie blandit id enim lectus.",
+  
 };

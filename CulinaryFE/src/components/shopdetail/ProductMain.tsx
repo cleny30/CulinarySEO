@@ -16,41 +16,42 @@ import { formatCurrency } from "@/utils/constants/product/product";
 
 export default function ProductMain({ productdetail }: { productdetail: ProductDetail | null }) {
     const [quantity, setQuantity] = useState<number>(1)
-    
+
     const increase = () => setQuantity((prev) => prev + 1)
     const decrease = () => setQuantity((prev) => (prev > 1 ? prev - 1 : 1))
-    const reviewCount= useMemo(()=>{
-        return productdetail?.reviews.filter(obj => obj.rating).length
-    },[productdetail])
+    const reviewCount = useMemo(() => {
+
+        return productdetail?.reviews ? productdetail?.reviews.filter(obj => obj.rating).length : null
+    }, [productdetail])
     return (
         <section className="pt-20">
             <div className="max-w-[1400px] w-full h-full mx-auto px-[15px]">
-                <div className="w-full h-full flex gap-8 items-start">
-                    <div className="w-[calc(40%-30px)] flex flex-col gap-4">
+                <div className="w-full h-full flex gap-8 items-start max-md:flex-col">
+                    <div className="w-[calc(40%-30px)] max-md:w-full flex flex-col gap-4">
                         <div className="w-full h-full">
                             <img src={"/img/foodholder.jpg"} alt="" className="object-fill" />
                         </div>
                         <div className="w-full">
                             <Carousel>
                                 <CarouselContent>
-                                    <CarouselItem className="md:basis-1/2 lg:basis-1/3">
+                                    <CarouselItem className="lg:basis-1/3 md:basis-1/2 basis-1/3">
                                         <img src={"/img/foodholder.jpg"} alt="" className="object-fill" />
                                     </CarouselItem>
-                                    <CarouselItem className="md:basis-1/2 lg:basis-1/3">
+                                    <CarouselItem className="lg:basis-1/3 md:basis-1/2 basis-1/3">
                                         <img src={"/img/foodholder.jpg"} alt="" className="object-fill" />
                                     </CarouselItem>
-                                    <CarouselItem className="md:basis-1/2 lg:basis-1/3">
+                                    <CarouselItem className="lg:basis-1/3 md:basis-1/2 basis-1/3">
                                         <img src={"/img/foodholder.jpg"} alt="" className="object-fill" />
                                     </CarouselItem>
-                                    <CarouselItem className="md:basis-1/2 lg:basis-1/3">
+                                    <CarouselItem className="lg:basis-1/3 md:basis-1/2 basis-1/3">
                                         <img src={"/img/foodholder.jpg"} alt="" className="object-fill" />
                                     </CarouselItem>
                                 </CarouselContent>
                             </Carousel>
                         </div>
                     </div>
-                    <div className="flex flex-col gap-4 w-[calc(50%+30px)] h-full items-start justify-start">
-                        <div className="pb-4 border-b-1">
+                    <div className="flex flex-col gap-4 w-[calc(50%+30px)] max-md:w-full h-full items-start justify-start">
+                        <div className="pb-4 border-b-1 w-full">
                             <strong className="text-[40px]">{productdetail?.productName}</strong>
                         </div>
                         <div>
@@ -74,7 +75,7 @@ export default function ProductMain({ productdetail }: { productdetail: ProductD
                                         {formatCurrency(productdetail.finalPrice)}
                                     </span>
                                     <span className='line-through text-gray-400'>
-                                        {formatCurrency(productdetail.price)}
+                                        {formatCurrency(productdetail?.price)}
                                     </span>
                                 </div>
                             ) :
@@ -122,10 +123,12 @@ export default function ProductMain({ productdetail }: { productdetail: ProductD
                         </div>
                         <div className="flex items-center gap-4">
                             <Button
+                                className="px-12"
                                 size={"xl"}>
                                 Add to Cart
                             </Button>
                             <Button
+                                className="px-12"
                                 size={"xl"}>
                                 Buy it now
                             </Button>

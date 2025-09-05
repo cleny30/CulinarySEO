@@ -11,7 +11,7 @@ export interface ProductDetail {
   productName: string | null;
   shortDescription: string | null;
   longDescription: string | null;
-  price: number | null;
+  price: number 
   discount: number | null;
   finalPrice: number | null;
   averageRating:number | null;

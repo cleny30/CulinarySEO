@@ -121,14 +121,14 @@ export default function ProductMain({ productdetail }: { productdetail: ProductD
                                 </Button>
                             </div>
                         </div>
-                        <div className="flex items-center gap-4">
+                        <div className="flex max-w-full w-full justify-center items-center gap-4">
                             <Button
-                                className="px-12"
+                                // className="px-6"
                                 size={"xl"}>
                                 Add to Cart
                             </Button>
                             <Button
-                                className="px-12"
+                                // className="px-6"
                                 size={"xl"}>
                                 Buy it now
                             </Button>

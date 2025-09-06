@@ -50,7 +50,7 @@ export default function RelatedProduct({ productdetail }: { productdetail: Produ
                                         >
                                             <Card
                                                 className="p-2 hover:shadow-lg transition-shadow cursor-pointer"
-                                                onClick={() => navigate(`/shop/${product.productId}`)}
+                                                onClick={() => navigate(`/shop/${product.slug}/${product.productId}`)}
                                             >
                                                 <div className="relative">
                                                     {product.discount && (

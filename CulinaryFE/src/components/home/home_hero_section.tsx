@@ -12,6 +12,7 @@ import {
   CarouselItem,
 } from "@/components/ui/carousel";
 import { Icon } from "@/utils/assets/icon";
+import { textSkewIn } from "@/utils/constants/effect";
 
 type HeroSlideImageKey =
   | "home_hero_slide_image1"
@@ -134,7 +135,7 @@ function BannerCarousel() {
                 className={`h-auto w-full lg:${index + 1 == 1 && "rotate-12"}`}
                 initial={{ scale: 0.1 }}
                 whileInView={{ scale: 1 }}
-                viewport={{once: true}}
+                viewport={{ once: true }}
                 transition={{ duration: 0.5 }}
               />
               <MotionPriceTag variants={variants} index={index} />
@@ -147,24 +148,10 @@ function BannerCarousel() {
 }
 
 function LeftContent() {
-  const textVariant = {
-    from: {
-      transform: "rotate(-10deg)",
-      X: 5,
-      y: 5,
-      opacity: 0,
-    },
-    to: {
-      transform: "rotate(0deg)",
-      X: 0,
-      y: 0,
-      opacity: 1,
-    },
-  };
   return (
     <div className="lg:basis-lg flex flex-col md:gap-y-2.5 shrink-0 pb-15">
       <motion.h5
-        variants={textVariant}
+        variants={textSkewIn}
         initial={"from"}
         animate={"to"}
         transition={{ duration: 1, delay: 0.3 }}
@@ -173,7 +160,7 @@ function LeftContent() {
         {storeInfo.home_hero_subtext}
       </motion.h5>
       <motion.h1
-        variants={textVariant}
+        variants={textSkewIn}
         initial={"from"}
         animate={"to"}
         transition={{ duration: 0.7 }}
@@ -182,7 +169,7 @@ function LeftContent() {
         {storeInfo.home_hero_title}
       </motion.h1>
       <motion.p
-        variants={textVariant}
+        variants={textSkewIn}
         initial={"from"}
         animate={"to"}
         transition={{ duration: 0.7 }}
@@ -191,7 +178,7 @@ function LeftContent() {
         {storeInfo.home_hero_subtitle}
       </motion.p>
       <motion.div
-        variants={textVariant}
+        variants={textSkewIn}
         initial={"from"}
         animate={"to"}
         className="hero-cta mt-4"

@@ -32,5 +32,10 @@ export const storeInfo = {
   section_introduce_img_2: "/img/section_introduce_img2.webp",
   section_introduce_subtext: "Mang đến sự tươi mới",
   section_introduce_title: "Thoã mãn cơn đói, giải toả cơn khát",
-  section_introduce_subtitle: "Lorem ipsum dolor sit amet consectetur. Varius nunc sagittis amet duis id tristique odio phasellus. Arcu ultricies nisi bibendum tellus amet. Vel nisl gravida hac euismod odio sed sem. Molestie blandit id enim lectus.",
+  section_introduce_subtitle:
+    "Lorem ipsum dolor sit amet consectetur. Varius nunc sagittis amet duis id tristique odio phasellus. Arcu ultricies nisi bibendum tellus amet. Vel nisl gravida hac euismod odio sed sem. Molestie blandit id enim lectus.",
+
+  section_category_show: true,
+  section_category_subtext: "Các danh mục",
+  section_category_title: "Danh mục nổi bật trong tuần",
 };

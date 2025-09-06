@@ -3,26 +3,13 @@ import { motion } from "framer-motion";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Skeleton } from "../ui/skeleton";
 import { Icon } from "@/utils/assets/icon";
+import { textSkewIn } from "@/utils/constants/effect";
 
 function IntroduceContent() {
-  const textVariant = {
-    from: {
-      transform: "rotate(-10deg)",
-      X: 5,
-      y: 5,
-      opacity: 0,
-    },
-    to: {
-      transform: "rotate(0deg)",
-      X: 0,
-      y: 0,
-      opacity: 1,
-    },
-  };
   return (
     <div className="flex flex-col gap-y-3 lg:gap-y-4">
       <motion.h5
-        variants={textVariant}
+        variants={textSkewIn}
         initial={"from"}
         viewport={{ once: true }}
         whileInView={"to"}
@@ -32,17 +19,17 @@ function IntroduceContent() {
         {storeInfo.section_introduce_subtext}
       </motion.h5>
       <motion.h1
-        variants={textVariant}
+        variants={textSkewIn}
         initial={"from"}
         viewport={{ once: true }}
         whileInView={"to"}
         transition={{ duration: 0.5 }}
-        className="introduce-title text-3xl lg:text-[2.75rem] font-Lucky tracking-wide leading-10 lg:leading-12 uppercase"
+        className="introduce-title text-3xl lg:text-[2.5rem] font-Lucky tracking-wide leading-10 lg:leading-12 uppercase"
       >
         {storeInfo.section_introduce_title}
       </motion.h1>
       <motion.p
-        variants={textVariant}
+        variants={textSkewIn}
         initial={"from"}
         viewport={{ once: true }}
         whileInView={"to"}

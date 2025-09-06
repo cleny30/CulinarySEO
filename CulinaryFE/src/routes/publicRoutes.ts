@@ -20,8 +20,8 @@ const publicRoutes: RouteConfig[] = [
     component: ShoppingPage,
     layout: ProductLayout,
   },
-    {
-    path: "/shop/:productId",
+  {
+    path: "/shop/:slug/:id",
     name: "ShopDetail",
     component: ShopDetail,
   },

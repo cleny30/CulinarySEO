@@ -18,7 +18,7 @@ function ProductGridCard({ product }: ProductCardProps) {
     return (
         <Card
             className="p-2 hover:shadow-lg transition-shadow"
-            onClick={() => navigate(`/shop/${product.productId}`)}
+            onClick={() => navigate(`/shop/${product.slug}/${product.productId}`)}
         >
             <div className="relative">
                 {product.discount && (

@@ -7,11 +7,7 @@ import { type Category } from "@/types/filter";
 interface ProductFilterState {
   productfilter: {
     selectedCategories?: number[] | null;
-    categories: Array<{
-      categoryId: number;
-      categoryName: string;
-      productCount: number;
-    }>;
+    categories: Category[];
     price?: { from: number; to: number } | null;
     availability?: boolean | null;
     sortBy?: string | null;

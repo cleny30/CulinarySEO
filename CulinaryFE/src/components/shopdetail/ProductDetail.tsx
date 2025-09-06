@@ -4,7 +4,6 @@ import { formatDate } from "@/utils/constants/date/date"
 import { Star } from "lucide-react"
 
 export default function ProductDetail({ productdetail }: { productdetail: ProductDetail | null }) {
-    console.log(productdetail, 'product')
     return (
         <section className='pt-20'>
             <div className='max-w-[1400px] w-full h-full mx-auto px-[15px]'>

@@ -27,7 +27,6 @@ function FIlterSider() {
     const getcategory = async () => (
         await getFilter(dispatch)
     )
-
     const form = useForm<FilterFormValues>({
         resolver: zodResolver(filterSchema),
         defaultValues: {
@@ -116,7 +115,7 @@ function FIlterSider() {
                                                                     field.onChange(newValue);
                                                                     dispatch(setSelectedCategories(newValue));
                                                                 }}
-                                                                className="data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                                                                className="border-1 border-primary data-[state=checked]:bg-primary data-[state=checked]:border-primary"
                                                             />
                                                             <span className="text-sm">{cat.categoryName}</span>
                                                         </div>
@@ -231,7 +230,7 @@ function FIlterSider() {
                                                         dispatch(setAvailability(null));
                                                     }
                                                 }}
-                                                className="data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                                                className="border-1 border-primary data-[state=checked]:bg-primary data-[state=checked]:border-primary"
                                             />
                                         </FormControl>
                                         <FormLabel className="text-sm font-normal ml-2">In Stock</FormLabel>
@@ -249,7 +248,7 @@ function FIlterSider() {
                                                         dispatch(setAvailability(null));
                                                     }
                                                 }}
-                                                className="data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                                                className="border-1 border-primary data-[state=checked]:bg-primary data-[state=checked]:border-primary"
                                             />
                                         </FormControl>
                                         <FormLabel className="text-sm font-normal ml-2">Out of Stock</FormLabel>

@@ -19,7 +19,6 @@ export default function RelatedProduct({ productdetail }: { productdetail: Produ
         fetchProducts(dispatch, 1, productdetail?.categoryId)
     }, [])
 
-    console.log(relatedProduct.products, 'related')
     return (
         <section className='pt-20'>
             {

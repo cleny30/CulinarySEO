@@ -12,6 +12,7 @@ import {
   ShoppingCart,
   MapPin,
   Menu,
+  Plus
 } from "lucide-react";
 import { GoogleIcon } from "@/assets/svg/google";
 import type { SVGProps, ImgHTMLAttributes } from "react";
@@ -33,6 +34,7 @@ export const Icon = {
   ShoppingCart: (props: LucideProps) => <ShoppingCart {...props} />,
   MapPin: (props: LucideProps) => <MapPin {...props} />,
   Menu: (props: LucideProps) => <Menu {...props} />,
+  Plus: (props: LucideProps) => <Plus {...props} />,
   Authen: (props: ImgHTMLAttributes<HTMLImageElement>) => (
     <img src={"/svg/authen.svg"} {...props} />
   ),

@@ -2,13 +2,8 @@ import { getCateList } from "@/services/homeService";
 import type { AppDispatch } from "../store";
 import { loadedCate, loadingCate } from "./homeSlice";
 import { menuNav } from "@/utils/config/navMenu";
+import type { Category, CategoryCount } from "@/types/category";
 
-interface Category {
-  categoryId: number;
-  categoryName: string;
-  categoryImage: string;
-  description: string;
-}
 export const fetchCateMenu = async (dispatch: AppDispatch) => {
   dispatch(loadingCate());
   const response = (await getCateList()) as Category[];
@@ -20,6 +15,7 @@ export const fetchCateMenu = async (dispatch: AppDispatch) => {
       image: item.categoryImage,
     };
   });
+  
   const updatedMenuNav = menuNav.map((item) => {
     if (item.slug === "thuc-don") {
       return {

@@ -6,7 +6,7 @@ import HeaderRightActions from "../header/header_right_actions";
 import SubHeader from "./subheader";
 import { cn } from "@/lib/utils";
 import TopBar from "./topbar";
-import { useEffect, useRef } from "react";
+import { useLayoutEffect, useRef } from "react";
 import { fetchCateMenu } from "@/redux/home/apiRequest";
 import HeaderNavMobile from "../header/header_nav-mobile";
 import { useScroll, useTransform, motion, useAnimation } from "framer-motion";
@@ -30,7 +30,7 @@ export default function Header({
     useSelector((state: RootState) => state.auth.login?.currentUser) || null;
   const headerContainerStyle = "w-full flex justify-center";
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const getCate = async () => {
       await fetchCateMenu(dispatch);
     };

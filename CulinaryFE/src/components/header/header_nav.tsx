@@ -105,7 +105,6 @@ const NavigationMenuContentCate = ({
                       style={{ padding: "0.25rem" }}
                     >
                       <LazyLoadImage
-                        effect="opacity"
                         src={item.image}
                         alt={item.label + "_img"}
                         className="aspect-square w-14 h-14 rounded-md bg-gray-100 group-hover:scale-105 duration-200"

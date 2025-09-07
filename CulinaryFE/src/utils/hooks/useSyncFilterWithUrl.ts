@@ -21,9 +21,26 @@ export function useSyncFilterWithUrl() {
 
     // URL → Redux
     useEffect(() => {
-        const categories = searchParams.getAll("filter.v.category"); // string[]
-        if (categories.length) {
-            dispatch(setSelectedCategories(categories.map(Number))); // number[]
+        // 1. Path-based category (shop/:slug)
+        const pathParts = location.pathname.split("/");
+        const slugFromPath = pathParts[2]; // "thit-heo" or "all"
+
+        if (slugFromPath && slugFromPath !== "all") {
+            const cat = filter.categories.find(c => c.slug === slugFromPath);
+            if (cat) {
+                dispatch(setSelectedCategories([cat.categoryId]));
+            }
+        } else {
+            dispatch(setSelectedCategories([])); // "all" → no filter
+        }
+
+        // 2. Query-based categories (multi-select case)
+        const categoriesFromUrl = searchParams.getAll("filter.v.category");
+        if (categoriesFromUrl.length) {
+            const ids = filter.categories
+                .filter(c => categoriesFromUrl.includes(c.slug))
+                .map(c => c.categoryId);
+            dispatch(setSelectedCategories(ids));
         }
 
         const priceGte = searchParams.get("filter.v.price.gte");
@@ -52,11 +69,6 @@ export function useSyncFilterWithUrl() {
     useEffect(() => {
         const params = new URLSearchParams();
 
-        if (filter.selectedCategories?.length) {
-            filter.selectedCategories.forEach((catId: number) => {
-                params.append("filter.v.category", String(catId));
-            });
-        }
         if (filter.price?.from !== undefined)
             params.set("filter.v.price.gte", String(filter.price.from));
         if (filter.price?.to !== undefined)
@@ -68,10 +80,17 @@ export function useSyncFilterWithUrl() {
         if (filter.sortBy !== null) params.set("sortBy", String(filter.sortBy));
 
         const newSearch = params.toString();
-        const currentSearch = location.search.replace(/^\?/, "");
+        const searchString = newSearch ? `?${newSearch}` : "";
 
-        if (newSearch !== currentSearch) {
-            navigate(`/shop?${newSearch}`, { replace: true });
+        // 🔹 Handle category slug in path
+        if (filter.selectedCategories?.length === 1) {
+            const catId = filter.selectedCategories[0];
+            const cat = filter.categories.find(c => c.categoryId === catId);
+            if (cat) {
+                navigate(`/shop/${cat.slug}${searchString}`, { replace: true });
+            }
+        } else {
+            navigate(`/shop/all${searchString}`, { replace: true });
         }
-    }, [filter, navigate, location.search]);
+    }, [filter, navigate]);
 }

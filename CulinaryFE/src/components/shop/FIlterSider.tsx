@@ -18,10 +18,12 @@ import { Input } from "../ui/input";
 import { Slider } from "../ui/slider";
 import FilterCard from "./FilterCard";
 import { Skeleton } from "../ui/skeleton";
+import { useCategoryNavigator } from "@/utils/constants/categories/categories";
 
 function FIlterSider() {
     const dispatch = useDispatch()
     const filterprops = useSelector((state: RootState) => state.productfilter, shallowEqual)
+    const { handleCategoryChange } = useCategoryNavigator();
     // const maxPrice = useMemo(() => getMaxPrice(products.products ?? null), [products.products]);
     const maxPrice = 500000; // Static max price for the entire catalog
     const getcategory = async () => (
@@ -108,12 +110,19 @@ function FIlterSider() {
                                                             <Checkbox
                                                                 checked={isChecked}
                                                                 onCheckedChange={(checked) => {
-                                                                    const newValue = checked
-                                                                        ? [...value, cat.categoryId]
-                                                                        : value.filter((id) => id !== cat.categoryId);
+                                                                    if (checked) {
+                                                                        //Replace old category with the new one
+                                                                        dispatch(setSelectedCategories([cat.categoryId]));
+                                                                        form.setValue("categories", [cat.categoryId]);
 
-                                                                    field.onChange(newValue);
-                                                                    dispatch(setSelectedCategories(newValue));
+                                                                        // Navigate to /shop/:slug
+                                                                        handleCategoryChange(cat.categoryId);
+                                                                    } else {
+                                                                        //Uncheck → reset to "all"
+                                                                        dispatch(setSelectedCategories(null));
+                                                                        form.setValue("categories", []);
+                                                                        handleCategoryChange(null); // navigate to /shop/all
+                                                                    }
                                                                 }}
                                                                 className="border-1 border-primary data-[state=checked]:bg-primary data-[state=checked]:border-primary"
                                                             />

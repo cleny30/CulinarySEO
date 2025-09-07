@@ -36,7 +36,7 @@ function FIlterSider() {
             sortBy: null,
         },
     });
-
+    //Ensure form values are in sync with Redux state
     useEffect(() => {
         const newValues = {
             categories: filterprops.productfilter.selectedCategories ?? [],

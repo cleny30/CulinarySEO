@@ -27,3 +27,4 @@ dist-ssr
 *.crt
 certs/
 .env
+package-lock.json

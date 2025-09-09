@@ -5,7 +5,6 @@ body {
   font-family: "Montserrat", sans-serif;
   font-weight: 500;
   font-size: 1.25rem;
-  background: rgba(var(--mau-sua-bo), 1);
 }
 
 input:-webkit-autofill,
@@ -18,4 +17,11 @@ select:-webkit-autofill,
 select:-webkit-autofill:hover,
 select:-webkit-autofill:focus {
   -webkit-box-shadow: 0 0 0px 1000px rgba(var(--mau-be), 1) inset !important;
+}
+
+.container{
+  max-width: 1200px;
+}
+.layoutContainer{
+  max-width: 96rem;
 }

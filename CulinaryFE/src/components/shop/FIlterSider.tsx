@@ -6,9 +6,9 @@ import {
     FormItem,
     FormLabel,
 } from "@/components/ui/form";
-import { useDispatch, useSelector } from 'react-redux'
+import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import type { RootState } from '@/redux/store'
-import { useEffect } from 'react'
+import { memo, useEffect } from 'react'
 import { getFilter } from "@/redux/product/apiRequest"
 import { filterSchema, type FilterFormValues } from "@/schemas/filter";
 import { useForm } from "react-hook-form";
@@ -18,17 +18,18 @@ import { Input } from "../ui/input";
 import { Slider } from "../ui/slider";
 import FilterCard from "./FilterCard";
 import { Skeleton } from "../ui/skeleton";
+import { useCategoryNavigator } from "@/utils/hooks/useCategoryNavigator";
 
-export default function FIlterSider() {
+
+function FIlterSider() {
     const dispatch = useDispatch()
-    const filterprops = useSelector((state: RootState) => state.productfilter)
-    const products = useSelector((state: RootState) => state.productview)
+    const filterprops = useSelector((state: RootState) => state.productfilter, shallowEqual)
+    const { handleCategoryChange } = useCategoryNavigator();
     // const maxPrice = useMemo(() => getMaxPrice(products.products ?? null), [products.products]);
     const maxPrice = 500000; // Static max price for the entire catalog
     const getcategory = async () => (
         await getFilter(dispatch)
     )
-
     const form = useForm<FilterFormValues>({
         resolver: zodResolver(filterSchema),
         defaultValues: {
@@ -38,29 +39,38 @@ export default function FIlterSider() {
             sortBy: null,
         },
     });
-    // const didInit = useRef(false);
+    //Ensure form values are in sync with Redux state
+    useEffect(() => {
+        const newValues = {
+            categories: filterprops.productfilter.selectedCategories ?? [],
+            price: filterprops.productfilter.price ?? { from: 0, to: maxPrice },
+            availability: filterprops.productfilter.availability ?? null,
+            sortBy: filterprops.productfilter.sortBy ?? null,
+        };
+        const currentValues = form.getValues();
 
-    // useEffect(() => {
-    //     if (maxPrice.raw > 0 && !didInit.current) {
-    //         // only set default once when products are loaded the first time
-    //         form.setValue("price", { from: 0, to: maxPrice.raw });
-    //         dispatch(setPrice({ from: 0, to: maxPrice.raw }));
-    //         didInit.current = true;
-    //     }
-    // }, [maxPrice, form, dispatch]);
+        // compare shallowly before calling reset
+        const isSame =
+            JSON.stringify(newValues) === JSON.stringify(currentValues);
 
+        if (!isSame) {
+            form.reset(newValues);
+        }
+    }, [
+        filterprops.productfilter.selectedCategories,
+        filterprops.productfilter.price,
+        filterprops.productfilter.availability,
+        filterprops.productfilter.sortBy,
+        form,
+    ])
 
     const filterwatchValues = form.watch()
-
-    // useEffect(() => {
-    //     console.log(watchValues, 'watchValues')
-    // }, [watchValues])
 
     useEffect(() => {
         getcategory()
     }, [])
     return (
-        <section className='w-3/12 px-[15px]'>
+        <section className='w-full'>
             <div className='w-full pb-[30px] border-b-[1px] mb-[30px]'>
                 <h6>Filters</h6>
                 <FilterCard name={filterwatchValues} categories={filterprops.productfilter.categories} />
@@ -101,14 +111,21 @@ export default function FIlterSider() {
                                                             <Checkbox
                                                                 checked={isChecked}
                                                                 onCheckedChange={(checked) => {
-                                                                    const newValue = checked
-                                                                        ? [...value, cat.categoryId]
-                                                                        : value.filter((id) => id !== cat.categoryId);
+                                                                    if (checked) {
+                                                                        //Replace old category with the new one
+                                                                        dispatch(setSelectedCategories([cat.categoryId]));
+                                                                        form.setValue("categories", [cat.categoryId]);
 
-                                                                    field.onChange(newValue);
-                                                                    dispatch(setSelectedCategories(newValue));
+                                                                        // Navigate to /collection/:slug
+                                                                        handleCategoryChange(cat.categoryId);
+                                                                    } else {
+                                                                        //Uncheck → reset to "all"
+                                                                        dispatch(setSelectedCategories(null));
+                                                                        form.setValue("categories", []);
+                                                                        handleCategoryChange(null); // navigate to /collection/all
+                                                                    }
                                                                 }}
-                                                                className="data-[state=checked]:bg-orange-500 data-[state=checked]:border-orange-500"
+                                                                className="border-1 border-primary data-[state=checked]:bg-primary data-[state=checked]:border-primary"
                                                             />
                                                             <span className="text-sm">{cat.categoryName}</span>
                                                         </div>
@@ -223,7 +240,7 @@ export default function FIlterSider() {
                                                         dispatch(setAvailability(null));
                                                     }
                                                 }}
-                                                className="data-[state=checked]:bg-orange-500 data-[state=checked]:border-orange-500"
+                                                className="border-1 border-primary data-[state=checked]:bg-primary data-[state=checked]:border-primary"
                                             />
                                         </FormControl>
                                         <FormLabel className="text-sm font-normal ml-2">In Stock</FormLabel>
@@ -241,7 +258,7 @@ export default function FIlterSider() {
                                                         dispatch(setAvailability(null));
                                                     }
                                                 }}
-                                                className="data-[state=checked]:bg-orange-500 data-[state=checked]:border-orange-500"
+                                                className="border-1 border-primary data-[state=checked]:bg-primary data-[state=checked]:border-primary"
                                             />
                                         </FormControl>
                                         <FormLabel className="text-sm font-normal ml-2">Out of Stock</FormLabel>
@@ -256,3 +273,4 @@ export default function FIlterSider() {
         </section>
     )
 }
+export default memo(FIlterSider)

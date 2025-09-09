@@ -1,10 +1,6 @@
-
+import { useEffect, useMemo, useState, memo, lazy } from 'react'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
-import { Toggle } from '../ui/toggle'
-import { Grid2X2, List } from 'lucide-react'
-import ProductGridView from './ProductGridView'
-import { useEffect, useMemo, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { shallowEqual, useDispatch, useSelector } from 'react-redux'
 import { fetchProducts } from '@/redux/productview/apiRequest'
 import type { RootState } from '@/redux/store'
 import {
@@ -16,14 +12,13 @@ import {
     PaginationPrevious,
 } from "@/components/ui/pagination"
 import { useDebounce } from '@/utils/hooks/useDebounce'
-import { getMaxPrice } from '@/utils/constants/product/product'
-import ProductListView from './ProductListView'
 import { setSortBy } from '@/redux/product/productfilterSlice'
-
-export default function ShopProduct() {
+const ProductGridView = lazy(() => import('./ProductGridView'))
+const MobileFilterSider = lazy(() => import('./MobileFilterSider'))
+function ShopProduct() {
     const dispatch = useDispatch();
-    const products = useSelector((state: RootState) => state.productview);
-    const filter = useSelector((state: RootState) => state.productfilter);
+    const products = useSelector((state: RootState) => state.productview, shallowEqual);
+    const filter = useSelector((state: RootState) => state.productfilter, shallowEqual);
     const [page, setPage] = useState(1);
 
 
@@ -52,13 +47,15 @@ export default function ShopProduct() {
 
         const sortBy =
             filter.productfilter?.sortBy ?? null;
-
+        const warehouseId =
+            filter.productfilter?.WarehouseId ?? null
         return {
             CategoryIds: selectedIds,
             MinPrice: minPrice,
             MaxPrice: maxPriceParam,
             IsAvailable: isAvailable,
             SortBy: sortBy,
+            warehouseId: warehouseId,
         };
     }, [filter, maxPrice]);
 
@@ -74,6 +71,7 @@ export default function ShopProduct() {
         debouncedParams.MaxPrice,
         debouncedParams.IsAvailable,
         debouncedParams.SortBy,
+        debouncedParams.warehouseId,
     ]);
 
     const totalItems = products.products?.totalItems ?? 0;
@@ -87,16 +85,20 @@ export default function ShopProduct() {
             debouncedParams.MinPrice,
             debouncedParams.MaxPrice,
             debouncedParams.IsAvailable,
-            debouncedParams.SortBy
+            debouncedParams.SortBy,
+            debouncedParams.warehouseId,
         );
-    }, [dispatch, page, debouncedParams]);
-
+    }, [page, debouncedParams]);
     return (
-        <section className='px-[15px] w-3/4'>
+        <section className='px-[15px] lg:w-3/4 w-full'>
             <div className='w-full'>
-                <img src="/promotion_banner.webp" alt="promotion-banner" />
+                <img src={'/img/promotion_banner.webp'} alt="promotion-banner" loading="eager" fetchPriority="high" width={1000}
+                    height={300} />
             </div>
             <div className='w-full flex items-center justify-between border-b-1 py-[15px]'>
+                <div className='lg:hidden w-full flex justify-start items-center'>
+                    <MobileFilterSider />
+                </div>
                 <div className='w-full flex items-center gap-2 justify-end'>
                     <strong className='text-sm'>Sort by:</strong>
                     <Select
@@ -156,3 +158,5 @@ export default function ShopProduct() {
         </section>
     )
 }
+
+export default memo(ShopProduct)

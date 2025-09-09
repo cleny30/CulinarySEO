@@ -1,6 +1,10 @@
 export interface Product {
   productId: string;
   productName: string;
+  shortDescription: string;
+  slug: string;
+  pageTitle: string;
+  metaDescription: string;
   price: number;
   finalPrice: number;
   discount: number;
@@ -9,6 +13,9 @@ export interface Product {
   reviewCount: number;
   averageRating: number;
   productImages: string[];
+  categoryIds: number[];
+  stocks: Record<string, number>; // key: warehouseId (UUID), value: stock quantity
+  currentWarehouseQuantity: number;
 }
 
 export interface ProductResult {

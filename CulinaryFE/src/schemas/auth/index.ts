@@ -1,4 +1,4 @@
-import { store_email, store_phone_number } from "@/utils/config/storeInfo";
+import { storeInfo } from "@/storeInfo";
 import * as z from "zod";
 
 export const LoginSchema = z.object({
@@ -21,12 +21,12 @@ export const RegisterSchema = z.object({
     .string()
     .nonempty({ message: "Phone shouldn't be empty" })
     .regex(/^[0-9]{10,11}$/, {
-      message: `Phone should be like ${store_phone_number}`,
+      message: `Phone should be like ${storeInfo.store_phone_number}`,
     }),
   email: z
     .string()
     .nonempty({ message: "Email shouldn't be empty" })
-    .email({ message: `Enter a valid email - ${store_email}` }),
+    .email({ message: `Enter a valid email - ${storeInfo.store_email}` }),
   password: z
     .string()
     .min(6, { message: "Password must be from 6 to 18 characters!" })

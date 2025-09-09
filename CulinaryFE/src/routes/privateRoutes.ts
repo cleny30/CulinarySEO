@@ -1,11 +1,12 @@
 // This file defines the private routes for the application.
 
-import AccountPage from "@/pages/Accounts/page";
+import AccountPage from "@/pages/accounts/page";
+import type { RouteConfig } from "@/types";
 
 // Private routes are typically accessible only to authenticated users.
-const privateRoutes = [
+const privateRoutes: RouteConfig[] = [
   {
-    path: "/account",
+    path: "/account/profile",
     name: "Account",
     component: AccountPage,
     allowPermissions: [""],

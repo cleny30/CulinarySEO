@@ -15,19 +15,19 @@ const publicRoutes: RouteConfig[] = [
     component: HomePage,
   },
   {
-    path: "/shop/all",
+  path: "/collection/all",
     name: "Shop",
     component: ShoppingPage,
     layout: ProductLayout,
   },
   {
-    path: "/shop/:slug",
+  path: "/collection/:slug",
     name: "Shop",
     component: ShoppingPage,
     layout: ProductLayout,
   },
   {
-    path: "/shop/:slug/:id",
+  path: "/collection/:slug/:id",
     name: "ShopDetail",
     component: ShopDetail,
   },

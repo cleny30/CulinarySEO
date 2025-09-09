@@ -18,7 +18,8 @@ import { Input } from "../ui/input";
 import { Slider } from "../ui/slider";
 import FilterCard from "./FilterCard";
 import { Skeleton } from "../ui/skeleton";
-import { useCategoryNavigator } from "@/utils/constants/categories/categories";
+import { useCategoryNavigator } from "@/utils/hooks/useCategoryNavigator";
+
 
 function FIlterSider() {
     const dispatch = useDispatch()
@@ -115,13 +116,13 @@ function FIlterSider() {
                                                                         dispatch(setSelectedCategories([cat.categoryId]));
                                                                         form.setValue("categories", [cat.categoryId]);
 
-                                                                        // Navigate to /shop/:slug
+                                                                        // Navigate to /collection/:slug
                                                                         handleCategoryChange(cat.categoryId);
                                                                     } else {
                                                                         //Uncheck → reset to "all"
                                                                         dispatch(setSelectedCategories(null));
                                                                         form.setValue("categories", []);
-                                                                        handleCategoryChange(null); // navigate to /shop/all
+                                                                        handleCategoryChange(null); // navigate to /collection/all
                                                                     }
                                                                 }}
                                                                 className="border-1 border-primary data-[state=checked]:bg-primary data-[state=checked]:border-primary"

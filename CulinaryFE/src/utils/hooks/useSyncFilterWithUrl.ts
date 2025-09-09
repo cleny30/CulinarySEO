@@ -43,8 +43,8 @@ export function useSyncFilterWithUrl() {
             dispatch(setSelectedCategories(ids));
         }
 
-        const priceGte = searchParams.get("filter.v.price.gte");
-        const priceLte = searchParams.get("filter.v.price.lte");
+        const priceGte = searchParams.get("price.gte");
+        const priceLte = searchParams.get("price.lte");
         if (priceGte || priceLte) {
             dispatch(
                 setPrice({
@@ -54,7 +54,7 @@ export function useSyncFilterWithUrl() {
             );
         }
 
-        const availability = searchParams.get("filter.v.availability");
+        const availability = searchParams.get("availability");
         if (availability !== null) {
             dispatch(setAvailability(availability === "1"));
         }
@@ -70,12 +70,12 @@ export function useSyncFilterWithUrl() {
         const params = new URLSearchParams();
 
         if (filter.price?.from !== undefined)
-            params.set("filter.v.price.gte", String(filter.price.from));
+            params.set("price.gte", String(filter.price.from));
         if (filter.price?.to !== undefined)
-            params.set("filter.v.price.lte", String(filter.price.to));
+            params.set("price.lte", String(filter.price.to));
 
         if (filter.availability !== null)
-            params.set("filter.v.availability", filter.availability ? "1" : "0");
+            params.set("availability", filter.availability ? "1" : "0");
 
         if (filter.sortBy !== null) params.set("sortBy", String(filter.sortBy));
 
@@ -87,10 +87,10 @@ export function useSyncFilterWithUrl() {
             const catId = filter.selectedCategories[0];
             const cat = filter.categories.find(c => c.categoryId === catId);
             if (cat) {
-                navigate(`/shop/${cat.slug}${searchString}`, { replace: true });
+                navigate(`/collection/${cat.slug}${searchString}`, { replace: true });
             }
         } else {
-            navigate(`/shop/all${searchString}`, { replace: true });
+            navigate(`/collection/all${searchString}`, { replace: true });
         }
     }, [filter, navigate]);
 }

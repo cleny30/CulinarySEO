@@ -1,11 +1,17 @@
 import { getCateList } from "@/services/homeService";
 import type { AppDispatch } from "../store";
-import { loadedCate, loadingCate } from "./homeSlice";
+import {
+  loadedCate,
+  loadedHomeCate,
+  loadingCate,
+  loadingHomeCate,
+} from "./homeSlice";
 import { menuNav } from "@/utils/config/navMenu";
-import type { Category, CategoryCount } from "@/types/category";
+import type { Category } from "@/types/category";
 
 export const fetchCateMenu = async (dispatch: AppDispatch) => {
   dispatch(loadingCate());
+  dispatch(loadingHomeCate());
   const response = (await getCateList()) as Category[];
 
   const newCategories = response.map((item) => {
@@ -15,7 +21,7 @@ export const fetchCateMenu = async (dispatch: AppDispatch) => {
       image: item.categoryImage,
     };
   });
-  
+
   const updatedMenuNav = menuNav.map((item) => {
     if (item.slug === "thuc-don") {
       return {
@@ -26,4 +32,5 @@ export const fetchCateMenu = async (dispatch: AppDispatch) => {
     return item;
   });
   dispatch(loadedCate(updatedMenuNav));
+  dispatch(loadedHomeCate(response));
 };

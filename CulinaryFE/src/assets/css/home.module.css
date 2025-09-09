@@ -1,3 +1,23 @@
 .headerLogo {
   background-color: aqua;
 }
+.categoryWrapper {
+  display: grid;
+  grid-template-rows: min-content;
+  grid-template-columns: repeat(4, minmax(10px, 1fr));
+  gap: 24px;
+  justify-content: center;
+}
+@media screen and (max-width: 1024px) and (min-width: 641px) {
+  .categoryWrapper {
+    grid-template-columns: repeat(3, minmax(10px, 1fr));
+  }
+  .categoryItem:last-child {
+    display: none;
+  }
+}
+@media screen and (max-width: 640px) {
+  .categoryWrapper {
+    grid-template-columns: repeat(2, minmax(10px, 1fr));
+  }
+}

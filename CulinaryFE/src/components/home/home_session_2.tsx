@@ -135,7 +135,7 @@ function RightLayout() {
 
 export default function SectionIntroduce() {
   return (
-    <section className="section_introduce py-20 px-4">
+    <section className="section_introduce py-25 px-4">
       <div className="container mx-auto">
         <div className="flex items-stretch justify-start gap-6 lg:gap-[10.8%] not-md:flex-col">
           <TwoBanner />

@@ -164,7 +164,7 @@ function LeftContent() {
         initial={"from"}
         animate={"to"}
         transition={{ duration: 0.7 }}
-        className="hero-title text-3xl md:text-4xl lg:text-5xl font-Lucky tracking-wide leading-15"
+        className="hero-title text-3xl md:text-4xl lg:text-5xl font-Lucky tracking-wide leading-10 lg:leading-15"
       >
         {storeInfo.home_hero_title}
       </motion.h1>

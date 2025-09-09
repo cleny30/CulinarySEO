@@ -38,4 +38,19 @@ export const storeInfo = {
   section_category_show: true,
   section_category_subtext: "Các danh mục",
   section_category_title: "Danh mục nổi bật trong tuần",
+
+  section_combo_show: true,
+  section_combo_subtext: "Các danh mục",
+  section_combo_title: "Danh mục nổi bật trong tuần",
+
+  section_combo_item1_img: "/img/combo_banner_img1.webp",
+  section_combo_item1_href: "/",
+  section_combo_item1_rating: 4.5,
+  section_combo_item1_name: "Combo tiệc cùng bạn bè",
+  section_combo_item1_price: "98,000",
+  section_combo_item2_img: "/img/combo_banner_img2.webp",
+  section_combo_item2_href: "/",
+  section_combo_item2_rating: 4.8,
+  section_combo_item2_price: "102,000",
+  section_combo_item2_name: "Cuối Tuần Bên Gia Đình",
 };

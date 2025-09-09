@@ -46,16 +46,25 @@ function CategoryList({ categoryList }: { categoryList?: Category[] | null }) {
       <div className={cn(styles.categoryWrapper)}>
         {!loading
           ? categoryList?.slice(1, 5).map((item, index) => (
-              <Link to={`/collections/${item.slug}`} className={cn(styles.categoryItem)}>
-                <div className="group flex flex-col items-center gap-4" key={index}>
+              <Link
+                to={`/collections/${item.slug}`}
+                className={cn(styles.categoryItem)}
+              >
+                <div
+                  className="group flex flex-col items-center gap-4"
+                  key={index}
+                >
                   <div className="relative aspect-square w-full h-auto rounded-lg  overflow-hidden">
                     <LazyLoadImage
                       className="aspect-square w-full object-cover bg-gray-50"
-                      src={item.categoryImage || "/img/noproduct.webp"}
+                      src={item.categoryImage}
                       alt={item.categoryName + "_img"}
-                      effect="opacity"
+                      placeholderSrc="/img/noproduct.webp"
+                      threshold={100}
                     />
-                    <h2 className="absolute z-2 left-0 bottom-4 bg-gray-50 text-sm font-Lucky p-2 pr-3 rounded-r-lg -translate-x-full group-hover:translate-x-0 duration-700">Xem thêm</h2>
+                    <h2 className="absolute z-2 left-0 bottom-4 bg-gray-50 text-sm font-Lucky p-2 pr-3 rounded-r-lg -translate-x-full group-hover:translate-x-0 duration-700">
+                      Xem thêm
+                    </h2>
                     <div className="absolute inset-0 z-1 bg-gradient-to-t from-mau-do-color/60 via-mau-do-color/30 to-transparent translate-y-full group-hover:translate-y-0 duration-500"></div>
                   </div>
                   <h3 className="w-full font-Lucky text-center">

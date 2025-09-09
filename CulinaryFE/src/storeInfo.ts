@@ -35,6 +35,21 @@ export const storeInfo = {
   section_introduce_subtitle:
     "Lorem ipsum dolor sit amet consectetur. Varius nunc sagittis amet duis id tristique odio phasellus. Arcu ultricies nisi bibendum tellus amet. Vel nisl gravida hac euismod odio sed sem. Molestie blandit id enim lectus.",
 
+  section_openingHour_show: true,
+  section_openingHour_img: "/img/section_openingHour_img.webp",
+  section_openingHour_subtext: "Thực phẩm an toàn",
+  section_openingHour_title: "Gói gọn trong sự quan tâm & sạch sẽ",
+  section_openingHour_subtitle:
+    "Lorem ipsum dolor sit amet consectetur. Varius nunc sagittis amet duis id tristique.",
+  section_openingHour_icon_list: "Clock3",
+  section_openingHour_list_title: "Giờ mở của",
+  section_openingHour_item_title1: "Thứ 2 đến Thứ 5",
+  section_openingHour_item_content1: "(08:00 AM – 06:00 PM)",
+  section_openingHour_item_title2: "Thứ 6 & Thứ 7",
+  section_openingHour_item_content2: "(10:00 AM – 08:00 PM)",
+  section_openingHour_item_title3: "Chủ nhật",
+  section_openingHour_item_content3: "(10:00 AM – 10:00 PM)",
+
   section_category_show: true,
   section_category_subtext: "Các danh mục",
   section_category_title: "Danh mục nổi bật trong tuần",

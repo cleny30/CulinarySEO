@@ -14,6 +14,7 @@ import {
   Menu,
   Plus,
   ChevronRight,
+  Clock3,
 } from "lucide-react";
 import { GoogleIcon } from "@/assets/svg/google";
 import type { SVGProps, ImgHTMLAttributes } from "react";
@@ -36,6 +37,7 @@ export const Icon = {
   MapPin: (props: LucideProps) => <MapPin {...props} />,
   Menu: (props: LucideProps) => <Menu {...props} />,
   Plus: (props: LucideProps) => <Plus {...props} />,
+  Clock3: (props: LucideProps) => <Clock3 {...props} />,
   ChevronRight: (props: LucideProps) => <ChevronRight {...props} />,
   Authen: (props: ImgHTMLAttributes<HTMLImageElement>) => (
     <img src={"/svg/authen.svg"} {...props} />

@@ -58,8 +58,8 @@ export default function Header({
   ]);
   const navHeight = useMotionValueScrollYFactory(["5rem", "5rem", "3.5rem"]);
   const headerVariants = {
-    visible: { top: "0%" },
-    hidden: { top: "-100px" },
+    visible: { top: "0%", opacity: 1 },
+    hidden: { top: "-100px", opacity: 0 },
   };
 
   const controls = useAnimation();

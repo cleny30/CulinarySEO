@@ -58,8 +58,8 @@ export default function Header({
   ]);
   const navHeight = useMotionValueScrollYFactory(["5rem", "5rem", "3.5rem"]);
   const headerVariants = {
-    visible: { top: "0%" },
-    hidden: { top: "-100px" },
+    visible: { top: "0%", opacity: 1 },
+    hidden: { top: "-100px", opacity: 0 },
   };
 
   const controls = useAnimation();
@@ -113,7 +113,7 @@ export default function Header({
               "border-b-1 border-b-mau-do-color"
             )}
           >
-            <MotionNav className="flex items-center w-full justify-between layoutContainer not-lg:py-2">
+            <MotionNav className="flex items-center w-full justify-between layoutContainer not-lg:py-2 px-2">
               <HeaderLogo height={imageHeight} />
               <HeaderNav motionHeight={navHeight} />
               <div className="flex items-center">

@@ -17,10 +17,14 @@ import { motion, MotionValue } from "framer-motion";
 
 const menuItemStyle =
   "text-mau-den font-Lucky text-lg bg-transparent justify-center";
-const MotionMenuTrigger = motion(NavigationMenuTrigger); 
-const MotionMenuLink = motion(NavigationMenuLink); 
+const MotionMenuTrigger = motion(NavigationMenuTrigger);
+const MotionMenuLink = motion(NavigationMenuLink);
 
-export default function HeaderNav({ motionHeight }: { motionHeight?: MotionValue<unknown> }) {
+export default function HeaderNav({
+  motionHeight,
+}: {
+  motionHeight?: MotionValue<unknown>;
+}) {
   const header = useSelector((state: RootState) => state.home.header);
   return (
     <NavigationMenu className="border-x-1 border-mau-do-color px-4 not-lg:hidden">
@@ -30,7 +34,10 @@ export default function HeaderNav({ motionHeight }: { motionHeight?: MotionValue
             <NavigationMenuItem key={item.label}>
               {item.children ? (
                 <>
-                  <MotionMenuTrigger className={cn("pr-3", menuItemStyle)} style={{height:motionHeight}}>
+                  <MotionMenuTrigger
+                    className={cn("pr-3", menuItemStyle)}
+                    style={{ height: motionHeight }}
+                  >
                     {item.label}
                   </MotionMenuTrigger>
                   {item.isCategory ? (
@@ -47,7 +54,7 @@ export default function HeaderNav({ motionHeight }: { motionHeight?: MotionValue
                 <MotionMenuLink
                   asChild
                   className={cn("px-5", menuItemStyle)}
-                  style={{height:motionHeight}}
+                  style={{ height: motionHeight }}
                 >
                   <Link to={item.href || "/"}>{item.label}</Link>
                 </MotionMenuLink>
@@ -107,6 +114,7 @@ const NavigationMenuContentCate = ({
                       <LazyLoadImage
                         src={item.image}
                         alt={item.label + "_img"}
+                        threshold={100}
                         className="aspect-square w-14 h-14 rounded-md bg-gray-100 group-hover:scale-105 duration-200"
                       />
                       <span className="text-sm transition-colors duration-200 group-hover:text-mau-do-color group-hover:font-semibold">

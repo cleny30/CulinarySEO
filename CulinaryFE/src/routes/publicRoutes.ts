@@ -1,11 +1,11 @@
 import { lazy } from "react";
 import ProductLayout from "@/components/layout/productLayout";
-import HomePage from "@/pages/Home/page";
+
 import ShopDetail from "@/pages/ShopDetail/page";
-const ShoppingPage = lazy(() => import('@/pages/Shopping/page'))
+const ShoppingPage = lazy(() => import("@/pages/shopping/page"));
 
 import type { RouteConfig } from "@/types";
-
+import HomePage from "@/pages/home/page";
 
 // Public routes are accessible to all users, regardless of authentication status.
 const publicRoutes: RouteConfig[] = [
@@ -15,19 +15,19 @@ const publicRoutes: RouteConfig[] = [
     component: HomePage,
   },
   {
-  path: "/collection/all",
+    path: "/collection/all",
     name: "Shop",
     component: ShoppingPage,
     layout: ProductLayout,
   },
   {
-  path: "/collection/:slug",
+    path: "/collection/:slug",
     name: "Shop",
     component: ShoppingPage,
     layout: ProductLayout,
   },
   {
-  path: "/collection/:slug/:id",
+    path: "/collection/:slug/:id",
     name: "ShopDetail",
     component: ShopDetail,
   },

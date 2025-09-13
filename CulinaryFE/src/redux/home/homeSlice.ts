@@ -1,4 +1,4 @@
-import type { CategoryCount } from "@/types/category";
+import type { Category } from "@/types/category";
 import type { NavItem } from "@/types/home";
 import { menuNav } from "@/utils/config/navMenu";
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
@@ -9,7 +9,7 @@ interface HomeState {
     loading: boolean;
   };
   home: {
-    categoryList?: Array<CategoryCount> | null;
+    categoryList?: Array<Category> | null;
     loading: boolean;
   };
 }
@@ -42,7 +42,7 @@ const homeSlice = createSlice({
     loadingHomeCate: (state) => {
       state.home.loading = true;
     },
-    loadedHomeCate: (state, action: PayloadAction<CategoryCount[]>) => {
+    loadedHomeCate: (state, action: PayloadAction<Category[]>) => {
       state.home.loading = false;
       state.home.categoryList = action.payload;
     },

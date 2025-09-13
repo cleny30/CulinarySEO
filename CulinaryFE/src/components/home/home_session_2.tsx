@@ -135,13 +135,34 @@ function RightLayout() {
 
 export default function SectionIntroduce() {
   return (
-    <section className="section_introduce py-20 px-4">
+    <section className="section_introduce pb-25 md:pt-10 px-4 relative">
       <div className="container mx-auto">
-        <div className="flex items-stretch justify-start gap-6 lg:gap-[10.8%] not-md:flex-col">
+        <div className="flex items-stretch justify-start gap-6 lg:gap-[10.8%] not-md:flex-col-reverse relative">
           <TwoBanner />
           <RightLayout />
+          <motion.img
+            initial={{ scale: 0, opacity: 0 }}
+            whileInView={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.5 }}
+            viewport={{ once: true }}
+            src="/svg/edge_image_3line.svg"
+            className="not-lg:hidden h-25 absolute z-10 top-0 left-0 -rotate-90  -translate-x-18 -translate-y-18"
+          />
         </div>
       </div>
+      <motion.div
+        className="absolute -right-18 top-1/3 not-lg:hidden"
+        animate={{
+          transform: ["translateY(10%)", "translateY(-10%)", "translateY(10%)"],
+        }}
+        transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
+      >
+        <img
+          src="/svg/bg_item_bread.svg"
+          alt="bg_item_bread_footer"
+          className="size-50"
+        />
+      </motion.div>
     </section>
   );
 }

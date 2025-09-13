@@ -7,7 +7,7 @@ const MotionLink = motion(Link);
 
 const HeaderLogo = (props: SVGMotionProps<SVGSVGElement>) => {
   return (
-    <MotionLink to={"/"} className={`ml-2`}>
+    <MotionLink to={"/"}>
       <Logo color="#222222" className="" {...props} />
     </MotionLink>
   );

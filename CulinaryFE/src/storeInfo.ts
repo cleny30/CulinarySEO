@@ -35,7 +35,61 @@ export const storeInfo = {
   section_introduce_subtitle:
     "Lorem ipsum dolor sit amet consectetur. Varius nunc sagittis amet duis id tristique odio phasellus. Arcu ultricies nisi bibendum tellus amet. Vel nisl gravida hac euismod odio sed sem. Molestie blandit id enim lectus.",
 
+  section_openingHour_show: true,
+  section_openingHour_img: "/img/section_openingHour_img.webp",
+  section_openingHour_subtext: "Thực phẩm an toàn",
+  section_openingHour_title: "Gói gọn trong sự quan tâm & sạch sẽ",
+  section_openingHour_subtitle:
+    "Lorem ipsum dolor sit amet consectetur. Varius nunc sagittis amet duis id tristique.",
+  section_openingHour_icon_list: "Clock3",
+  section_openingHour_list_title: "Giờ mở của",
+  section_openingHour_item_title1: "Thứ 2 đến Thứ 5",
+  section_openingHour_item_content1: "(08:00 AM – 06:00 PM)",
+  section_openingHour_item_title2: "Thứ 6 & Thứ 7",
+  section_openingHour_item_content2: "(10:00 AM – 08:00 PM)",
+  section_openingHour_item_title3: "Chủ nhật",
+  section_openingHour_item_content3: "(10:00 AM – 10:00 PM)",
+
   section_category_show: true,
   section_category_subtext: "Các danh mục",
   section_category_title: "Danh mục nổi bật trong tuần",
+
+  section_combo_show: true,
+  section_combo_subtext: "Các combo deals",
+  section_combo_title: "Combo mới dành cho gia đình & bạn bè",
+
+  section_combo_item1_img: "/img/combo_banner_img1.webp",
+  section_combo_item1_href: "/",
+  section_combo_item1_rating: 4.5,
+  section_combo_item1_name: "Combo tiệc cùng bạn bè",
+  section_combo_item1_price: "98,000",
+  section_combo_item2_img: "/img/combo_banner_img2.webp",
+  section_combo_item2_href: "/",
+  section_combo_item2_rating: 4.8,
+  section_combo_item2_price: "102,000",
+  section_combo_item2_name: "Cuối Tuần Bên Gia Đình",
+
+  section_service_show: true,
+  section_service_item1_img: "/svg/service_item1_img.svg",
+  section_service_item1_title: "Giao nhanh chóng",
+  section_service_item1_subtitle:
+    "Lorem ipsum dolor sit amet consectetur adipiscing.",
+  section_service_item2_img: "/svg/service_item2_img.svg",
+  section_service_item2_title: "Đóng gói an toàn",
+  section_service_item2_subtitle:
+    "Lorem ipsum dolor sit amet consectetur adipiscing.",
+  section_service_item3_img: "/svg/service_item3_img.svg",
+  section_service_item3_title: "Thanh toán bảo mật",
+  section_service_item3_subtitle:
+    "Lorem ipsum dolor sit amet consectetur adipiscing.",
+
+  section_video_show: true,
+  section_video_source:
+    "https://cdn.prod.website-files.com/6852aaf2968e2cff672f2c54%2F685b7e495b95ac17ebf70be1_video-v2-transcode.webm",
+  section_video_source_alter:
+    "https://cdn.prod.website-files.com/6852aaf2968e2cff672f2c54%2F685b7e495b95ac17ebf70be1_video-v2-transcode.mp4",
+  section_video_poster:
+    "https://cdn.prod.website-files.com/6852aaf2968e2cff672f2c54%2F685b7e495b95ac17ebf70be1_video-v2-poster-00001.jpg",
 };
+
+export type storeInfoKey = keyof typeof storeInfo;

@@ -248,7 +248,7 @@ export default function Footer() {
 
   return (
     <motion.footer
-      className="bg-mau-sua-bo relative overflow-hidden"
+      className="bg-mau-sua-bo relative overflow-hidden px-2"
       onMouseMove={(e) => handleMouseMove(e)}
     >
       {isDesktop && <ImageList tomatoX={tomatoX} tomatoY={tomatoY} />}

@@ -1,5 +1,5 @@
 import { LogoMonoColor } from "@/assets/svg/logo_monocolor";
-import { storeInfo } from "@/storeInfo";
+import { storeInfo, type storeInfoKey } from "@/storeInfo";
 import { Button } from "../ui/button";
 import { Link } from "react-router-dom";
 import Fade from "embla-carousel-fade";
@@ -13,15 +13,6 @@ import {
 } from "@/components/ui/carousel";
 import { Icon } from "@/utils/assets/icon";
 import { textSkewIn } from "@/utils/constants/effect";
-
-type HeroSlideImageKey =
-  | "home_hero_slide_image1"
-  | "home_hero_slide_image2"
-  | "home_hero_slide_image3";
-type HeroSlidePriceKey =
-  | "home_hero_slide_price1"
-  | "home_hero_slide_price2"
-  | "home_hero_slide_price3";
 
 const MotionPriceTag = ({
   variants,
@@ -40,7 +31,7 @@ const MotionPriceTag = ({
       <p className="text-sm lg:text-base text-white font-Lucky">Giá chỉ</p>
       <p className="text-lg lg:text-2xl text-white tracking-wider">
         <span className="font-Lucky">
-          {storeInfo[`home_hero_slide_price${index + 1}` as HeroSlidePriceKey]}
+          {storeInfo[`home_hero_slide_price${index + 1}` as storeInfoKey]}
         </span>
         đ
       </p>
@@ -129,8 +120,8 @@ function BannerCarousel() {
                 alt={`hero_banner_slide_image${index + 1}`}
                 src={
                   storeInfo[
-                    `home_hero_slide_image${index + 1}` as HeroSlideImageKey
-                  ]
+                    `home_hero_slide_image${index + 1}` as storeInfoKey
+                  ] as string
                 }
                 className={`h-auto w-full lg:${index + 1 == 1 && "rotate-12"}`}
                 initial={{ scale: 0.1 }}
@@ -164,7 +155,7 @@ function LeftContent() {
         initial={"from"}
         animate={"to"}
         transition={{ duration: 0.7 }}
-        className="hero-title text-3xl md:text-4xl lg:text-5xl font-Lucky tracking-wide leading-15"
+        className="hero-title text-3xl md:text-4xl lg:text-5xl font-Lucky tracking-wide leading-10 lg:leading-15"
       >
         {storeInfo.home_hero_title}
       </motion.h1>

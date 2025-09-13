@@ -1,23 +1,12 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { textSkewIn } from "@/utils/constants/effect";
-import { storeInfo } from "@/storeInfo";
+import { storeInfo, type storeInfoKey } from "@/storeInfo";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { RatingStar } from "../ui/ratingStart";
 import { Button } from "../ui/button";
 import { Link } from "react-router-dom";
 
-type ComboKey =
-  | "section_combo_item1_img"
-  | "section_combo_item2_img"
-  | "section_combo_item1_name"
-  | "section_combo_item2_name"
-  | "section_combo_item1_rating"
-  | "section_combo_item2_rating"
-  | "section_combo_item1_href"
-  | "section_combo_item2_href"
-  | "section_combo_item1_price"
-  | "section_combo_item2_price";
 
 function ComboHeader() {
   return (
@@ -61,22 +50,22 @@ function ComboList() {
               <LazyLoadImage
                 src={
                   storeInfo[
-                    `section_combo_item${index + 1}_img` as ComboKey
+                    `section_combo_item${index + 1}_img` as storeInfoKey
                   ] as string
                 }
                 alt={
                   storeInfo[
-                    `section_combo_item${index + 1}_name` as ComboKey
+                    `section_combo_item${index + 1}_name` as storeInfoKey
                   ] as string
                 }
                 className="object-cover"
               />
-              <h2 className="absolute z-2 left-0 bottom-10 bg-gray-50 text-base flex items-start gap-x-3 p-3 pr-4 rounded-r-lg lg:-translate-x-full group-hover:translate-x-0 duration-700">
+              <h2 className="absolute z-2 left-0 bottom-10 bg-white text-base flex items-start gap-x-3 p-3 pr-4 rounded-r-lg lg:-translate-x-full group-hover:translate-x-0 duration-700">
                 Giá{" "}
                 <span className="font-Lucky text-2xl lg:text-3xl">
                   {
                     storeInfo[
-                      `section_combo_item${index + 1}_price` as ComboKey
+                      `section_combo_item${index + 1}_price` as storeInfoKey
                     ] as string
                   }
                   <span className="font-Mont">đ</span>
@@ -93,7 +82,7 @@ function ComboList() {
                     readOnly
                     value={
                       storeInfo[
-                        `section_combo_item${index + 1}_rating` as ComboKey
+                        `section_combo_item${index + 1}_rating` as storeInfoKey
                       ] as number
                     }
                     size={16}
@@ -105,7 +94,7 @@ function ComboList() {
                   >
                     {
                       storeInfo[
-                        `section_combo_item${index + 1}_rating` as ComboKey
+                        `section_combo_item${index + 1}_rating` as storeInfoKey
                       ] as number
                     }
                   </span>
@@ -113,7 +102,7 @@ function ComboList() {
                 <h1 className="font-Lucky uppercase text-2xl lg:text-3xl">
                   {
                     storeInfo[
-                      `section_combo_item${index + 1}_name` as ComboKey
+                      `section_combo_item${index + 1}_name` as storeInfoKey
                     ] as string
                   }
                 </h1>
@@ -122,7 +111,7 @@ function ComboList() {
                 <Link
                   to={
                     storeInfo[
-                      `section_combo_item${index + 1}_href` as ComboKey
+                      `section_combo_item${index + 1}_href` as storeInfoKey
                     ] as string
                   }
                 >
@@ -150,7 +139,7 @@ function ComboList() {
 }
 export default function SectionComboDeals() {
   return (
-    <section className="section_combo py-4 pb-40">
+    <section className="section_combo py-4 pb-25">
       <div className="container mx-auto space-y-15">
         <ComboHeader />
         <ComboList />

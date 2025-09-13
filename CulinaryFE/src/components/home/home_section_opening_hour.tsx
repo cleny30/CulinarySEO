@@ -1,15 +1,8 @@
-import { storeInfo } from "@/storeInfo";
+import { storeInfo, type storeInfoKey } from "@/storeInfo";
 import { motion } from "framer-motion";
-import { Icon } from "@/utils/assets/icon";
+import { Icon, type IconName } from "@/utils/assets/icon";
 import { textSkewIn } from "@/utils/constants/effect";
 
-type openingHourKey =
-  | "section_openingHour_item_title1"
-  | "section_openingHour_item_title2"
-  | "section_openingHour_item_title3"
-  | "section_openingHour_item_content1"
-  | "section_openingHour_item_content2"
-  | "section_openingHour_item_content3";
 
 function IntroduceContent() {
   return (
@@ -81,7 +74,7 @@ function OpeningHourList() {
           <h1 className={h1Style}>
             {
               storeInfo[
-                `section_openingHour_item_title${index + 1}` as openingHourKey
+                `section_openingHour_item_title${index + 1}` as storeInfoKey
               ]
             }
           </h1>
@@ -89,7 +82,7 @@ function OpeningHourList() {
             {" "}
             {
               storeInfo[
-                `section_openingHour_item_content${index + 1}` as openingHourKey
+                `section_openingHour_item_content${index + 1}` as storeInfoKey
               ]
             }
           </h5>
@@ -100,6 +93,8 @@ function OpeningHourList() {
 }
 
 function LeftLayout() {
+  const IconName = storeInfo.section_openingHour_icon_list as IconName;
+  const SelectedIcon = Icon[IconName];
   return (
     <div className="shrink-0 basis-[405px] flex flex-col items-center md:items-start gap-y-10 md:gap-y-20 justify-center py-4">
       <IntroduceContent />
@@ -122,7 +117,7 @@ function LeftLayout() {
           className="flex not-md:flex-col items-center gap-4"
         >
           <div className="size-12 grid place-items-center relative rounded-full z-1">
-            <Icon.Clock3 className="text-white" />
+            <SelectedIcon className="text-white"/>
             <Icon.SocialBg className="absolute inset-0 text-primary -z-1 size-full" />
           </div>
           <p className="font-Lucky text-3xl">

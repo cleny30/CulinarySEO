@@ -52,7 +52,7 @@ function FeaturedContent({ isDesktop }: { isDesktop: boolean }) {
       <Button
         variant={"outline"}
         size={"lg"}
-        className="font-Lucky tracking-wider text-base py-6 mt-2 cursor-pointer bg-transparent"
+        className="font-Lucky tracking-wider text-base border-mau-do-color py-6 hover:bg-mau-do-color hover:text-white mt-2 cursor-pointer bg-transparent"
       >
         <Link to={storeInfo.section_featureProduct_btn_href}>
           {storeInfo.section_featureProduct_btn_label}

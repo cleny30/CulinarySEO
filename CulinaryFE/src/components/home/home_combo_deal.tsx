@@ -139,7 +139,7 @@ function ComboList() {
 }
 export default function SectionComboDeals() {
   return (
-    <section className="section_combo py-4 pb-25">
+    <section className="section_combo py-4 pb-25 overflow-hidden">
       <div className="container mx-auto space-y-15">
         <ComboHeader />
         <ComboList />

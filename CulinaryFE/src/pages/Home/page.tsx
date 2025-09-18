@@ -1,3 +1,4 @@
+import SectionCallToSignUp from "@/components/home/home_call_to_signup";
 import SectionCategoryList from "@/components/home/home_category_list";
 import SectionComboDeals from "@/components/home/home_combo_deal";
 import HomeFeatureProduct from "@/components/home/home_feature_product";
@@ -18,6 +19,7 @@ export default function HomePage() {
       {storeInfo.section_video_show && <HomeVideoSection />}
       {storeInfo.section_service_show && <SectionHomeService />}
       {storeInfo.section_featureProduct_show && <HomeFeatureProduct />}
+      {storeInfo.section_ctsu_show && <SectionCallToSignUp />}
     </>
   );
 }

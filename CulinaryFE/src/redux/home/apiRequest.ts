@@ -1,17 +1,11 @@
-import { getCateList } from "@/services/homeService";
+import { getCateList, getFeatureProduct } from "@/services/homeService";
 import type { AppDispatch } from "../store";
-import {
-  loadedCate,
-  loadedHomeCate,
-  loadingCate,
-  loadingHomeCate,
-} from "./homeSlice";
+import { loadedCate, loadedHomeCate, loadedProduct } from "./homeSlice";
 import { menuNav } from "@/utils/config/navMenu";
 import type { Category } from "@/types/category";
+import type { Product } from "@/types/product";
 
 export const fetchCateMenu = async (dispatch: AppDispatch) => {
-  dispatch(loadingCate());
-  dispatch(loadingHomeCate());
   const response = (await getCateList()) as Category[];
 
   const newCategories = response.map((item) => {
@@ -33,4 +27,17 @@ export const fetchCateMenu = async (dispatch: AppDispatch) => {
   });
   dispatch(loadedCate(updatedMenuNav));
   dispatch(loadedHomeCate(response));
+};
+
+export const fetch4FeaturedProduct = async (dispatch: AppDispatch) => {
+  const response = (await getFeatureProduct()) as {
+    items: Product[];
+    page: number;
+    pageSize: number;
+    totalItems: number;
+  };
+  console.log(response)
+  const top4Product = response!.items.slice(0, 4);
+
+  dispatch(loadedProduct(top4Product));
 };

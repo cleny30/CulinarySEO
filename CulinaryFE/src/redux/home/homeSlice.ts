@@ -1,14 +1,15 @@
 import type { Category } from "@/types/category";
 import type { NavItem } from "@/types/home";
+import type { Product } from "@/types/product";
 import { menuNav } from "@/utils/config/navMenu";
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
 interface HomeState {
   header: {
     categoryItem: Array<NavItem>;
-    loading: boolean;
   };
   home: {
+    featuredProduct?: Array<Product> | null;
     categoryList?: Array<Category> | null;
     loading: boolean;
   };
@@ -17,11 +18,11 @@ interface HomeState {
 const initialState: HomeState = {
   header: {
     categoryItem: menuNav,
-    loading: false,
   },
   home: {
+    featuredProduct: null,
     categoryList: null,
-    loading: false,
+    loading: true,
   },
 };
 
@@ -29,27 +30,22 @@ const homeSlice = createSlice({
   name: "home",
   initialState,
   reducers: {
-    loadingCate: (state) => {
-      state.header.loading = true;
-    },
     loadedCate: (
       state,
       action: PayloadAction<HomeState["header"]["categoryItem"]>
     ) => {
-      state.header.loading = false;
       state.header.categoryItem = action.payload;
-    },
-    loadingHomeCate: (state) => {
-      state.home.loading = true;
     },
     loadedHomeCate: (state, action: PayloadAction<Category[]>) => {
       state.home.loading = false;
       state.home.categoryList = action.payload;
     },
+    loadedProduct: (state, action: PayloadAction<Product[]>) => {
+      state.home.featuredProduct = action.payload;
+    },
   },
 });
 
-export const { loadingCate, loadedCate, loadingHomeCate, loadedHomeCate } =
-  homeSlice.actions;
+export const { loadedCate, loadedHomeCate, loadedProduct } = homeSlice.actions;
 
 export default homeSlice.reducer;

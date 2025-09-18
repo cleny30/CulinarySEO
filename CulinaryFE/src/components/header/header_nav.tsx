@@ -17,13 +17,15 @@ import { motion, MotionValue } from "framer-motion";
 
 const menuItemStyle =
   "text-mau-den font-Lucky text-lg bg-transparent justify-center";
-const MotionMenuTrigger = motion(NavigationMenuTrigger);
-const MotionMenuLink = motion(NavigationMenuLink);
+const MotionMenuTrigger = motion.create(NavigationMenuTrigger);
+const MotionMenuLink = motion.create(NavigationMenuLink);
 
 export default function HeaderNav({
   motionHeight,
+  loading,
 }: {
   motionHeight?: MotionValue<unknown>;
+  loading: boolean;
 }) {
   const header = useSelector((state: RootState) => state.home.header);
   return (
@@ -44,7 +46,7 @@ export default function HeaderNav({
                     <NavigationMenuContentCate
                       menuItems={item.children}
                       featureCats={item.featureCat!}
-                      loading={header.loading}
+                      loading={loading}
                     />
                   ) : (
                     <NavigationMenuContentNormal menuItems={item.children} />

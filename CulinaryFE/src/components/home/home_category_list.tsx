@@ -47,6 +47,7 @@ function CategoryList({ categoryList }: { categoryList?: Category[] | null }) {
         {!loading
           ? categoryList?.slice(1, 5).map((item, index) => (
               <Link
+                key={item.categoryName + "key"}
                 to={`/collections/${item.slug}`}
                 className={cn(styles.categoryItem)}
               >

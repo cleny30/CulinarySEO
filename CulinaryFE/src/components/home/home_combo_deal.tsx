@@ -45,7 +45,7 @@ function ComboList() {
         className="grid grid-col-1 md:grid-cols-2 gap-10"
       >
         {Array.from({ length: 2 }).map((_, index) => (
-          <div className="flex flex-col items-stretch gap-5">
+          <div className="flex flex-col items-stretch gap-5" key={index}>
             <div className="group relative image_container overflow-hidden rounded-lg">
               <LazyLoadImage
                 src={

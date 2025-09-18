@@ -5,11 +5,12 @@ import styles from "@/assets/css/home.module.css";
 
 export default function SectionHomeService() {
   return (
-    <section className="section_service py-25 not-md:px-4">
+    <section className="section_service py-15 md:py-25 not-md:px-4">
       <div className="container mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-3 place-items-stretch">
           {Array.from({ length: 3 }).map((_, index) => (
             <motion.div
+              key={index}
               className={styles.serviceItem}
               initial={{ y: "50%", opacity: 0 }}
               whileInView={{ y: "0%", opacity: 1 }}

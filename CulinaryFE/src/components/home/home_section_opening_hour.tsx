@@ -132,7 +132,7 @@ function LeftLayout() {
 
 export default function SectionOpeningHour() {
   return (
-    <section className="section_introduce py-25 not-md:pb-4 px-4 relative">
+    <section className="section_introduce pt-25 not-md:pb-4 px-4 relative overflow-hidden">
       <div className="container mx-auto">
         <div className="flex items-stretch justify-start gap-8 lg:gap-[10.8%] not-md:flex-col-reverse relative">
           <LeftLayout />

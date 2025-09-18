@@ -75,7 +75,7 @@ function AvatarGroup() {
   return (
     <div className="avatarGroup flex flex-row">
       {Array.from({ length: 3 }).map((_, index) => (
-        <Avatar className="size-13 rounded-full -mr-3">
+        <Avatar className="size-13 rounded-full -mr-3" key={index}>
           <AvatarImage src={`/img/person${index + 1}.webp`} />
           <AvatarFallback>
             <Skeleton className="rounded-full size-full" />
@@ -135,7 +135,7 @@ function RightLayout() {
 
 export default function SectionIntroduce() {
   return (
-    <section className="section_introduce pb-25 md:pt-10 px-4 relative">
+    <section className="section_introduce pb-25 md:pt-25 px-4 relative overflow-hidden">
       <div className="container mx-auto">
         <div className="flex items-stretch justify-start gap-6 lg:gap-[10.8%] not-md:flex-col-reverse relative">
           <TwoBanner />

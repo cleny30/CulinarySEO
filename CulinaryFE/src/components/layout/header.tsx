@@ -6,7 +6,7 @@ import HeaderRightActions from "../header/header_right_actions";
 import SubHeader from "./subheader";
 import { cn } from "@/lib/utils";
 import TopBar from "./topbar";
-import { useLayoutEffect, useRef } from "react";
+import { useLayoutEffect, useRef, useTransition } from "react";
 import { fetchCateMenu } from "@/redux/home/apiRequest";
 import HeaderNavMobile from "../header/header_nav-mobile";
 import { useScroll, useTransform, motion, useAnimation } from "framer-motion";
@@ -29,13 +29,17 @@ export default function Header({
   const user =
     useSelector((state: RootState) => state.auth.login?.currentUser) || null;
   const headerContainerStyle = "w-full flex justify-center";
+  const categoryList = useSelector(
+    (state: RootState) => state.home.home.categoryList
+  );
+  const [isLoading, startTransition] = useTransition();
 
   useLayoutEffect(() => {
     const getCate = async () => {
       await fetchCateMenu(dispatch);
     };
-    getCate();
-  }, [dispatch]);
+    if (!categoryList) startTransition(getCate);
+  }, [categoryList, dispatch]);
 
   const { scrollY } = useScroll();
   const scrollYRange = [0, 100, 100];
@@ -65,7 +69,7 @@ export default function Header({
   const controls = useAnimation();
   const delta = useRef(0);
   const lastScrollY = useRef(0);
-  scrollY.onChange((val) => {
+  scrollY.on("change", (val) => {
     const diff = Math.abs(val - lastScrollY.current);
     if (val >= lastScrollY.current) {
       delta.current = delta.current >= 10 ? 10 : delta.current + diff;
@@ -85,7 +89,7 @@ export default function Header({
     <>
       {headerStyle === "1" && (
         <MotionHeader
-          className="w-full flex flex-col fixed z-50"
+          className="w-screen flex flex-col fixed z-50"
           variants={headerVariants}
           initial="visible"
           animate={controls}
@@ -114,8 +118,8 @@ export default function Header({
             )}
           >
             <MotionNav className="flex items-center w-full justify-between layoutContainer not-lg:py-2 px-2">
-              <HeaderLogo height={imageHeight} />
-              <HeaderNav motionHeight={navHeight} />
+              <HeaderLogo style={{ height: imageHeight }} />
+              <HeaderNav motionHeight={navHeight} loading={isLoading} />
               <div className="flex items-center">
                 <HeaderRightActions user={user} />
                 <HeaderNavMobile user={user} />

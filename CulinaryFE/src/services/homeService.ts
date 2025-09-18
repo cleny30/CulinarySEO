@@ -15,3 +15,14 @@ export const getCateList = async () => {
     return errorMessage(error);
   }
 };
+export const getFeatureProduct= async () => {
+  try {
+    const res = await doRequest<BackendApiResponse<unknown>>(
+      "get",
+      "/api/products/filter-product?CategoryIds=1"
+    );
+    return  res.data.result;
+  } catch (error) {
+    return errorMessage(error);
+  }
+};

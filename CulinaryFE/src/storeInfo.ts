@@ -90,6 +90,13 @@ export const storeInfo = {
     "https://cdn.prod.website-files.com/6852aaf2968e2cff672f2c54%2F685b7e495b95ac17ebf70be1_video-v2-transcode.mp4",
   section_video_poster:
     "https://cdn.prod.website-files.com/6852aaf2968e2cff672f2c54%2F685b7e495b95ac17ebf70be1_video-v2-poster-00001.jpg",
+
+  section_featureProduct_show: true,
+  section_featureProduct_subtext: "Sản phẩm đặc biệt",
+  section_featureProduct_title:
+    "Nguyên liệu đa dạng, nhiều hơn ở căn bếp của bạn",
+  section_featureProduct_btn_label: "Xem tất cả",
+  section_featureProduct_btn_href: "/collections/featured",
 };
 
 export type storeInfoKey = keyof typeof storeInfo;

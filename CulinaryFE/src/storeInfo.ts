@@ -97,16 +97,25 @@ export const storeInfo = {
     "Nguyên liệu đa dạng, nhiều hơn ở căn bếp của bạn",
   section_featureProduct_btn_label: "Xem tất cả",
   section_featureProduct_btn_href: "/collections/featured",
-  
+
   section_ctsu_show: true,
   section_ctsu_subtext: "Tham gia & ưu đãi",
   section_ctsu_title: "Đăng ký thành viên & nhận ưu đãi ngay hôm nay",
-  section_ctsu_subtitle: "Nhận thông tin về các chương trình khuyến mãi, ưu đãi đặc biệt và tin tức mới nhất từ cửa hàng chúng tôi.",
+  section_ctsu_subtitle:
+    "Nhận thông tin về các chương trình khuyến mãi, ưu đãi đặc biệt và tin tức mới nhất từ cửa hàng chúng tôi.",
   section_ctsu_img: "/img/section_ctsu_img.webp",
-  section_ctsu_other_label:"Nhận 10% ưu đãi!",
-  section_ctsu_other_sublabel:"Đăng ký ngay hôm nay",
-  section_ctsu_btn_label:"Đăng ký ngay",
-  section_ctsu_btn_href:"/register",
+  section_ctsu_other_label: "Nhận 10% ưu đãi!",
+  section_ctsu_other_sublabel: "Đăng ký ngay hôm nay",
+  section_ctsu_btn_label: "Đăng ký ngay",
+  section_ctsu_btn_href: "/register",
+
+  section_marquee_show: true,
+  section_marquee_text1: "Thực phẩm tươi sạch",
+  section_marquee_icon1: "Bread",
+  section_marquee_text2: "Đa dạng nguyên liệu",
+  section_marquee_icon2: "Bread",
+  section_marquee_text3: "Giao hàng nhanh chóng",
+  section_marquee_icon3: "Bread",
 };
 
 export type storeInfoKey = keyof typeof storeInfo;

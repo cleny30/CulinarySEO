@@ -46,6 +46,9 @@ export const Icon = {
   Authen: (props: ImgHTMLAttributes<HTMLImageElement>) => (
     <img src={"/svg/authen.svg"} {...props} />
   ),
+  Bread: (props: ImgHTMLAttributes<HTMLImageElement>) => (
+    <img src={"/svg/marquee_bread.svg"} {...props} />
+  ),
   SocialBg: (props: SVGProps<SVGSVGElement>) => <SocialBg {...props} />,
   Facebook: (props: SVGProps<SVGSVGElement>) => <FacebookIcon {...props} />,
   Instagram: (props: SVGProps<SVGSVGElement>) => <InstagramIcon {...props} />,

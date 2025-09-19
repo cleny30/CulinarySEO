@@ -86,7 +86,7 @@ function CtsuArea() {
 
 export default function SectionCallToSignUp() {
   return (
-    <section className="section_call_to_signup py-10 md:py-25 bg-mau-be relative overflow-hidden">
+    <section className="section_call_to_signup py-15 md:py-25 bg-mau-be relative overflow-hidden">
       <div className="container mx-auto not-md:px-4 not-lg:px-2">
         <div className="grid grid-cols-1 md:grid-cols-2 not-lg:gap-x-10  md:not-lg:h-180">
           <motion.div className="h-full">

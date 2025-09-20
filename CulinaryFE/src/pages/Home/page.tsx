@@ -8,6 +8,7 @@ import SectionOpeningHour from "@/components/home/home_section_opening_hour";
 import SectionHomeService from "@/components/home/home_service";
 import SectionIntroduce from "@/components/home/home_session_2";
 import HomeVideoSection from "@/components/home/home_video_section";
+import HomeVideoRatingSection from "@/components/home/home_video_withRating";
 import type { RootState } from "@/redux/store";
 import { storeInfo } from "@/storeInfo";
 import { useSelector } from "react-redux";
@@ -25,6 +26,7 @@ export default function HomePage() {
       {storeInfo.section_featureProduct_show && <HomeFeatureProduct />}
       {storeInfo.section_ctsu_show && !user && <SectionCallToSignUp />}
       {storeInfo.section_marquee_show && <HomeMarquee />}
+      {storeInfo.section_videoRating_show && <HomeVideoRatingSection />}
     </>
   );
 }

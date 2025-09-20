@@ -58,7 +58,7 @@ function IntroduceContent() {
 
 function CtsuArea() {
   return (
-    <div className="flex flex-col w-[52%] md:w-[85%] gap-y-5 md:gap-y-10 relative">
+    <div className="flex flex-col w-[65%] sm:w-[52%] md:w-[85%] gap-y-5 md:gap-y-10 relative">
       <div className="space-y-2 md:space-y-4 self-end">
         <h1 className="font-Lucky text-mau-do-color text-2xl md:text-4xl">
           {storeInfo.section_ctsu_other_label}

@@ -116,6 +116,20 @@ export const storeInfo = {
   section_marquee_icon2: "Bread",
   section_marquee_text3: "Giao hàng nhanh chóng",
   section_marquee_icon3: "Bread",
+
+  section_videoRating_show: true,
+  section_videoRating_subtext: "Đồ ăn tươi ngon",
+  section_videoRating_title:
+    "Cửa hàng mang đến nguyên liệu ngon và tuyệt vời nhất cho bạn",
+  section_videoRating_rating: 4.9,
+  section_videoRating_ratingDesc:
+    "Cửa hàng cung cấp những gì ngon và tuyệt vời nhất cho bạn",
+  section_videoRating_video_poster:
+    "https://cdn.prod.website-files.com/683948647d80a2f677804c9e%2F6859476a00c03beaf2a10274_video-v1-poster-00001.jpg",
+  section_videoRating_video_src:
+    "https://cdn.prod.website-files.com/683948647d80a2f677804c9e%2F6859476a00c03beaf2a10274_video-v1-transcode.webm",
+  section_videoRating_video_srcAlter:
+    "https://cdn.prod.website-files.com/683948647d80a2f677804c9e%2F6859476a00c03beaf2a10274_video-v1-transcode.mp4",
 };
 
 export type storeInfoKey = keyof typeof storeInfo;

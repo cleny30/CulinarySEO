@@ -6,7 +6,7 @@ import { storeInfo, type storeInfoKey } from "@/storeInfo";
 export default function HomeMarquee() {
   return (
     <section className="section_marquee bg-primary">
-      <Marquee repeat={2} >
+      <Marquee repeat={4}>
         {Array.from({ length: 3 }).map((_, index) => {
           const IconName = storeInfo[
             `section_marquee_icon${index + 1}` as storeInfoKey

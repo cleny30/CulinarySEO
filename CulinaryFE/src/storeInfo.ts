@@ -97,6 +97,39 @@ export const storeInfo = {
     "Nguyên liệu đa dạng, nhiều hơn ở căn bếp của bạn",
   section_featureProduct_btn_label: "Xem tất cả",
   section_featureProduct_btn_href: "/collections/featured",
+
+  section_ctsu_show: true,
+  section_ctsu_subtext: "Tham gia & ưu đãi",
+  section_ctsu_title: "Đăng ký thành viên & nhận ưu đãi ngay hôm nay",
+  section_ctsu_subtitle:
+    "Nhận thông tin về các chương trình khuyến mãi, ưu đãi đặc biệt và tin tức mới nhất từ cửa hàng chúng tôi.",
+  section_ctsu_img: "/img/section_ctsu_img.webp",
+  section_ctsu_other_label: "Nhận 10% ưu đãi!",
+  section_ctsu_other_sublabel: "Đăng ký ngay hôm nay",
+  section_ctsu_btn_label: "Đăng ký ngay",
+  section_ctsu_btn_href: "/register",
+
+  section_marquee_show: true,
+  section_marquee_text1: "Thực phẩm tươi sạch",
+  section_marquee_icon1: "Bread",
+  section_marquee_text2: "Đa dạng nguyên liệu",
+  section_marquee_icon2: "Bread",
+  section_marquee_text3: "Giao hàng nhanh chóng",
+  section_marquee_icon3: "Bread",
+
+  section_videoRating_show: true,
+  section_videoRating_subtext: "Đồ ăn tươi ngon",
+  section_videoRating_title:
+    "Cửa hàng mang đến nguyên liệu ngon và tuyệt vời nhất cho bạn",
+  section_videoRating_rating: 4.9,
+  section_videoRating_ratingDesc:
+    "Cửa hàng cung cấp những gì ngon và tuyệt vời nhất cho bạn",
+  section_videoRating_video_poster:
+    "https://cdn.prod.website-files.com/683948647d80a2f677804c9e%2F6859476a00c03beaf2a10274_video-v1-poster-00001.jpg",
+  section_videoRating_video_src:
+    "https://cdn.prod.website-files.com/683948647d80a2f677804c9e%2F6859476a00c03beaf2a10274_video-v1-transcode.webm",
+  section_videoRating_video_srcAlter:
+    "https://cdn.prod.website-files.com/683948647d80a2f677804c9e%2F6859476a00c03beaf2a10274_video-v1-transcode.mp4",
 };
 
 export type storeInfoKey = keyof typeof storeInfo;

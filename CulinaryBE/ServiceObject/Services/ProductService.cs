@@ -33,7 +33,7 @@ namespace ServiceObject.Services
             {
                 var products = await productDAO.GetAllProducts();
                 await _elasticService.ReindexAllAsync();
-                return _mapper.Map<List<GetProductDto>>(products); 
+                return _mapper.Map<List<GetProductDto>>(products);
 
             }
             catch (Exception ex)
@@ -64,10 +64,21 @@ namespace ServiceObject.Services
 
         public async Task<PagedResult<ProductFilterResponse>> GetFilteredProductsAsync(ProductFilterRequest request)
         {
-            var result = await _elasticService.GetFilteredProducts(request);
+            int total = 0;
+            List<ProductFilterResponse> items = new List<ProductFilterResponse>();
+            if (await _elasticService.IsConnection())
+            {
+                var result = await _elasticService.GetFilteredProducts(request);
+                total = result.TotalItems;
+                items = result.Items;
+            }
+            else
+            {
+                var result = await productDAO.GetFilteredProductsAsync(request);
+                total = result.TotalItems;
+                items = _mapper.Map<List<ProductFilterResponse>>(result.Items);
+            }
 
-            var total = result.TotalItems;
-            var items = result.Items;
 
             var pagedResult = new PagedResult<ProductFilterResponse>
             {

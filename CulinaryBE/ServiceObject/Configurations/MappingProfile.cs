@@ -108,7 +108,42 @@ namespace ServiceObject.Configurations
                         )
                     ));
 
-
+            CreateMap<Product,ProductFilterResponse>()
+                .ForMember(dest => dest.FinalPrice,
+                    opt => opt.MapFrom(src =>
+                        src.Discount.HasValue
+                            ? src.Price - (src.Price * (src.Discount.Value / 100))
+                            : src.Price
+                    ))
+                .ForMember(dest => dest.TotalQuantity,
+                    opt => opt.MapFrom(src =>
+                        src.Stocks.Sum(s => s.Quantity)
+                    ))
+                .ForMember(dest => dest.ReviewCount,
+                    opt => opt.MapFrom(src => src.ProductReviews.Count()))
+                .ForMember(dest => dest.AverageRating,
+                    opt => opt.MapFrom(src =>
+                        src.ProductReviews.Any(r => r.Rating.HasValue)
+                            ? (decimal)src.ProductReviews.Where(r => r.Rating.HasValue).Average(r => r.Rating!.Value)
+                            : 0
+                    ))
+                .ForMember(dest => dest.ProductImages,
+                    opt => opt.MapFrom(src => src.ProductImages
+                        .Select(img => img.ImageUrl)
+                        .ToList()
+                    ))
+                .ForMember(dest => dest.CategoryIds,
+                    opt => opt.MapFrom(src => src.ProductCategoryMappings
+                        .Select(m => m.CategoryId)
+                        .ToList()
+                    ))
+                .ForMember(dest => dest.Stocks,
+                    opt => opt.MapFrom(src => src.Stocks
+                        .ToDictionary(
+                            s => s.WarehouseId.ToString(),
+                            s => s.Quantity
+                        )
+                    ));
             #endregion
 
             #region Customer

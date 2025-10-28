@@ -1,0 +1,1 @@
+import{j as e}from"./index-B4fGi5se.js";function s(){return e.jsx("div",{className:"w-max-[1400px] w-full max-h-[300px] py-[80px] flex items-center justify-center text-4xl ",children:e.jsx("span",{className:"font-bold",children:"Our Shop"})})}export{s as default};

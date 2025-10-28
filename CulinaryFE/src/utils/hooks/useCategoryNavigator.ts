@@ -12,7 +12,7 @@ export function useCategoryNavigator() {
     const slug = cat ? cat.slug : "all";
 
     const query = searchParams.toString();
-    navigate(`/collection/${slug}${query ? "?" + query : ""}`);
+    navigate(`/collections/${slug}${query ? "?" + query : ""}`);
   };
 
   return { handleCategoryChange };

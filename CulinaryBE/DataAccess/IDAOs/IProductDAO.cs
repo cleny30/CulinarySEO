@@ -1,4 +1,5 @@
-﻿using BusinessObject.Models.Entity;
+﻿using BusinessObject.Models.Dto;
+using BusinessObject.Models.Entity;
 
 namespace DataAccess.IDAOs
 {
@@ -10,5 +11,6 @@ namespace DataAccess.IDAOs
         Task<List<Product>> GetProductSummariesById(IEnumerable<Guid> productIds);
         Task<Product?> GetProductAsync(Guid productId);
         Task<List<Product>> GetAllProductsWithStocksAsync();
+        Task<(int TotalItems, List<Product> Items)> GetFilteredProductsAsync(ProductFilterRequest request);
     }
 }

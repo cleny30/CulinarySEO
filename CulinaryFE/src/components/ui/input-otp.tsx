@@ -291,7 +291,7 @@ function InputOTPSlot({
       whileHover={{ scale: 1.02 }}
     >
       <input
-        ref={(el) => (inputsRef.current[index] = el)}
+        ref={(el) => { inputsRef.current[index] = el; }}
         type="text"
         inputMode="text"
         maxLength={1}

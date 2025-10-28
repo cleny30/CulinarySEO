@@ -1,6 +1,8 @@
 ﻿using BusinessObject.AppDbContext;
 using BusinessObject.Models;
+using BusinessObject.Models.Dto;
 using BusinessObject.Models.Entity;
+using BusinessObject.Models.Enum;
 using DataAccess.IDAOs;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -129,6 +131,96 @@ namespace DataAccess.DAOs
             {
                 _logger.LogError(ex, "Error fetching all products with stocks");
                 throw;
+            }
+        }
+
+        public async Task<(int TotalItems, List<Product> Items)> GetFilteredProductsAsync(ProductFilterRequest request)
+        {
+            try
+            {
+                IQueryable<Product> query = _context.Products
+                    .Include(p => p.Stocks)
+                    .Include(p => p.ProductImages)
+                    .Include(p => p.ProductReviews)
+                    .Include(p => p.ProductCategoryMappings)
+                    .ThenInclude(pcm => pcm.Category)
+                    .AsQueryable();
+
+                // Filter category
+                if (request.CategoryIds != null && request.CategoryIds.Any())
+                {
+                    query = query.Where(p =>
+                        p.ProductCategoryMappings.Any(pcm => request.CategoryIds.Contains(pcm.CategoryId))
+                    );
+                }
+
+                // Filter price
+                if (request.MinPrice.HasValue)
+                    query = query.Where(p => p.Price >= request.MinPrice.Value);
+
+                if (request.MaxPrice.HasValue)
+                    query = query.Where(p => p.Price <= request.MaxPrice.Value);
+
+                // Filter available
+                if (request.IsAvailable.HasValue)
+                {
+                    query = request.IsAvailable.Value
+                        ? query.Where(p => p.Stocks.Sum(s => s.Quantity) > 0)
+                        : query.Where(p => p.Stocks.Sum(s => s.Quantity) == 0);
+                }
+
+                // Sort
+                query = request.SortBy switch
+                {
+                    ProductSortOption.BestSelling => query.OrderByDescending(p => p.TotalSold),
+                    ProductSortOption.NameAZ => query.OrderBy(p => p.ProductName),
+                    ProductSortOption.NameZA => query.OrderByDescending(p => p.ProductName),
+                    ProductSortOption.PriceLowHigh => query.OrderBy(p => p.Price),
+                    ProductSortOption.PriceHighLow => query.OrderByDescending(p => p.Price),
+                    ProductSortOption.DateNewOld => query.OrderByDescending(p => p.CreatedAt),
+                    ProductSortOption.DateOldNew => query.OrderBy(p => p.CreatedAt),
+                    ProductSortOption.Feature => query
+                        .Where(p => p.ProductCategoryMappings.Any(pcm => pcm.Category!.CategoryName == "Featured"))
+                        .OrderByDescending(p => p.CreatedAt),
+                    _ => query.OrderBy(p => p.ProductName) // mặc định
+                };
+
+                int totalItems = await query.CountAsync();
+
+                var items = await query
+                    .Skip((request.Page - 1) * request.PageSize)
+                    .Take(request.PageSize)
+                    .Select(p => new Product
+                    {
+                        ProductId = p.ProductId,
+                        ProductName = p.ProductName,
+                        Price = p.Price,
+                        Discount = p.Discount,
+                        ProductReviews = p.ProductReviews,
+                        Stocks = p.Stocks
+                        .Select(s => new Stock
+                        {
+                            Quantity = s.Quantity
+                        }).ToList(),
+
+                        ProductImages = p.ProductImages
+                        .Select(img => new ProductImage
+                        {
+                            ImageUrl = img.ImageUrl
+                        }).ToList()
+                    })
+                    .AsNoTracking()
+                    .ToListAsync(); // Trả nguyên Product entity
+
+                return (totalItems, items);
+            }
+            catch (DbUpdateException ex)
+            {
+                throw new DbUpdateException("An error occurred while retrieving filtered products.", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("An unexpected error occurred while retrieving filtered products.", ex);
             }
         }
     }

@@ -11,7 +11,7 @@ export const fetchCateMenu = async (dispatch: AppDispatch) => {
   const newCategories = response.map((item) => {
     return {
       label: item.categoryName,
-      href: `/collections/${item.categoryId}`,
+      href: `/collections/${item.slug}`,
       image: item.categoryImage,
     };
   });

@@ -116,13 +116,13 @@ function FIlterSider() {
                                                                         dispatch(setSelectedCategories([cat.categoryId]));
                                                                         form.setValue("categories", [cat.categoryId]);
 
-                                                                        // Navigate to /collection/:slug
+                                                                        // Navigate to /collections/:slug
                                                                         handleCategoryChange(cat.categoryId);
                                                                     } else {
                                                                         //Uncheck → reset to "all"
                                                                         dispatch(setSelectedCategories(null));
                                                                         form.setValue("categories", []);
-                                                                        handleCategoryChange(null); // navigate to /collection/all
+                                                                        handleCategoryChange(null); // navigate to /collections/all
                                                                     }
                                                                 }}
                                                                 className="border-1 border-primary data-[state=checked]:bg-primary data-[state=checked]:border-primary"

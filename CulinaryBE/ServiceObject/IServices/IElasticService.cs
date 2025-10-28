@@ -8,5 +8,6 @@ namespace ServiceObject.IServices
         Task DeleteProductAsync(Guid productId);
         Task IndexProductAsync(Guid productId);
         Task<PagedResult<ProductFilterResponse>> GetFilteredProducts(ProductFilterRequest request);
+        Task<bool> IsConnection();
     }
 }

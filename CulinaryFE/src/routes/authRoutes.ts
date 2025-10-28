@@ -1,5 +1,5 @@
 import AuthLayout from "@/components/layout/authLayout";
-import LoginPage from "@/pages/Auth/login/page";
+import LoginPage from "@/pages/Auth/Login/page";
 import RegisterPage from "@/pages/Auth/register/page";
 import VerifyOtpPage from "@/pages/Auth/verify-otp/page";
 import type { RouteConfig } from "@/types";

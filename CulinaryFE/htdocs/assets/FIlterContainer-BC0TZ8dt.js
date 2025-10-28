@@ -1,0 +1,1 @@
+import{j as r}from"./index-B4fGi5se.js";import{F as e}from"./FIlterSider-B_o1RUHz.js";import"./index-BdQq_4o_.js";function n(){return r.jsx(r.Fragment,{children:r.jsx("aside",{className:"hidden lg:block w-3/12 px-[15px]",children:r.jsx(e,{})})})}export{n as default};

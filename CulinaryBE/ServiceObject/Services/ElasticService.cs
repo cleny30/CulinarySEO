@@ -241,6 +241,20 @@ namespace ServiceObject.Services
             }
         }
 
+        public async Task<bool> IsConnection()
+        {
+            try
+            {
+                var pingResponse = await _elasticClient.PingAsync();
+                return pingResponse.IsValidResponse;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Elasticsearch connection check failed");
+                return false;
+            }
+        }
+
         #endregion
     }
 }

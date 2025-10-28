@@ -87,10 +87,10 @@ export function useSyncFilterWithUrl() {
             const catId = filter.selectedCategories[0];
             const cat = filter.categories.find(c => c.categoryId === catId);
             if (cat) {
-                navigate(`/collection/${cat.slug}${searchString}`, { replace: true });
+                navigate(`/collections/${cat.slug}${searchString}`, { replace: true });
             }
         } else {
-            navigate(`/collection/all${searchString}`, { replace: true });
+            navigate(`/collections/all${searchString}`, { replace: true });
         }
     }, [filter, navigate]);
 }

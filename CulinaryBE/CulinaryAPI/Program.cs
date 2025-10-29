@@ -87,7 +87,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigin", policy =>
     {
-        policy.WithOrigins(builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>())
+        policy.WithOrigins("https://culinary.free.nf")
               .AllowAnyMethod()
               .AllowAnyHeader()
               .AllowCredentials();

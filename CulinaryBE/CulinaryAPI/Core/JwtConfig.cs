@@ -6,13 +6,8 @@ namespace CulinaryAPI.Core
 {
     public static class JwtConfig
     {
-        public static void AddJwtAuthentication(this IServiceCollection services)
+        public static void AddJwtAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
-            var configuration = new ConfigurationBuilder()
-                .SetBasePath(AppContext.BaseDirectory)
-                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                .Build();
-
             var jwtSettings = configuration.GetSection("Jwt");
 
             var key = jwtSettings["Key"];

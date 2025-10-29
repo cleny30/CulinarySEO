@@ -14,7 +14,9 @@ using Elastic.Transport;
 
 
 var builder = WebApplication.CreateBuilder(args);
-
+builder.Configuration
+    .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+    .AddEnvironmentVariables(); // 👈 thêm dòng này để Render đọc ENV
 
 //Coanfig Supabase
 builder.Services.AddDbContext<CulinaryContext>(options =>

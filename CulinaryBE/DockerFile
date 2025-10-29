@@ -17,6 +17,7 @@ COPY ["ServiceObject/ServiceObject.csproj", "ServiceObject/"]
 COPY ["BusinessObject/BusinessObject.csproj", "BusinessObject/"]
 COPY ["DataAccess/DataAccess.csproj", "DataAccess/"]
 RUN dotnet restore "./CulinaryAPI/CulinaryAPI.csproj"
+RUN echo '{ "Logging": { "LogLevel": { "Default": "Information" } } }' > /src/CulinaryAPI/appsettings.json
 COPY . .
 WORKDIR "/src/CulinaryAPI"
 RUN dotnet build "./CulinaryAPI.csproj" -c $BUILD_CONFIGURATION -o /app/build
